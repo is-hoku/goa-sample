@@ -1,0 +1,1 @@
+# goa-template
