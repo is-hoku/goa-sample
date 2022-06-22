@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS `students`;
+
+CREATE TABLE `students` (
+		`id` BIGINT UNSIGNED NOT NULL PRIMARY KEY,
+		`name` VARCHAR(128) NOT NULL,
+		`ruby` VARCHAR(128) NOT NULL,
+		`student_number` INT UNSIGNED NOT NULL,
+		`date_of_birth` DATETIME NOT NULL,
+		`address` VARCHAR(256) NOT NULL,
+		`expiration_date` DATETIME NOT NULL,
+		`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		INDEX `idx_student_number` (`student_number`)
+);
