@@ -2,15 +2,18 @@ module github.com/is-hoku/goa-template
 
 go 1.18
 
-require goa.design/goa/v3 v3.7.6
+require (
+	goa.design/goa/v3 v3.7.6
+	goa.design/plugins/v3 v3.7.6
+)
 
 require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
 	github.com/dimfeld/httptreemux/v5 v5.4.0 // indirect
+	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
-	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/smartystreets/assertions v1.13.0 // indirect

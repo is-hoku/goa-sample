@@ -1,14 +1,23 @@
 package design
 
-import . "goa.design/goa/v3/dsl"
+import (
+	. "goa.design/goa/v3/dsl"
+	cors "goa.design/plugins/v3/cors/dsl"
+)
 
 var _ = API("students", func() {
 	Title("Students API")
 	Description("API for student information management")
 	Server("student", func() {
-		Host("localhost", func() {
-			URI("http://localhost:8080")
+		Host("0.0.0.0", func() {
+			URI("http://0.0.0.0:8080")
 		})
+	})
+	cors.Origin("http://localhost:8017", func() {
+		cors.Expose("X-Time")
+		cors.Methods("GET", "POST", "PUT", "DELETE")
+		cors.MaxAge(600)
+		cors.Credentials()
 	})
 })
 

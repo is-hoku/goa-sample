@@ -15,3 +15,6 @@
 # vendor/
 
 .env
+student
+openapi.json
+openapi3.json

@@ -14,7 +14,7 @@ import (
 
 func main() {
 	var (
-		hostF = flag.String("host", "localhost", "Server host (valid values: localhost)")
+		hostF = flag.String("host", "0.0.0.0", "Server host (valid values: 0.0.0.0)")
 		addrF = flag.String("url", "", "URL to service host")
 
 		verboseF = flag.Bool("verbose", false, "Print request and response details")
@@ -32,10 +32,10 @@ func main() {
 		addr = *addrF
 		if addr == "" {
 			switch *hostF {
-			case "localhost":
-				addr = "http://localhost:8080"
+			case "0.0.0.0":
+				addr = "http://0.0.0.0:8080"
 			default:
-				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: localhost)\n", *hostF)
+				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: 0.0.0.0)\n", *hostF)
 				os.Exit(1)
 			}
 		}
@@ -97,7 +97,7 @@ func usage() {
 Usage:
     %s [-host HOST][-url URL][-timeout SECONDS][-verbose|-v] SERVICE ENDPOINT [flags]
 
-    -host HOST:  server host (localhost). valid values: localhost
+    -host HOST:  server host (0.0.0.0). valid values: 0.0.0.0
     -url URL:    specify service URL overriding host URL (http://localhost:8080)
     -timeout:    maximum number of seconds to wait for response (30)
     -verbose|-v: print request and response details (false)

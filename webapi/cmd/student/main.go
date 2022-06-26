@@ -20,7 +20,7 @@ func main() {
 	// Define command line flags, add any other flag required to configure the
 	// service.
 	var (
-		hostF     = flag.String("host", "localhost", "Server host (valid values: localhost)")
+		hostF     = flag.String("host", "0.0.0.0", "Server host (valid values: 0.0.0.0)")
 		domainF   = flag.String("domain", "", "Host domain name (overrides host domain specified in service design)")
 		httpPortF = flag.String("http-port", "", "HTTP port (overrides host HTTP port specified in service design)")
 		secureF   = flag.Bool("secure", false, "Use secure scheme (https or grpcs)")
@@ -70,9 +70,9 @@ func main() {
 
 	// Start the servers and send errors (if any) to the error channel.
 	switch *hostF {
-	case "localhost":
+	case "0.0.0.0":
 		{
-			addr := "http://localhost:8080"
+			addr := "http://0.0.0.0:8080"
 			u, err := url.Parse(addr)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", addr, err)
@@ -98,7 +98,7 @@ func main() {
 		}
 
 	default:
-		fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: localhost)\n", *hostF)
+		fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: 0.0.0.0)\n", *hostF)
 	}
 
 	// Wait for signal.
