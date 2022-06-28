@@ -29,7 +29,7 @@ func NewClient(getStudent, getStudents, createStudent goa.Endpoint) *Client {
 	}
 }
 
-// GetStudent calls the "get student" endpoint of the "students" service.
+// GetStudent calls the "get_student" endpoint of the "students" service.
 // GetStudent may return the following errors:
 //	- "internal_error" (type *CustomError)
 //	- "not_found" (type *CustomError)
@@ -43,7 +43,7 @@ func (c *Client) GetStudent(ctx context.Context, p *GetStudentPayload) (res *Stu
 	return ires.(*Student), nil
 }
 
-// GetStudents calls the "get students" endpoint of the "students" service.
+// GetStudents calls the "get_students" endpoint of the "students" service.
 // GetStudents may return the following errors:
 //	- "internal_error" (type *CustomError)
 //	- error: internal error
@@ -56,7 +56,7 @@ func (c *Client) GetStudents(ctx context.Context) (res *Students, err error) {
 	return ires.(*Students), nil
 }
 
-// CreateStudent calls the "create student" endpoint of the "students" service.
+// CreateStudent calls the "create_student" endpoint of the "students" service.
 // CreateStudent may return the following errors:
 //	- "internal_error" (type *CustomError)
 //	- "bad_request" (type *CustomError)

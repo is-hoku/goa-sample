@@ -31,7 +31,7 @@ const ServiceName = "students"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [3]string{"get student", "get students", "create student"}
+var MethodNames = [3]string{"get_student", "get_students", "create_student"}
 
 type CustomError struct {
 	// Name of error
@@ -40,14 +40,14 @@ type CustomError struct {
 	Message string
 }
 
-// GetStudentPayload is the payload type of the students service get student
+// GetStudentPayload is the payload type of the students service get_student
 // method.
 type GetStudentPayload struct {
 	// Student's unique ID
 	ID *int64
 }
 
-// Student is the result type of the students service get student method.
+// Student is the result type of the students service get_student method.
 type Student struct {
 	// 学生を一意に表す ID
 	ID int64
@@ -65,7 +65,7 @@ type Student struct {
 	ExpirationDate string
 }
 
-// Students is the result type of the students service get students method.
+// Students is the result type of the students service get_students method.
 type Students struct {
 	Students []*Student
 }

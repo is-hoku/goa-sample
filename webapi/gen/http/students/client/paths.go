@@ -11,17 +11,17 @@ import (
 	"fmt"
 )
 
-// GetStudentStudentsPath returns the URL path to the students service get student HTTP endpoint.
+// GetStudentStudentsPath returns the URL path to the students service get_student HTTP endpoint.
 func GetStudentStudentsPath(id int64) string {
 	return fmt.Sprintf("/students/%v", id)
 }
 
-// GetStudentsStudentsPath returns the URL path to the students service get students HTTP endpoint.
+// GetStudentsStudentsPath returns the URL path to the students service get_students HTTP endpoint.
 func GetStudentsStudentsPath() string {
 	return "/students"
 }
 
-// CreateStudentStudentsPath returns the URL path to the students service create student HTTP endpoint.
+// CreateStudentStudentsPath returns the URL path to the students service create_student HTTP endpoint.
 func CreateStudentStudentsPath() string {
 	return "/students"
 }

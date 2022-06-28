@@ -14,7 +14,7 @@ import (
 	students "github.com/is-hoku/goa-template/gen/students"
 )
 
-// BuildGetStudentPayload builds the payload for the students get student
+// BuildGetStudentPayload builds the payload for the students get_student
 // endpoint from CLI flags.
 func BuildGetStudentPayload(studentsGetStudentID string) (*students.GetStudentPayload, error) {
 	var err error

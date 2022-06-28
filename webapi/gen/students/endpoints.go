@@ -37,7 +37,7 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 }
 
 // NewGetStudentEndpoint returns an endpoint function that calls the method
-// "get student" of service "students".
+// "get_student" of service "students".
 func NewGetStudentEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*GetStudentPayload)
@@ -51,7 +51,7 @@ func NewGetStudentEndpoint(s Service) goa.Endpoint {
 }
 
 // NewGetStudentsEndpoint returns an endpoint function that calls the method
-// "get students" of service "students".
+// "get_students" of service "students".
 func NewGetStudentsEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		res, err := s.GetStudents(ctx)
@@ -64,7 +64,7 @@ func NewGetStudentsEndpoint(s Service) goa.Endpoint {
 }
 
 // NewCreateStudentEndpoint returns an endpoint function that calls the method
-// "create student" of service "students".
+// "create_student" of service "students".
 func NewCreateStudentEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		res, err := s.CreateStudent(ctx)

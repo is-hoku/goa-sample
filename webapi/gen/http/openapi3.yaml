@@ -10,9 +10,9 @@ paths:
         get:
             tags:
                 - students
-            summary: get students students
+            summary: get_students students
             description: 学籍番号で昇順にソートされた全ての学生を取得する。
-            operationId: students#get students
+            operationId: students#get_students
             responses:
                 "200":
                     description: OK response.
@@ -59,9 +59,9 @@ paths:
         post:
             tags:
                 - students
-            summary: create student students
+            summary: create_student students
             description: 学生を登録する。
-            operationId: students#create student
+            operationId: students#create_student
             responses:
                 "200":
                     description: OK response.
@@ -93,9 +93,9 @@ paths:
         get:
             tags:
                 - students
-            summary: get student students
+            summary: get_student students
             description: id から学生を取得する。
-            operationId: students#get student
+            operationId: students#get_student
             parameters:
                 - name: id
                   in: path

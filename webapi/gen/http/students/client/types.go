@@ -13,7 +13,7 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// GetStudentResponseBody is the type of the "students" service "get student"
+// GetStudentResponseBody is the type of the "students" service "get_student"
 // endpoint HTTP response body.
 type GetStudentResponseBody struct {
 	// 学生を一意に表す ID
@@ -32,14 +32,14 @@ type GetStudentResponseBody struct {
 	ExpirationDate *string `form:"expiration_date,omitempty" json:"expiration_date,omitempty" xml:"expiration_date,omitempty"`
 }
 
-// GetStudentsResponseBody is the type of the "students" service "get students"
+// GetStudentsResponseBody is the type of the "students" service "get_students"
 // endpoint HTTP response body.
 type GetStudentsResponseBody struct {
 	Students []*StudentResponseBody `form:"students,omitempty" json:"students,omitempty" xml:"students,omitempty"`
 }
 
-// CreateStudentResponseBody is the type of the "students" service "create
-// student" endpoint HTTP response body.
+// CreateStudentResponseBody is the type of the "students" service
+// "create_student" endpoint HTTP response body.
 type CreateStudentResponseBody struct {
 	// 学生を一意に表す ID
 	ID *int64 `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
@@ -58,7 +58,7 @@ type CreateStudentResponseBody struct {
 }
 
 // GetStudentInternalErrorResponseBody is the type of the "students" service
-// "get student" endpoint HTTP response body for the "internal_error" error.
+// "get_student" endpoint HTTP response body for the "internal_error" error.
 type GetStudentInternalErrorResponseBody struct {
 	// Name of error
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
@@ -66,8 +66,8 @@ type GetStudentInternalErrorResponseBody struct {
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
-// GetStudentNotFoundResponseBody is the type of the "students" service "get
-// student" endpoint HTTP response body for the "not_found" error.
+// GetStudentNotFoundResponseBody is the type of the "students" service
+// "get_student" endpoint HTTP response body for the "not_found" error.
 type GetStudentNotFoundResponseBody struct {
 	// Name of error
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
@@ -76,7 +76,7 @@ type GetStudentNotFoundResponseBody struct {
 }
 
 // GetStudentsInternalErrorResponseBody is the type of the "students" service
-// "get students" endpoint HTTP response body for the "internal_error" error.
+// "get_students" endpoint HTTP response body for the "internal_error" error.
 type GetStudentsInternalErrorResponseBody struct {
 	// Name of error
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
@@ -85,7 +85,7 @@ type GetStudentsInternalErrorResponseBody struct {
 }
 
 // CreateStudentInternalErrorResponseBody is the type of the "students" service
-// "create student" endpoint HTTP response body for the "internal_error" error.
+// "create_student" endpoint HTTP response body for the "internal_error" error.
 type CreateStudentInternalErrorResponseBody struct {
 	// Name of error
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
@@ -94,7 +94,7 @@ type CreateStudentInternalErrorResponseBody struct {
 }
 
 // CreateStudentBadRequestResponseBody is the type of the "students" service
-// "create student" endpoint HTTP response body for the "bad_request" error.
+// "create_student" endpoint HTTP response body for the "bad_request" error.
 type CreateStudentBadRequestResponseBody struct {
 	// Name of error
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
@@ -120,7 +120,7 @@ type StudentResponseBody struct {
 	ExpirationDate *string `form:"expiration_date,omitempty" json:"expiration_date,omitempty" xml:"expiration_date,omitempty"`
 }
 
-// NewGetStudentStudentOK builds a "students" service "get student" endpoint
+// NewGetStudentStudentOK builds a "students" service "get_student" endpoint
 // result from a HTTP "OK" response.
 func NewGetStudentStudentOK(body *GetStudentResponseBody) *studentsviews.StudentView {
 	v := &studentsviews.StudentView{
@@ -136,7 +136,7 @@ func NewGetStudentStudentOK(body *GetStudentResponseBody) *studentsviews.Student
 	return v
 }
 
-// NewGetStudentInternalError builds a students service get student endpoint
+// NewGetStudentInternalError builds a students service get_student endpoint
 // internal_error error.
 func NewGetStudentInternalError(body *GetStudentInternalErrorResponseBody) *students.CustomError {
 	v := &students.CustomError{
@@ -147,7 +147,7 @@ func NewGetStudentInternalError(body *GetStudentInternalErrorResponseBody) *stud
 	return v
 }
 
-// NewGetStudentNotFound builds a students service get student endpoint
+// NewGetStudentNotFound builds a students service get_student endpoint
 // not_found error.
 func NewGetStudentNotFound(body *GetStudentNotFoundResponseBody) *students.CustomError {
 	v := &students.CustomError{
@@ -158,7 +158,7 @@ func NewGetStudentNotFound(body *GetStudentNotFoundResponseBody) *students.Custo
 	return v
 }
 
-// NewGetStudentsStudentsOK builds a "students" service "get students" endpoint
+// NewGetStudentsStudentsOK builds a "students" service "get_students" endpoint
 // result from a HTTP "OK" response.
 func NewGetStudentsStudentsOK(body *GetStudentsResponseBody) *studentsviews.StudentsView {
 	v := &studentsviews.StudentsView{}
@@ -170,7 +170,7 @@ func NewGetStudentsStudentsOK(body *GetStudentsResponseBody) *studentsviews.Stud
 	return v
 }
 
-// NewGetStudentsInternalError builds a students service get students endpoint
+// NewGetStudentsInternalError builds a students service get_students endpoint
 // internal_error error.
 func NewGetStudentsInternalError(body *GetStudentsInternalErrorResponseBody) *students.CustomError {
 	v := &students.CustomError{
@@ -181,7 +181,7 @@ func NewGetStudentsInternalError(body *GetStudentsInternalErrorResponseBody) *st
 	return v
 }
 
-// NewCreateStudentStudentOK builds a "students" service "create student"
+// NewCreateStudentStudentOK builds a "students" service "create_student"
 // endpoint result from a HTTP "OK" response.
 func NewCreateStudentStudentOK(body *CreateStudentResponseBody) *studentsviews.StudentView {
 	v := &studentsviews.StudentView{
@@ -197,7 +197,7 @@ func NewCreateStudentStudentOK(body *CreateStudentResponseBody) *studentsviews.S
 	return v
 }
 
-// NewCreateStudentInternalError builds a students service create student
+// NewCreateStudentInternalError builds a students service create_student
 // endpoint internal_error error.
 func NewCreateStudentInternalError(body *CreateStudentInternalErrorResponseBody) *students.CustomError {
 	v := &students.CustomError{
@@ -208,7 +208,7 @@ func NewCreateStudentInternalError(body *CreateStudentInternalErrorResponseBody)
 	return v
 }
 
-// NewCreateStudentBadRequest builds a students service create student endpoint
+// NewCreateStudentBadRequest builds a students service create_student endpoint
 // bad_request error.
 func NewCreateStudentBadRequest(body *CreateStudentBadRequestResponseBody) *students.CustomError {
 	v := &students.CustomError{
@@ -220,7 +220,7 @@ func NewCreateStudentBadRequest(body *CreateStudentBadRequestResponseBody) *stud
 }
 
 // ValidateGetStudentInternalErrorResponseBody runs the validations defined on
-// get student_internal_error_response_body
+// get_student_internal_error_response_body
 func ValidateGetStudentInternalErrorResponseBody(body *GetStudentInternalErrorResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -231,8 +231,8 @@ func ValidateGetStudentInternalErrorResponseBody(body *GetStudentInternalErrorRe
 	return
 }
 
-// ValidateGetStudentNotFoundResponseBody runs the validations defined on get
-// student_not_found_response_body
+// ValidateGetStudentNotFoundResponseBody runs the validations defined on
+// get_student_not_found_response_body
 func ValidateGetStudentNotFoundResponseBody(body *GetStudentNotFoundResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -244,7 +244,7 @@ func ValidateGetStudentNotFoundResponseBody(body *GetStudentNotFoundResponseBody
 }
 
 // ValidateGetStudentsInternalErrorResponseBody runs the validations defined on
-// get students_internal_error_response_body
+// get_students_internal_error_response_body
 func ValidateGetStudentsInternalErrorResponseBody(body *GetStudentsInternalErrorResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -256,7 +256,7 @@ func ValidateGetStudentsInternalErrorResponseBody(body *GetStudentsInternalError
 }
 
 // ValidateCreateStudentInternalErrorResponseBody runs the validations defined
-// on create student_internal_error_response_body
+// on create_student_internal_error_response_body
 func ValidateCreateStudentInternalErrorResponseBody(body *CreateStudentInternalErrorResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -268,7 +268,7 @@ func ValidateCreateStudentInternalErrorResponseBody(body *CreateStudentInternalE
 }
 
 // ValidateCreateStudentBadRequestResponseBody runs the validations defined on
-// create student_bad_request_response_body
+// create_student_bad_request_response_body
 func ValidateCreateStudentBadRequestResponseBody(body *CreateStudentBadRequestResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))

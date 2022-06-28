@@ -97,7 +97,7 @@ func (s *Server) Mount(mux goahttp.Muxer) {
 }
 
 // MountGetStudentHandler configures the mux to serve the "students" service
-// "get student" endpoint.
+// "get_student" endpoint.
 func MountGetStudentHandler(mux goahttp.Muxer, h http.Handler) {
 	f, ok := HandleStudentsOrigin(h).(http.HandlerFunc)
 	if !ok {
@@ -109,7 +109,7 @@ func MountGetStudentHandler(mux goahttp.Muxer, h http.Handler) {
 }
 
 // NewGetStudentHandler creates a HTTP handler which loads the HTTP request and
-// calls the "students" service "get student" endpoint.
+// calls the "students" service "get_student" endpoint.
 func NewGetStudentHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
@@ -125,7 +125,7 @@ func NewGetStudentHandler(
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
-		ctx = context.WithValue(ctx, goa.MethodKey, "get student")
+		ctx = context.WithValue(ctx, goa.MethodKey, "get_student")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "students")
 		payload, err := decodeRequest(r)
 		if err != nil {
@@ -148,7 +148,7 @@ func NewGetStudentHandler(
 }
 
 // MountGetStudentsHandler configures the mux to serve the "students" service
-// "get students" endpoint.
+// "get_students" endpoint.
 func MountGetStudentsHandler(mux goahttp.Muxer, h http.Handler) {
 	f, ok := HandleStudentsOrigin(h).(http.HandlerFunc)
 	if !ok {
@@ -160,7 +160,7 @@ func MountGetStudentsHandler(mux goahttp.Muxer, h http.Handler) {
 }
 
 // NewGetStudentsHandler creates a HTTP handler which loads the HTTP request
-// and calls the "students" service "get students" endpoint.
+// and calls the "students" service "get_students" endpoint.
 func NewGetStudentsHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
@@ -175,7 +175,7 @@ func NewGetStudentsHandler(
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
-		ctx = context.WithValue(ctx, goa.MethodKey, "get students")
+		ctx = context.WithValue(ctx, goa.MethodKey, "get_students")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "students")
 		var err error
 		res, err := endpoint(ctx, nil)
@@ -192,7 +192,7 @@ func NewGetStudentsHandler(
 }
 
 // MountCreateStudentHandler configures the mux to serve the "students" service
-// "create student" endpoint.
+// "create_student" endpoint.
 func MountCreateStudentHandler(mux goahttp.Muxer, h http.Handler) {
 	f, ok := HandleStudentsOrigin(h).(http.HandlerFunc)
 	if !ok {
@@ -204,7 +204,7 @@ func MountCreateStudentHandler(mux goahttp.Muxer, h http.Handler) {
 }
 
 // NewCreateStudentHandler creates a HTTP handler which loads the HTTP request
-// and calls the "students" service "create student" endpoint.
+// and calls the "students" service "create_student" endpoint.
 func NewCreateStudentHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
@@ -219,7 +219,7 @@ func NewCreateStudentHandler(
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
-		ctx = context.WithValue(ctx, goa.MethodKey, "create student")
+		ctx = context.WithValue(ctx, goa.MethodKey, "create_student")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "students")
 		var err error
 		res, err := endpoint(ctx, nil)

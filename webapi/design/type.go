@@ -2,7 +2,7 @@ package design
 
 import . "goa.design/goa/v3/dsl"
 
-var StudentType = ResultType("Student", func() {
+var StudentType = ResultType("application/vnd.student+json", "Student", func() {
 	Description("One student")
 	Attributes(func() {
 		Attribute("id", Int64, "学生を一意に表す ID", func() {
@@ -41,7 +41,7 @@ var StudentType = ResultType("Student", func() {
 	})
 })
 
-var StudentsType = ResultType("Students", func() {
+var StudentsType = ResultType("application/vnd.students+json", "Students", func() {
 	Description("All students")
 	Attribute("students", ArrayOf(StudentType), func() {
 		ArrayOf(StudentType)

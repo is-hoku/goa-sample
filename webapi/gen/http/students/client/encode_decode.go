@@ -20,7 +20,7 @@ import (
 )
 
 // BuildGetStudentRequest instantiates a HTTP request object with method and
-// path set to call the "students" service "get student" endpoint
+// path set to call the "students" service "get_student" endpoint
 func (c *Client) BuildGetStudentRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	var (
 		id int64
@@ -28,7 +28,7 @@ func (c *Client) BuildGetStudentRequest(ctx context.Context, v interface{}) (*ht
 	{
 		p, ok := v.(*students.GetStudentPayload)
 		if !ok {
-			return nil, goahttp.ErrInvalidType("students", "get student", "*students.GetStudentPayload", v)
+			return nil, goahttp.ErrInvalidType("students", "get_student", "*students.GetStudentPayload", v)
 		}
 		if p.ID != nil {
 			id = *p.ID
@@ -37,7 +37,7 @@ func (c *Client) BuildGetStudentRequest(ctx context.Context, v interface{}) (*ht
 	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetStudentStudentsPath(id)}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		return nil, goahttp.ErrInvalidURL("students", "get student", u.String(), err)
+		return nil, goahttp.ErrInvalidURL("students", "get_student", u.String(), err)
 	}
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -47,7 +47,7 @@ func (c *Client) BuildGetStudentRequest(ctx context.Context, v interface{}) (*ht
 }
 
 // DecodeGetStudentResponse returns a decoder for responses returned by the
-// students get student endpoint. restoreBody controls whether the response
+// students get_student endpoint. restoreBody controls whether the response
 // body should be restored after having been read.
 // DecodeGetStudentResponse may return the following errors:
 //	- "internal_error" (type *students.CustomError): http.StatusInternalServerError
@@ -75,13 +75,13 @@ func DecodeGetStudentResponse(decoder func(*http.Response) goahttp.Decoder, rest
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("students", "get student", err)
+				return nil, goahttp.ErrDecodingError("students", "get_student", err)
 			}
 			p := NewGetStudentStudentOK(&body)
 			view := "default"
 			vres := &studentsviews.Student{Projected: p, View: view}
 			if err = studentsviews.ValidateStudent(vres); err != nil {
-				return nil, goahttp.ErrValidationError("students", "get student", err)
+				return nil, goahttp.ErrValidationError("students", "get_student", err)
 			}
 			res := students.NewStudent(vres)
 			return res, nil
@@ -92,11 +92,11 @@ func DecodeGetStudentResponse(decoder func(*http.Response) goahttp.Decoder, rest
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("students", "get student", err)
+				return nil, goahttp.ErrDecodingError("students", "get_student", err)
 			}
 			err = ValidateGetStudentInternalErrorResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("students", "get student", err)
+				return nil, goahttp.ErrValidationError("students", "get_student", err)
 			}
 			return nil, NewGetStudentInternalError(&body)
 		case http.StatusNotFound:
@@ -106,27 +106,27 @@ func DecodeGetStudentResponse(decoder func(*http.Response) goahttp.Decoder, rest
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("students", "get student", err)
+				return nil, goahttp.ErrDecodingError("students", "get_student", err)
 			}
 			err = ValidateGetStudentNotFoundResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("students", "get student", err)
+				return nil, goahttp.ErrValidationError("students", "get_student", err)
 			}
 			return nil, NewGetStudentNotFound(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
-			return nil, goahttp.ErrInvalidResponse("students", "get student", resp.StatusCode, string(body))
+			return nil, goahttp.ErrInvalidResponse("students", "get_student", resp.StatusCode, string(body))
 		}
 	}
 }
 
 // BuildGetStudentsRequest instantiates a HTTP request object with method and
-// path set to call the "students" service "get students" endpoint
+// path set to call the "students" service "get_students" endpoint
 func (c *Client) BuildGetStudentsRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetStudentsStudentsPath()}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		return nil, goahttp.ErrInvalidURL("students", "get students", u.String(), err)
+		return nil, goahttp.ErrInvalidURL("students", "get_students", u.String(), err)
 	}
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -136,7 +136,7 @@ func (c *Client) BuildGetStudentsRequest(ctx context.Context, v interface{}) (*h
 }
 
 // DecodeGetStudentsResponse returns a decoder for responses returned by the
-// students get students endpoint. restoreBody controls whether the response
+// students get_students endpoint. restoreBody controls whether the response
 // body should be restored after having been read.
 // DecodeGetStudentsResponse may return the following errors:
 //	- "internal_error" (type *students.CustomError): http.StatusInternalServerError
@@ -163,13 +163,13 @@ func DecodeGetStudentsResponse(decoder func(*http.Response) goahttp.Decoder, res
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("students", "get students", err)
+				return nil, goahttp.ErrDecodingError("students", "get_students", err)
 			}
 			p := NewGetStudentsStudentsOK(&body)
 			view := "default"
 			vres := &studentsviews.Students{Projected: p, View: view}
 			if err = studentsviews.ValidateStudents(vres); err != nil {
-				return nil, goahttp.ErrValidationError("students", "get students", err)
+				return nil, goahttp.ErrValidationError("students", "get_students", err)
 			}
 			res := students.NewStudents(vres)
 			return res, nil
@@ -180,27 +180,27 @@ func DecodeGetStudentsResponse(decoder func(*http.Response) goahttp.Decoder, res
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("students", "get students", err)
+				return nil, goahttp.ErrDecodingError("students", "get_students", err)
 			}
 			err = ValidateGetStudentsInternalErrorResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("students", "get students", err)
+				return nil, goahttp.ErrValidationError("students", "get_students", err)
 			}
 			return nil, NewGetStudentsInternalError(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
-			return nil, goahttp.ErrInvalidResponse("students", "get students", resp.StatusCode, string(body))
+			return nil, goahttp.ErrInvalidResponse("students", "get_students", resp.StatusCode, string(body))
 		}
 	}
 }
 
 // BuildCreateStudentRequest instantiates a HTTP request object with method and
-// path set to call the "students" service "create student" endpoint
+// path set to call the "students" service "create_student" endpoint
 func (c *Client) BuildCreateStudentRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateStudentStudentsPath()}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
-		return nil, goahttp.ErrInvalidURL("students", "create student", u.String(), err)
+		return nil, goahttp.ErrInvalidURL("students", "create_student", u.String(), err)
 	}
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -210,7 +210,7 @@ func (c *Client) BuildCreateStudentRequest(ctx context.Context, v interface{}) (
 }
 
 // DecodeCreateStudentResponse returns a decoder for responses returned by the
-// students create student endpoint. restoreBody controls whether the response
+// students create_student endpoint. restoreBody controls whether the response
 // body should be restored after having been read.
 // DecodeCreateStudentResponse may return the following errors:
 //	- "internal_error" (type *students.CustomError): http.StatusInternalServerError
@@ -238,13 +238,13 @@ func DecodeCreateStudentResponse(decoder func(*http.Response) goahttp.Decoder, r
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("students", "create student", err)
+				return nil, goahttp.ErrDecodingError("students", "create_student", err)
 			}
 			p := NewCreateStudentStudentOK(&body)
 			view := "default"
 			vres := &studentsviews.Student{Projected: p, View: view}
 			if err = studentsviews.ValidateStudent(vres); err != nil {
-				return nil, goahttp.ErrValidationError("students", "create student", err)
+				return nil, goahttp.ErrValidationError("students", "create_student", err)
 			}
 			res := students.NewStudent(vres)
 			return res, nil
@@ -255,11 +255,11 @@ func DecodeCreateStudentResponse(decoder func(*http.Response) goahttp.Decoder, r
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("students", "create student", err)
+				return nil, goahttp.ErrDecodingError("students", "create_student", err)
 			}
 			err = ValidateCreateStudentInternalErrorResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("students", "create student", err)
+				return nil, goahttp.ErrValidationError("students", "create_student", err)
 			}
 			return nil, NewCreateStudentInternalError(&body)
 		case http.StatusBadRequest:
@@ -269,16 +269,16 @@ func DecodeCreateStudentResponse(decoder func(*http.Response) goahttp.Decoder, r
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("students", "create student", err)
+				return nil, goahttp.ErrDecodingError("students", "create_student", err)
 			}
 			err = ValidateCreateStudentBadRequestResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("students", "create student", err)
+				return nil, goahttp.ErrValidationError("students", "create_student", err)
 			}
 			return nil, NewCreateStudentBadRequest(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
-			return nil, goahttp.ErrInvalidResponse("students", "create student", resp.StatusCode, string(body))
+			return nil, goahttp.ErrInvalidResponse("students", "create_student", resp.StatusCode, string(body))
 		}
 	}
 }

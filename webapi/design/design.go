@@ -22,7 +22,7 @@ var _ = API("students", func() {
 })
 
 var _ = Service("students", func() {
-	Method("get student", func() {
+	Method("get_student", func() {
 		Description("id から学生を取得する。")
 		Result(StudentType)
 		Error("internal_error", CustomErrorType)
@@ -37,7 +37,7 @@ var _ = Service("students", func() {
 			Response("not_found", StatusNotFound)
 		})
 	})
-	Method("get students", func() {
+	Method("get_students", func() {
 		Description("学籍番号で昇順にソートされた全ての学生を取得する。")
 		Result(StudentsType)
 		Error("internal_error", CustomErrorType)
@@ -47,7 +47,7 @@ var _ = Service("students", func() {
 			Response("internal_error", StatusInternalServerError)
 		})
 	})
-	Method("create student", func() {
+	Method("create_student", func() {
 		Description("学生を登録する。")
 		Result(StudentType)
 		Error("internal_error", CustomErrorType)

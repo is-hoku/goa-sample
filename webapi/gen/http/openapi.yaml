@@ -17,9 +17,9 @@ paths:
         get:
             tags:
                 - students
-            summary: get students students
+            summary: get_students students
             description: 学籍番号で昇順にソートされた全ての学生を取得する。
-            operationId: students#get students
+            operationId: students#get_students
             responses:
                 "200":
                     description: OK response.
@@ -37,9 +37,9 @@ paths:
         post:
             tags:
                 - students
-            summary: create student students
+            summary: create_student students
             description: 学生を登録する。
-            operationId: students#create student
+            operationId: students#create_student
             responses:
                 "200":
                     description: OK response.
@@ -65,9 +65,9 @@ paths:
         get:
             tags:
                 - students
-            summary: get student students
+            summary: get_student students
             description: id から学生を取得する。
-            operationId: students#get student
+            operationId: students#get_student
             parameters:
                 - name: id
                   in: path
@@ -98,7 +98,7 @@ paths:
                 - http
 definitions:
     StudentResponseBody:
-        title: 'Mediatype identifier: student; view=default'
+        title: 'Mediatype identifier: application/vnd.student+json; view=default'
         type: object
         properties:
             address:
@@ -187,7 +187,7 @@ definitions:
             - name
             - message
     StudentsCreateStudentResponseBody:
-        title: 'Mediatype identifier: student; view=default'
+        title: 'Mediatype identifier: application/vnd.student+json; view=default'
         type: object
         properties:
             address:
@@ -222,7 +222,7 @@ definitions:
                 description: 学生の学籍番号
                 example: 12345
                 format: int64
-        description: Create StudentResponseBody result type (default view)
+        description: create_student_response_body result type (default view)
         example:
             address: 名古屋市中区三の丸三丁目1番2号
             date_of_birth: "2022-04-01T13:30:00+09:00"
@@ -276,7 +276,7 @@ definitions:
             - name
             - message
     StudentsGetStudentResponseBody:
-        title: 'Mediatype identifier: student; view=default'
+        title: 'Mediatype identifier: application/vnd.student+json; view=default'
         type: object
         properties:
             address:
@@ -311,7 +311,7 @@ definitions:
                 description: 学生の学籍番号
                 example: 12345
                 format: int64
-        description: Get StudentResponseBody result type (default view)
+        description: get_student_response_body result type (default view)
         example:
             address: 名古屋市中区三の丸三丁目1番2号
             date_of_birth: "2022-04-01T13:30:00+09:00"
@@ -347,7 +347,7 @@ definitions:
             - name
             - message
     StudentsGetStudentsResponseBody:
-        title: 'Mediatype identifier: students; view=default'
+        title: 'Mediatype identifier: application/vnd.students+json; view=default'
         type: object
         properties:
             students:
@@ -383,7 +383,7 @@ definitions:
                       name: 鈴木太郎
                       ruby: スズキタロウ
                       student_number: 12345
-        description: Get StudentsResponseBody result type (default view)
+        description: get_students_response_body result type (default view)
         example:
             students:
                 - address: 名古屋市中区三の丸三丁目1番2号

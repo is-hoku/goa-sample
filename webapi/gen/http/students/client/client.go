@@ -17,16 +17,16 @@ import (
 
 // Client lists the students service endpoint HTTP clients.
 type Client struct {
-	// GetStudent Doer is the HTTP client used to make requests to the get student
+	// GetStudent Doer is the HTTP client used to make requests to the get_student
 	// endpoint.
 	GetStudentDoer goahttp.Doer
 
-	// GetStudents Doer is the HTTP client used to make requests to the get
-	// students endpoint.
+	// GetStudents Doer is the HTTP client used to make requests to the
+	// get_students endpoint.
 	GetStudentsDoer goahttp.Doer
 
-	// CreateStudent Doer is the HTTP client used to make requests to the create
-	// student endpoint.
+	// CreateStudent Doer is the HTTP client used to make requests to the
+	// create_student endpoint.
 	CreateStudentDoer goahttp.Doer
 
 	// CORS Doer is the HTTP client used to make requests to the  endpoint.
@@ -65,7 +65,7 @@ func NewClient(
 }
 
 // GetStudent returns an endpoint that makes HTTP requests to the students
-// service get student server.
+// service get_student server.
 func (c *Client) GetStudent() goa.Endpoint {
 	var (
 		decodeResponse = DecodeGetStudentResponse(c.decoder, c.RestoreResponseBody)
@@ -77,14 +77,14 @@ func (c *Client) GetStudent() goa.Endpoint {
 		}
 		resp, err := c.GetStudentDoer.Do(req)
 		if err != nil {
-			return nil, goahttp.ErrRequestError("students", "get student", err)
+			return nil, goahttp.ErrRequestError("students", "get_student", err)
 		}
 		return decodeResponse(resp)
 	}
 }
 
 // GetStudents returns an endpoint that makes HTTP requests to the students
-// service get students server.
+// service get_students server.
 func (c *Client) GetStudents() goa.Endpoint {
 	var (
 		decodeResponse = DecodeGetStudentsResponse(c.decoder, c.RestoreResponseBody)
@@ -96,14 +96,14 @@ func (c *Client) GetStudents() goa.Endpoint {
 		}
 		resp, err := c.GetStudentsDoer.Do(req)
 		if err != nil {
-			return nil, goahttp.ErrRequestError("students", "get students", err)
+			return nil, goahttp.ErrRequestError("students", "get_students", err)
 		}
 		return decodeResponse(resp)
 	}
 }
 
 // CreateStudent returns an endpoint that makes HTTP requests to the students
-// service create student server.
+// service create_student server.
 func (c *Client) CreateStudent() goa.Endpoint {
 	var (
 		decodeResponse = DecodeCreateStudentResponse(c.decoder, c.RestoreResponseBody)
@@ -115,7 +115,7 @@ func (c *Client) CreateStudent() goa.Endpoint {
 		}
 		resp, err := c.CreateStudentDoer.Do(req)
 		if err != nil {
-			return nil, goahttp.ErrRequestError("students", "create student", err)
+			return nil, goahttp.ErrRequestError("students", "create_student", err)
 		}
 		return decodeResponse(resp)
 	}

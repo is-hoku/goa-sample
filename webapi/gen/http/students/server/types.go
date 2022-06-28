@@ -12,7 +12,7 @@ import (
 	studentsviews "github.com/is-hoku/goa-template/gen/students/views"
 )
 
-// GetStudentResponseBody is the type of the "students" service "get student"
+// GetStudentResponseBody is the type of the "students" service "get_student"
 // endpoint HTTP response body.
 type GetStudentResponseBody struct {
 	// 学生を一意に表す ID
@@ -31,14 +31,14 @@ type GetStudentResponseBody struct {
 	ExpirationDate string `form:"expiration_date" json:"expiration_date" xml:"expiration_date"`
 }
 
-// GetStudentsResponseBody is the type of the "students" service "get students"
+// GetStudentsResponseBody is the type of the "students" service "get_students"
 // endpoint HTTP response body.
 type GetStudentsResponseBody struct {
 	Students []*StudentResponseBody `form:"students" json:"students" xml:"students"`
 }
 
-// CreateStudentResponseBody is the type of the "students" service "create
-// student" endpoint HTTP response body.
+// CreateStudentResponseBody is the type of the "students" service
+// "create_student" endpoint HTTP response body.
 type CreateStudentResponseBody struct {
 	// 学生を一意に表す ID
 	ID int64 `form:"id" json:"id" xml:"id"`
@@ -57,7 +57,7 @@ type CreateStudentResponseBody struct {
 }
 
 // GetStudentInternalErrorResponseBody is the type of the "students" service
-// "get student" endpoint HTTP response body for the "internal_error" error.
+// "get_student" endpoint HTTP response body for the "internal_error" error.
 type GetStudentInternalErrorResponseBody struct {
 	// Name of error
 	Name string `form:"name" json:"name" xml:"name"`
@@ -65,8 +65,8 @@ type GetStudentInternalErrorResponseBody struct {
 	Message string `form:"message" json:"message" xml:"message"`
 }
 
-// GetStudentNotFoundResponseBody is the type of the "students" service "get
-// student" endpoint HTTP response body for the "not_found" error.
+// GetStudentNotFoundResponseBody is the type of the "students" service
+// "get_student" endpoint HTTP response body for the "not_found" error.
 type GetStudentNotFoundResponseBody struct {
 	// Name of error
 	Name string `form:"name" json:"name" xml:"name"`
@@ -75,7 +75,7 @@ type GetStudentNotFoundResponseBody struct {
 }
 
 // GetStudentsInternalErrorResponseBody is the type of the "students" service
-// "get students" endpoint HTTP response body for the "internal_error" error.
+// "get_students" endpoint HTTP response body for the "internal_error" error.
 type GetStudentsInternalErrorResponseBody struct {
 	// Name of error
 	Name string `form:"name" json:"name" xml:"name"`
@@ -84,7 +84,7 @@ type GetStudentsInternalErrorResponseBody struct {
 }
 
 // CreateStudentInternalErrorResponseBody is the type of the "students" service
-// "create student" endpoint HTTP response body for the "internal_error" error.
+// "create_student" endpoint HTTP response body for the "internal_error" error.
 type CreateStudentInternalErrorResponseBody struct {
 	// Name of error
 	Name string `form:"name" json:"name" xml:"name"`
@@ -93,7 +93,7 @@ type CreateStudentInternalErrorResponseBody struct {
 }
 
 // CreateStudentBadRequestResponseBody is the type of the "students" service
-// "create student" endpoint HTTP response body for the "bad_request" error.
+// "create_student" endpoint HTTP response body for the "bad_request" error.
 type CreateStudentBadRequestResponseBody struct {
 	// Name of error
 	Name string `form:"name" json:"name" xml:"name"`
@@ -120,7 +120,7 @@ type StudentResponseBody struct {
 }
 
 // NewGetStudentResponseBody builds the HTTP response body from the result of
-// the "get student" endpoint of the "students" service.
+// the "get_student" endpoint of the "students" service.
 func NewGetStudentResponseBody(res *studentsviews.StudentView) *GetStudentResponseBody {
 	body := &GetStudentResponseBody{
 		ID:             *res.ID,
@@ -135,7 +135,7 @@ func NewGetStudentResponseBody(res *studentsviews.StudentView) *GetStudentRespon
 }
 
 // NewGetStudentsResponseBody builds the HTTP response body from the result of
-// the "get students" endpoint of the "students" service.
+// the "get_students" endpoint of the "students" service.
 func NewGetStudentsResponseBody(res *studentsviews.StudentsView) *GetStudentsResponseBody {
 	body := &GetStudentsResponseBody{}
 	if res.Students != nil {
@@ -148,7 +148,7 @@ func NewGetStudentsResponseBody(res *studentsviews.StudentsView) *GetStudentsRes
 }
 
 // NewCreateStudentResponseBody builds the HTTP response body from the result
-// of the "create student" endpoint of the "students" service.
+// of the "create_student" endpoint of the "students" service.
 func NewCreateStudentResponseBody(res *studentsviews.StudentView) *CreateStudentResponseBody {
 	body := &CreateStudentResponseBody{
 		ID:             *res.ID,
@@ -163,7 +163,7 @@ func NewCreateStudentResponseBody(res *studentsviews.StudentView) *CreateStudent
 }
 
 // NewGetStudentInternalErrorResponseBody builds the HTTP response body from
-// the result of the "get student" endpoint of the "students" service.
+// the result of the "get_student" endpoint of the "students" service.
 func NewGetStudentInternalErrorResponseBody(res *students.CustomError) *GetStudentInternalErrorResponseBody {
 	body := &GetStudentInternalErrorResponseBody{
 		Name:    res.Name,
@@ -173,7 +173,7 @@ func NewGetStudentInternalErrorResponseBody(res *students.CustomError) *GetStude
 }
 
 // NewGetStudentNotFoundResponseBody builds the HTTP response body from the
-// result of the "get student" endpoint of the "students" service.
+// result of the "get_student" endpoint of the "students" service.
 func NewGetStudentNotFoundResponseBody(res *students.CustomError) *GetStudentNotFoundResponseBody {
 	body := &GetStudentNotFoundResponseBody{
 		Name:    res.Name,
@@ -183,7 +183,7 @@ func NewGetStudentNotFoundResponseBody(res *students.CustomError) *GetStudentNot
 }
 
 // NewGetStudentsInternalErrorResponseBody builds the HTTP response body from
-// the result of the "get students" endpoint of the "students" service.
+// the result of the "get_students" endpoint of the "students" service.
 func NewGetStudentsInternalErrorResponseBody(res *students.CustomError) *GetStudentsInternalErrorResponseBody {
 	body := &GetStudentsInternalErrorResponseBody{
 		Name:    res.Name,
@@ -193,7 +193,7 @@ func NewGetStudentsInternalErrorResponseBody(res *students.CustomError) *GetStud
 }
 
 // NewCreateStudentInternalErrorResponseBody builds the HTTP response body from
-// the result of the "create student" endpoint of the "students" service.
+// the result of the "create_student" endpoint of the "students" service.
 func NewCreateStudentInternalErrorResponseBody(res *students.CustomError) *CreateStudentInternalErrorResponseBody {
 	body := &CreateStudentInternalErrorResponseBody{
 		Name:    res.Name,
@@ -203,7 +203,7 @@ func NewCreateStudentInternalErrorResponseBody(res *students.CustomError) *Creat
 }
 
 // NewCreateStudentBadRequestResponseBody builds the HTTP response body from
-// the result of the "create student" endpoint of the "students" service.
+// the result of the "create_student" endpoint of the "students" service.
 func NewCreateStudentBadRequestResponseBody(res *students.CustomError) *CreateStudentBadRequestResponseBody {
 	body := &CreateStudentBadRequestResponseBody{
 		Name:    res.Name,
@@ -212,7 +212,7 @@ func NewCreateStudentBadRequestResponseBody(res *students.CustomError) *CreateSt
 	return body
 }
 
-// NewGetStudentPayload builds a students service get student endpoint payload.
+// NewGetStudentPayload builds a students service get_student endpoint payload.
 func NewGetStudentPayload(id int64) *students.GetStudentPayload {
 	v := &students.GetStudentPayload{}
 	v.ID = &id

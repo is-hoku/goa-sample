@@ -20,7 +20,7 @@ import (
 )
 
 // EncodeGetStudentResponse returns an encoder for responses returned by the
-// students get student endpoint.
+// students get_student endpoint.
 func EncodeGetStudentResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res := v.(*studentsviews.Student)
@@ -32,7 +32,7 @@ func EncodeGetStudentResponse(encoder func(context.Context, http.ResponseWriter)
 }
 
 // DecodeGetStudentRequest returns a decoder for requests sent to the students
-// get student endpoint.
+// get_student endpoint.
 func DecodeGetStudentRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
@@ -58,8 +58,8 @@ func DecodeGetStudentRequest(mux goahttp.Muxer, decoder func(*http.Request) goah
 	}
 }
 
-// EncodeGetStudentError returns an encoder for errors returned by the get
-// student students endpoint.
+// EncodeGetStudentError returns an encoder for errors returned by the
+// get_student students endpoint.
 func EncodeGetStudentError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
 	encodeError := goahttp.ErrorEncoder(encoder, formatter)
 	return func(ctx context.Context, w http.ResponseWriter, v error) error {
@@ -101,7 +101,7 @@ func EncodeGetStudentError(encoder func(context.Context, http.ResponseWriter) go
 }
 
 // EncodeGetStudentsResponse returns an encoder for responses returned by the
-// students get students endpoint.
+// students get_students endpoint.
 func EncodeGetStudentsResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res := v.(*studentsviews.Students)
@@ -112,8 +112,8 @@ func EncodeGetStudentsResponse(encoder func(context.Context, http.ResponseWriter
 	}
 }
 
-// EncodeGetStudentsError returns an encoder for errors returned by the get
-// students students endpoint.
+// EncodeGetStudentsError returns an encoder for errors returned by the
+// get_students students endpoint.
 func EncodeGetStudentsError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
 	encodeError := goahttp.ErrorEncoder(encoder, formatter)
 	return func(ctx context.Context, w http.ResponseWriter, v error) error {
@@ -142,7 +142,7 @@ func EncodeGetStudentsError(encoder func(context.Context, http.ResponseWriter) g
 }
 
 // EncodeCreateStudentResponse returns an encoder for responses returned by the
-// students create student endpoint.
+// students create_student endpoint.
 func EncodeCreateStudentResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res := v.(*studentsviews.Student)
@@ -154,7 +154,7 @@ func EncodeCreateStudentResponse(encoder func(context.Context, http.ResponseWrit
 }
 
 // EncodeCreateStudentError returns an encoder for errors returned by the
-// create student students endpoint.
+// create_student students endpoint.
 func EncodeCreateStudentError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
 	encodeError := goahttp.ErrorEncoder(encoder, formatter)
 	return func(ctx context.Context, w http.ResponseWriter, v error) error {
