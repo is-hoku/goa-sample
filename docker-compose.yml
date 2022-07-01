@@ -14,6 +14,9 @@ services:
         tty: true
         volumes:
             - .:/go/src
+
+        environment:
+            - DSN=${DSN}
         container_name: webapi
 
     db:
@@ -26,7 +29,7 @@ services:
           - MYSQL_USER=${DB_USER}
           - MYSQL_PASSWORD=${DB_PASS}
           - MYSQL_ROOT_PASSWORD=${DB_PASS}
-          - MYSQL_HOTS=${DB_HOST}
+          - MYSQL_HOST=${DB_HOST}
           - TZ=${TZ}
         ports:
           - 3306:3306

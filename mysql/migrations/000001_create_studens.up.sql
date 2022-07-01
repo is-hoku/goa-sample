@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS `students`;
-
 CREATE TABLE `students` (
 		`id` BIGINT UNSIGNED NOT NULL PRIMARY KEY,
 		`name` VARCHAR(128) NOT NULL,
@@ -12,3 +10,4 @@ CREATE TABLE `students` (
 		`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		INDEX `idx_student_number` (`student_number`)
 );
+
