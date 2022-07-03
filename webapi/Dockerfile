@@ -9,4 +9,6 @@ WORKDIR /go/src/webapi
 
 ADD . /go/src/webapi
 
+RUN go install github.com/cosmtrek/air@latest
+
 CMD [ "./scripts/startup.sh" ]
