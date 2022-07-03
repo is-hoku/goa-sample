@@ -12,8 +12,8 @@ import (
 	"sync"
 	"syscall"
 
-	studentsapi "github.com/is-hoku/goa-template"
-	students "github.com/is-hoku/goa-template/gen/students"
+	studentsapi "github.com/is-hoku/goa-template/webapi"
+	students "github.com/is-hoku/goa-template/webapi/gen/students"
 )
 
 func main() {

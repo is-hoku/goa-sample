@@ -8,8 +8,8 @@
 package server
 
 import (
-	students "github.com/is-hoku/goa-template/gen/students"
-	studentsviews "github.com/is-hoku/goa-template/gen/students/views"
+	students "github.com/is-hoku/goa-template/webapi/gen/students"
+	studentsviews "github.com/is-hoku/goa-template/webapi/gen/students/views"
 )
 
 // GetStudentResponseBody is the type of the "students" service "get_student"

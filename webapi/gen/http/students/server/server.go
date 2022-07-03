@@ -11,7 +11,7 @@ import (
 	"context"
 	"net/http"
 
-	students "github.com/is-hoku/goa-template/gen/students"
+	students "github.com/is-hoku/goa-template/webapi/gen/students"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 	"goa.design/plugins/v3/cors"

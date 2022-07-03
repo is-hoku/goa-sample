@@ -13,4 +13,7 @@ test:
 	go vet ./...
 clean:
 	rm -rf dist
-.PHONY: build test clean run
+goagen:
+	goa gen github.com/is-hoku/goa-template/webapi/design
+	rm -rf gen/http/cli gen/http/students/client
+.PHONY: build test clean run goagen

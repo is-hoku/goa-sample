@@ -10,7 +10,7 @@ package students
 import (
 	"context"
 
-	studentsviews "github.com/is-hoku/goa-template/gen/students/views"
+	studentsviews "github.com/is-hoku/goa-template/webapi/gen/students/views"
 )
 
 // Service is the students service interface.

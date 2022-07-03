@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	students "github.com/is-hoku/goa-template/gen/students"
+	students "github.com/is-hoku/goa-template/webapi/gen/students"
 )
 
 // students service example implementation.

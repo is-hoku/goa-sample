@@ -13,8 +13,8 @@ import (
 	"net/http"
 	"strconv"
 
-	students "github.com/is-hoku/goa-template/gen/students"
-	studentsviews "github.com/is-hoku/goa-template/gen/students/views"
+	students "github.com/is-hoku/goa-template/webapi/gen/students"
+	studentsviews "github.com/is-hoku/goa-template/webapi/gen/students/views"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )

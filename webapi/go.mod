@@ -1,4 +1,4 @@
-module github.com/is-hoku/goa-template
+module github.com/is-hoku/goa-template/webapi
 
 go 1.18
 
