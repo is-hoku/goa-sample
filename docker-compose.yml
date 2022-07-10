@@ -14,7 +14,6 @@ services:
         tty: true
         volumes:
             - .:/go/src
-
         environment:
             - DSN=${DSN}
         container_name: webapi
@@ -23,7 +22,6 @@ services:
         image: mysql:8.0
         volumes:
           - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-          - ./mysql/initdb.d:/docker-entrypoint-initdb.d
         environment:
           - MYSQL_DATABASE=${DB_NAME}
           - MYSQL_USER=${DB_USER}
