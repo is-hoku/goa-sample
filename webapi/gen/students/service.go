@@ -15,7 +15,7 @@ import (
 
 // Service is the students service interface.
 type Service interface {
-	// id から学生を取得する。
+	// 学籍番号から学生を取得する。
 	GetStudent(context.Context, *GetStudentPayload) (res *Student, err error)
 	// 学籍番号で昇順にソートされた全ての学生を取得する。
 	GetStudents(context.Context) (res *Students, err error)
@@ -43,8 +43,8 @@ type CustomError struct {
 // GetStudentPayload is the payload type of the students service get_student
 // method.
 type GetStudentPayload struct {
-	// Student's unique ID
-	ID *int64
+	// Student's unique number
+	StudentNumber *int64
 }
 
 // Student is the result type of the students service get_student method.

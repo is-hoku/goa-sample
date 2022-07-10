@@ -36,23 +36,23 @@ func EncodeGetStudentResponse(encoder func(context.Context, http.ResponseWriter)
 func DecodeGetStudentRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			id  int64
-			err error
+			studentNumber int64
+			err           error
 
 			params = mux.Vars(r)
 		)
 		{
-			idRaw := params["id"]
-			v, err2 := strconv.ParseInt(idRaw, 10, 64)
+			studentNumberRaw := params["student_number"]
+			v, err2 := strconv.ParseInt(studentNumberRaw, 10, 64)
 			if err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("id", idRaw, "integer"))
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("studentNumber", studentNumberRaw, "integer"))
 			}
-			id = v
+			studentNumber = v
 		}
 		if err != nil {
 			return nil, err
 		}
-		payload := NewGetStudentPayload(id)
+		payload := NewGetStudentPayload(studentNumber)
 
 		return payload, nil
 	}

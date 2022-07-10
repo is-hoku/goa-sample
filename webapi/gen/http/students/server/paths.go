@@ -12,8 +12,8 @@ import (
 )
 
 // GetStudentStudentsPath returns the URL path to the students service get_student HTTP endpoint.
-func GetStudentStudentsPath(id int64) string {
-	return fmt.Sprintf("/students/%v", id)
+func GetStudentStudentsPath(studentNumber int64) string {
+	return fmt.Sprintf("/students/%v", studentNumber)
 }
 
 // GetStudentsStudentsPath returns the URL path to the students service get_students HTTP endpoint.

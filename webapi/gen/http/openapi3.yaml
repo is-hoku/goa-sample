@@ -89,21 +89,21 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CustomError'
-    /students/{id}:
+    /students/{student_number}:
         get:
             tags:
                 - students
             summary: get_student students
-            description: id から学生を取得する。
+            description: 学籍番号から学生を取得する。
             operationId: students#get_student
             parameters:
-                - name: id
+                - name: student_number
                   in: path
-                  description: Student's unique ID
+                  description: Student's unique number
                   required: true
                   schema:
                     type: integer
-                    description: Student's unique ID
+                    description: Student's unique number
                     example: 2311868056971056429
                     format: int64
                   example: 7361208326735898235

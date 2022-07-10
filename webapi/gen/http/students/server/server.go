@@ -59,10 +59,10 @@ func New(
 ) *Server {
 	return &Server{
 		Mounts: []*MountPoint{
-			{"GetStudent", "GET", "/students/{id}"},
+			{"GetStudent", "GET", "/students/{student_number}"},
 			{"GetStudents", "GET", "/students"},
 			{"CreateStudent", "POST", "/students"},
-			{"CORS", "OPTIONS", "/students/{id}"},
+			{"CORS", "OPTIONS", "/students/{student_number}"},
 			{"CORS", "OPTIONS", "/students"},
 		},
 		GetStudent:    NewGetStudentHandler(e.GetStudent, mux, decoder, encoder, errhandler, formatter),
@@ -105,7 +105,7 @@ func MountGetStudentHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("GET", "/students/{id}", f)
+	mux.Handle("GET", "/students/{student_number}", f)
 }
 
 // NewGetStudentHandler creates a HTTP handler which loads the HTTP request and
@@ -239,7 +239,7 @@ func NewCreateStudentHandler(
 // service students.
 func MountCORSHandler(mux goahttp.Muxer, h http.Handler) {
 	h = HandleStudentsOrigin(h)
-	mux.Handle("OPTIONS", "/students/{id}", h.ServeHTTP)
+	mux.Handle("OPTIONS", "/students/{student_number}", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/students", h.ServeHTTP)
 }
 

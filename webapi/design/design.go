@@ -23,15 +23,15 @@ var _ = API("students", func() {
 
 var _ = Service("students", func() {
 	Method("get_student", func() {
-		Description("id から学生を取得する。")
+		Description("学籍番号から学生を取得する。")
 		Result(StudentType)
 		Error("internal_error", CustomErrorType)
 		Error("not_found", CustomErrorType)
 		Payload(func() {
-			Attribute("id", Int64, "Student's unique ID")
+			Attribute("student_number", Int64, "Student's unique number")
 		})
 		HTTP(func() {
-			GET("students/{id}")
+			GET("students/{student_number}")
 			Response(StatusOK)
 			Response("internal_error", StatusInternalServerError)
 			Response("not_found", StatusNotFound)

@@ -3,6 +3,8 @@ module github.com/is-hoku/goa-template/webapi
 go 1.18
 
 require (
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/joho/godotenv v1.4.0
 	goa.design/goa/v3 v3.7.6
 	goa.design/plugins/v3 v3.7.6
 )

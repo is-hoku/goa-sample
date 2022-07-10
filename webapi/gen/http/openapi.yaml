@@ -61,17 +61,17 @@ paths:
                             - message
             schemes:
                 - http
-    /students/{id}:
+    /students/{student_number}:
         get:
             tags:
                 - students
             summary: get_student students
-            description: id から学生を取得する。
+            description: 学籍番号から学生を取得する。
             operationId: students#get_student
             parameters:
-                - name: id
+                - name: student_number
                   in: path
-                  description: Student's unique ID
+                  description: Student's unique number
                   required: true
                   type: integer
                   format: int64
