@@ -214,6 +214,7 @@ func NewCreateStudentHandler(
 	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
+		decodeRequest  = DecodeCreateStudentRequest(mux, decoder)
 		encodeResponse = EncodeCreateStudentResponse(encoder)
 		encodeError    = EncodeCreateStudentError(encoder, formatter)
 	)
@@ -221,8 +222,14 @@ func NewCreateStudentHandler(
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "create_student")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "students")
-		var err error
-		res, err := endpoint(ctx, nil)
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)

@@ -10,7 +10,25 @@ package server
 import (
 	students "github.com/is-hoku/goa-template/webapi/gen/students"
 	studentsviews "github.com/is-hoku/goa-template/webapi/gen/students/views"
+	goa "goa.design/goa/v3/pkg"
 )
+
+// CreateStudentRequestBody is the type of the "students" service
+// "create_student" endpoint HTTP request body.
+type CreateStudentRequestBody struct {
+	// 学生の氏名
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// 学生の氏名のフリガナ
+	Ruby *string `form:"ruby,omitempty" json:"ruby,omitempty" xml:"ruby,omitempty"`
+	// 学生の学籍番号
+	StudentNumber *int `form:"student_number,omitempty" json:"student_number,omitempty" xml:"student_number,omitempty"`
+	// 学生の生年月日 (RFC3339)
+	DateOfBirth *string `form:"date_of_birth,omitempty" json:"date_of_birth,omitempty" xml:"date_of_birth,omitempty"`
+	// 学生の住所
+	Address *string `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
+	// 学生証の有効期間 (RFC3339)
+	ExpirationDate *string `form:"expiration_date,omitempty" json:"expiration_date,omitempty" xml:"expiration_date,omitempty"`
+}
 
 // GetStudentResponseBody is the type of the "students" service "get_student"
 // endpoint HTTP response body.
@@ -218,4 +236,49 @@ func NewGetStudentPayload(studentNumber int64) *students.GetStudentPayload {
 	v.StudentNumber = &studentNumber
 
 	return v
+}
+
+// NewCreateStudentStudentBody builds a students service create_student
+// endpoint payload.
+func NewCreateStudentStudentBody(body *CreateStudentRequestBody) *students.StudentBody {
+	v := &students.StudentBody{
+		Name:           *body.Name,
+		Ruby:           *body.Ruby,
+		StudentNumber:  *body.StudentNumber,
+		DateOfBirth:    *body.DateOfBirth,
+		Address:        *body.Address,
+		ExpirationDate: *body.ExpirationDate,
+	}
+
+	return v
+}
+
+// ValidateCreateStudentRequestBody runs the validations defined on
+// create_student_request_body
+func ValidateCreateStudentRequestBody(body *CreateStudentRequestBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.Ruby == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("ruby", "body"))
+	}
+	if body.StudentNumber == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("student_number", "body"))
+	}
+	if body.DateOfBirth == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("date_of_birth", "body"))
+	}
+	if body.Address == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("address", "body"))
+	}
+	if body.ExpirationDate == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("expiration_date", "body"))
+	}
+	if body.DateOfBirth != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.date_of_birth", *body.DateOfBirth, goa.FormatDateTime))
+	}
+	if body.ExpirationDate != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.expiration_date", *body.ExpirationDate, goa.FormatDateTime))
+	}
+	return
 }

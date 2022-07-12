@@ -10,6 +10,7 @@ package server
 import (
 	"context"
 	"errors"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -148,8 +149,33 @@ func EncodeCreateStudentResponse(encoder func(context.Context, http.ResponseWrit
 		res := v.(*studentsviews.Student)
 		enc := encoder(ctx, w)
 		body := NewCreateStudentResponseBody(res.Projected)
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		return enc.Encode(body)
+	}
+}
+
+// DecodeCreateStudentRequest returns a decoder for requests sent to the
+// students create_student endpoint.
+func DecodeCreateStudentRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body CreateStudentRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateCreateStudentRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewCreateStudentStudentBody(&body)
+
+		return payload, nil
 	}
 }
 

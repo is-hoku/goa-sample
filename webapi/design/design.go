@@ -52,9 +52,11 @@ var _ = Service("students", func() {
 		Result(StudentType)
 		Error("internal_error", CustomErrorType)
 		Error("bad_request", CustomErrorType)
+		Payload(StudentBodyType)
 		HTTP(func() {
 			POST("/students")
-			Response(StatusOK)
+			Body(StudentBodyType)
+			Response(StatusCreated)
 			Response("internal_error", StatusInternalServerError)
 			Response("bad_request", StatusBadRequest)
 		})

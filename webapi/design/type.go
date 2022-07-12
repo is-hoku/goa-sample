@@ -52,6 +52,31 @@ var StudentsType = ResultType("application/vnd.students+json", "Students", func(
 	})
 })
 
+var StudentBodyType = Type("StudentBody", func() {
+	Description("Student Body")
+	Attribute("name", String, "学生の氏名", func() {
+		Example("鈴木太郎")
+	})
+	Attribute("ruby", String, "学生の氏名のフリガナ", func() {
+		Example("スズキタロウ")
+	})
+	Attribute("student_number", Int, "学生の学籍番号", func() {
+		Example(12345)
+	})
+	Attribute("date_of_birth", String, "学生の生年月日 (RFC3339)", func() {
+		Format(FormatDateTime)
+		Example("2022-04-01T13:30:00+09:00")
+	})
+	Attribute("address", String, "学生の住所", func() {
+		Example("名古屋市中区三の丸三丁目1番2号")
+	})
+	Attribute("expiration_date", String, "学生証の有効期間 (RFC3339)", func() {
+		Format(FormatDateTime)
+		Example("2027-03-31T00:00:00+09:00")
+	})
+	Required("name", "ruby", "student_number", "date_of_birth", "address", "expiration_date")
+})
+
 var CustomErrorType = Type("CustomError", func() {
 	ErrorName("name", String, "Name of error", func() {
 		Example("internal_error")

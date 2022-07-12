@@ -61,9 +61,9 @@ func (c *Client) GetStudents(ctx context.Context) (res *Students, err error) {
 //	- "internal_error" (type *CustomError)
 //	- "bad_request" (type *CustomError)
 //	- error: internal error
-func (c *Client) CreateStudent(ctx context.Context) (res *Student, err error) {
+func (c *Client) CreateStudent(ctx context.Context, p *StudentBody) (res *Student, err error) {
 	var ires interface{}
-	ires, err = c.CreateStudentEndpoint(ctx, nil)
+	ires, err = c.CreateStudentEndpoint(ctx, p)
 	if err != nil {
 		return
 	}

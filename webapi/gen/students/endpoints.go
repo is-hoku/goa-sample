@@ -67,7 +67,8 @@ func NewGetStudentsEndpoint(s Service) goa.Endpoint {
 // "create_student" of service "students".
 func NewCreateStudentEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		res, err := s.CreateStudent(ctx)
+		p := req.(*StudentBody)
+		res, err := s.CreateStudent(ctx, p)
 		if err != nil {
 			return nil, err
 		}

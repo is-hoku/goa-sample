@@ -20,7 +20,7 @@ type Service interface {
 	// 学籍番号で昇順にソートされた全ての学生を取得する。
 	GetStudents(context.Context) (res *Students, err error)
 	// 学生を登録する。
-	CreateStudent(context.Context) (res *Student, err error)
+	CreateStudent(context.Context, *StudentBody) (res *Student, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -51,6 +51,23 @@ type GetStudentPayload struct {
 type Student struct {
 	// 学生を一意に表す ID
 	ID int64
+	// 学生の氏名
+	Name string
+	// 学生の氏名のフリガナ
+	Ruby string
+	// 学生の学籍番号
+	StudentNumber int
+	// 学生の生年月日 (RFC3339)
+	DateOfBirth string
+	// 学生の住所
+	Address string
+	// 学生証の有効期間 (RFC3339)
+	ExpirationDate string
+}
+
+// StudentBody is the payload type of the students service create_student
+// method.
+type StudentBody struct {
 	// 学生の氏名
 	Name string
 	// 学生の氏名のフリガナ
