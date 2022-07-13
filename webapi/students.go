@@ -8,6 +8,7 @@ import (
 	"github.com/is-hoku/goa-template/webapi/datastore"
 	students "github.com/is-hoku/goa-template/webapi/gen/students"
 	"github.com/is-hoku/goa-template/webapi/interactor"
+	"github.com/is-hoku/goa-template/webapi/repository"
 	"github.com/joho/godotenv"
 )
 
@@ -15,7 +16,7 @@ import (
 // The example methods log the requests and return zero values.
 type studentssrvc struct {
 	logger  *log.Logger
-	handler *datastore.DBHandler
+	handler repository.StudentRepository
 }
 
 // NewStudents returns the students service implementation.

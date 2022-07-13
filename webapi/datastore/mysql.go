@@ -8,6 +8,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/is-hoku/goa-template/webapi/model"
+	"github.com/is-hoku/goa-template/webapi/repository"
 )
 
 type DBHandler struct {
@@ -41,6 +42,8 @@ func New(config *Config) (*DBHandler, error) {
 	}
 	return &DBHandler{db}, err
 }
+
+var _ repository.StudentRepository = (*DBHandler)(nil)
 
 func (db *DBHandler) Get(ctx context.Context, num int64) (*model.Student, error) {
 	var s model.Student

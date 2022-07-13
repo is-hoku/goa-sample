@@ -7,11 +7,14 @@ import (
 	"github.com/is-hoku/goa-template/webapi/gen/students"
 	"github.com/is-hoku/goa-template/webapi/model"
 	"github.com/is-hoku/goa-template/webapi/repository"
+	"github.com/is-hoku/goa-template/webapi/usecase"
 )
 
 type StudentInteractor struct {
 	Repo repository.StudentRepository
 }
+
+var _ usecase.StudentUsecase = (*StudentInteractor)(nil)
 
 func (i *StudentInteractor) GetByNum(ctx context.Context, num int64) (*model.Student, error) {
 	student, err := i.Repo.Get(ctx, num)
