@@ -5,8 +5,8 @@ import (
 	cors "goa.design/plugins/v3/cors/dsl"
 )
 
-var _ = API("students", func() {
-	Title("Students API")
+var _ = API("student", func() {
+	Title("Student API")
 	Description("API for student information management")
 	Server("student", func() {
 		Host("0.0.0.0", func() {
@@ -23,7 +23,7 @@ var _ = API("students", func() {
 	})
 })
 
-var _ = Service("students", func() {
+var _ = Service("student", func() {
 	Method("get_student", func() {
 		Description("学籍番号から学生を取得する。")
 		Result(StudentType)

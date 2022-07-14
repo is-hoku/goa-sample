@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-    title: Students API
+    title: Student API
     description: API for student information management
     version: ""
 host: 0.0.0.0:8080
@@ -16,19 +16,19 @@ paths:
     /students:
         get:
             tags:
-                - students
-            summary: get_students students
+                - student
+            summary: get_students student
             description: 学籍番号で昇順にソートされた全ての学生を取得する。
-            operationId: students#get_students
+            operationId: student#get_students
             responses:
                 "200":
                     description: OK response.
                     schema:
-                        $ref: '#/definitions/StudentsGetStudentsResponseBody'
+                        $ref: '#/definitions/StudentGetStudentsResponseBody'
                 "500":
                     description: Internal Server Error response.
                     schema:
-                        $ref: '#/definitions/StudentsGetStudentsInternalErrorResponseBody'
+                        $ref: '#/definitions/StudentGetStudentsInternalErrorResponseBody'
                         required:
                             - name
                             - message
@@ -36,32 +36,32 @@ paths:
                 - http
         post:
             tags:
-                - students
-            summary: create_student students
+                - student
+            summary: create_student student
             description: 学生を登録する。
-            operationId: students#create_student
+            operationId: student#create_student
             parameters:
                 - name: create_student_request_body
                   in: body
                   required: true
                   schema:
-                    $ref: '#/definitions/StudentsCreateStudentRequestBody'
+                    $ref: '#/definitions/StudentCreateStudentRequestBody'
             responses:
                 "201":
                     description: Created response.
                     schema:
-                        $ref: '#/definitions/StudentsCreateStudentResponseBody'
+                        $ref: '#/definitions/StudentCreateStudentResponseBody'
                 "400":
                     description: Bad Request response.
                     schema:
-                        $ref: '#/definitions/StudentsCreateStudentBadRequestResponseBody'
+                        $ref: '#/definitions/StudentCreateStudentBadRequestResponseBody'
                         required:
                             - name
                             - message
                 "500":
                     description: Internal Server Error response.
                     schema:
-                        $ref: '#/definitions/StudentsCreateStudentInternalErrorResponseBody'
+                        $ref: '#/definitions/StudentCreateStudentInternalErrorResponseBody'
                         required:
                             - name
                             - message
@@ -70,10 +70,10 @@ paths:
     /students/{student_number}:
         get:
             tags:
-                - students
-            summary: get_student students
+                - student
+            summary: get_student student
             description: 学籍番号から学生を取得する。
-            operationId: students#get_student
+            operationId: student#get_student
             parameters:
                 - name: student_number
                   in: path
@@ -85,24 +85,322 @@ paths:
                 "200":
                     description: OK response.
                     schema:
-                        $ref: '#/definitions/StudentsGetStudentResponseBody'
+                        $ref: '#/definitions/StudentGetStudentResponseBody'
                 "404":
                     description: Not Found response.
                     schema:
-                        $ref: '#/definitions/StudentsGetStudentNotFoundResponseBody'
+                        $ref: '#/definitions/StudentGetStudentNotFoundResponseBody'
                         required:
                             - name
                             - message
                 "500":
                     description: Internal Server Error response.
                     schema:
-                        $ref: '#/definitions/StudentsGetStudentInternalErrorResponseBody'
+                        $ref: '#/definitions/StudentGetStudentInternalErrorResponseBody'
                         required:
                             - name
                             - message
             schemes:
                 - http
 definitions:
+    StudentCreateStudentBadRequestResponseBody:
+        title: StudentCreateStudentBadRequestResponseBody
+        type: object
+        properties:
+            message:
+                type: string
+                description: Message of error
+                example: This is an error message.
+            name:
+                type: string
+                description: Name of error
+                example: internal_error
+        example:
+            message: This is an error message.
+            name: internal_error
+        required:
+            - name
+            - message
+    StudentCreateStudentInternalErrorResponseBody:
+        title: StudentCreateStudentInternalErrorResponseBody
+        type: object
+        properties:
+            message:
+                type: string
+                description: Message of error
+                example: This is an error message.
+            name:
+                type: string
+                description: Name of error
+                example: internal_error
+        example:
+            message: This is an error message.
+            name: internal_error
+        required:
+            - name
+            - message
+    StudentCreateStudentRequestBody:
+        title: StudentCreateStudentRequestBody
+        type: object
+        properties:
+            address:
+                type: string
+                description: 学生の住所
+                example: 名古屋市中区三の丸三丁目1番2号
+            date_of_birth:
+                type: string
+                description: 学生の生年月日 (RFC3339)
+                example: "2022-04-01T13:30:00+09:00"
+                format: date-time
+            expiration_date:
+                type: string
+                description: 学生証の有効期間 (RFC3339)
+                example: "2027-03-31T00:00:00+09:00"
+                format: date-time
+            name:
+                type: string
+                description: 学生の氏名
+                example: 鈴木太郎
+            ruby:
+                type: string
+                description: 学生の氏名のフリガナ
+                example: スズキタロウ
+            student_number:
+                type: integer
+                description: 学生の学籍番号
+                example: 12345
+                format: int64
+        description: Student Body
+        example:
+            address: 名古屋市中区三の丸三丁目1番2号
+            date_of_birth: "2022-04-01T13:30:00+09:00"
+            expiration_date: "2027-03-31T00:00:00+09:00"
+            name: 鈴木太郎
+            ruby: スズキタロウ
+            student_number: 12345
+        required:
+            - name
+            - ruby
+            - student_number
+            - date_of_birth
+            - address
+            - expiration_date
+    StudentCreateStudentResponseBody:
+        title: 'Mediatype identifier: application/vnd.student+json; view=default'
+        type: object
+        properties:
+            address:
+                type: string
+                description: 学生の住所
+                example: 名古屋市中区三の丸三丁目1番2号
+            date_of_birth:
+                type: string
+                description: 学生の生年月日 (RFC3339)
+                example: "2022-04-01T13:30:00+09:00"
+                format: date-time
+            expiration_date:
+                type: string
+                description: 学生証の有効期間 (RFC3339)
+                example: "2027-03-31T00:00:00+09:00"
+                format: date-time
+            id:
+                type: integer
+                description: 学生を一意に表す ID
+                example: 1
+                format: int64
+            name:
+                type: string
+                description: 学生の氏名
+                example: 鈴木太郎
+            ruby:
+                type: string
+                description: 学生の氏名のフリガナ
+                example: スズキタロウ
+            student_number:
+                type: integer
+                description: 学生の学籍番号
+                example: 12345
+                format: int64
+        description: create_student_response_body result type (default view)
+        example:
+            address: 名古屋市中区三の丸三丁目1番2号
+            date_of_birth: "2022-04-01T13:30:00+09:00"
+            expiration_date: "2027-03-31T00:00:00+09:00"
+            id: 1
+            name: 鈴木太郎
+            ruby: スズキタロウ
+            student_number: 12345
+        required:
+            - id
+            - name
+            - ruby
+            - student_number
+            - date_of_birth
+            - address
+            - expiration_date
+    StudentGetStudentInternalErrorResponseBody:
+        title: StudentGetStudentInternalErrorResponseBody
+        type: object
+        properties:
+            message:
+                type: string
+                description: Message of error
+                example: This is an error message.
+            name:
+                type: string
+                description: Name of error
+                example: internal_error
+        example:
+            message: This is an error message.
+            name: internal_error
+        required:
+            - name
+            - message
+    StudentGetStudentNotFoundResponseBody:
+        title: StudentGetStudentNotFoundResponseBody
+        type: object
+        properties:
+            message:
+                type: string
+                description: Message of error
+                example: This is an error message.
+            name:
+                type: string
+                description: Name of error
+                example: internal_error
+        example:
+            message: This is an error message.
+            name: internal_error
+        required:
+            - name
+            - message
+    StudentGetStudentResponseBody:
+        title: 'Mediatype identifier: application/vnd.student+json; view=default'
+        type: object
+        properties:
+            address:
+                type: string
+                description: 学生の住所
+                example: 名古屋市中区三の丸三丁目1番2号
+            date_of_birth:
+                type: string
+                description: 学生の生年月日 (RFC3339)
+                example: "2022-04-01T13:30:00+09:00"
+                format: date-time
+            expiration_date:
+                type: string
+                description: 学生証の有効期間 (RFC3339)
+                example: "2027-03-31T00:00:00+09:00"
+                format: date-time
+            id:
+                type: integer
+                description: 学生を一意に表す ID
+                example: 1
+                format: int64
+            name:
+                type: string
+                description: 学生の氏名
+                example: 鈴木太郎
+            ruby:
+                type: string
+                description: 学生の氏名のフリガナ
+                example: スズキタロウ
+            student_number:
+                type: integer
+                description: 学生の学籍番号
+                example: 12345
+                format: int64
+        description: get_student_response_body result type (default view)
+        example:
+            address: 名古屋市中区三の丸三丁目1番2号
+            date_of_birth: "2022-04-01T13:30:00+09:00"
+            expiration_date: "2027-03-31T00:00:00+09:00"
+            id: 1
+            name: 鈴木太郎
+            ruby: スズキタロウ
+            student_number: 12345
+        required:
+            - id
+            - name
+            - ruby
+            - student_number
+            - date_of_birth
+            - address
+            - expiration_date
+    StudentGetStudentsInternalErrorResponseBody:
+        title: StudentGetStudentsInternalErrorResponseBody
+        type: object
+        properties:
+            message:
+                type: string
+                description: Message of error
+                example: This is an error message.
+            name:
+                type: string
+                description: Name of error
+                example: internal_error
+        example:
+            message: This is an error message.
+            name: internal_error
+        required:
+            - name
+            - message
+    StudentGetStudentsResponseBody:
+        title: 'Mediatype identifier: application/vnd.students+json; view=default'
+        type: object
+        properties:
+            students:
+                type: array
+                items:
+                    $ref: '#/definitions/StudentResponseBody'
+                example:
+                    - address: 名古屋市中区三の丸三丁目1番2号
+                      date_of_birth: "2022-04-01T13:30:00+09:00"
+                      expiration_date: "2027-03-31T00:00:00+09:00"
+                      id: 1
+                      name: 鈴木太郎
+                      ruby: スズキタロウ
+                      student_number: 12345
+                    - address: 名古屋市中区三の丸三丁目1番2号
+                      date_of_birth: "2022-04-01T13:30:00+09:00"
+                      expiration_date: "2027-03-31T00:00:00+09:00"
+                      id: 1
+                      name: 鈴木太郎
+                      ruby: スズキタロウ
+                      student_number: 12345
+        description: get_students_response_body result type (default view)
+        example:
+            students:
+                - address: 名古屋市中区三の丸三丁目1番2号
+                  date_of_birth: "2022-04-01T13:30:00+09:00"
+                  expiration_date: "2027-03-31T00:00:00+09:00"
+                  id: 1
+                  name: 鈴木太郎
+                  ruby: スズキタロウ
+                  student_number: 12345
+                - address: 名古屋市中区三の丸三丁目1番2号
+                  date_of_birth: "2022-04-01T13:30:00+09:00"
+                  expiration_date: "2027-03-31T00:00:00+09:00"
+                  id: 1
+                  name: 鈴木太郎
+                  ruby: スズキタロウ
+                  student_number: 12345
+                - address: 名古屋市中区三の丸三丁目1番2号
+                  date_of_birth: "2022-04-01T13:30:00+09:00"
+                  expiration_date: "2027-03-31T00:00:00+09:00"
+                  id: 1
+                  name: 鈴木太郎
+                  ruby: スズキタロウ
+                  student_number: 12345
+                - address: 名古屋市中区三の丸三丁目1番2号
+                  date_of_birth: "2022-04-01T13:30:00+09:00"
+                  expiration_date: "2027-03-31T00:00:00+09:00"
+                  id: 1
+                  name: 鈴木太郎
+                  ruby: スズキタロウ
+                  student_number: 12345
+        required:
+            - students
     StudentResponseBody:
         title: 'Mediatype identifier: application/vnd.student+json; view=default'
         type: object
@@ -156,301 +454,3 @@ definitions:
             - date_of_birth
             - address
             - expiration_date
-    StudentsCreateStudentBadRequestResponseBody:
-        title: StudentsCreateStudentBadRequestResponseBody
-        type: object
-        properties:
-            message:
-                type: string
-                description: Message of error
-                example: This is an error message.
-            name:
-                type: string
-                description: Name of error
-                example: internal_error
-        example:
-            message: This is an error message.
-            name: internal_error
-        required:
-            - name
-            - message
-    StudentsCreateStudentInternalErrorResponseBody:
-        title: StudentsCreateStudentInternalErrorResponseBody
-        type: object
-        properties:
-            message:
-                type: string
-                description: Message of error
-                example: This is an error message.
-            name:
-                type: string
-                description: Name of error
-                example: internal_error
-        example:
-            message: This is an error message.
-            name: internal_error
-        required:
-            - name
-            - message
-    StudentsCreateStudentRequestBody:
-        title: StudentsCreateStudentRequestBody
-        type: object
-        properties:
-            address:
-                type: string
-                description: 学生の住所
-                example: 名古屋市中区三の丸三丁目1番2号
-            date_of_birth:
-                type: string
-                description: 学生の生年月日 (RFC3339)
-                example: "2022-04-01T13:30:00+09:00"
-                format: date-time
-            expiration_date:
-                type: string
-                description: 学生証の有効期間 (RFC3339)
-                example: "2027-03-31T00:00:00+09:00"
-                format: date-time
-            name:
-                type: string
-                description: 学生の氏名
-                example: 鈴木太郎
-            ruby:
-                type: string
-                description: 学生の氏名のフリガナ
-                example: スズキタロウ
-            student_number:
-                type: integer
-                description: 学生の学籍番号
-                example: 12345
-                format: int64
-        description: Student Body
-        example:
-            address: 名古屋市中区三の丸三丁目1番2号
-            date_of_birth: "2022-04-01T13:30:00+09:00"
-            expiration_date: "2027-03-31T00:00:00+09:00"
-            name: 鈴木太郎
-            ruby: スズキタロウ
-            student_number: 12345
-        required:
-            - name
-            - ruby
-            - student_number
-            - date_of_birth
-            - address
-            - expiration_date
-    StudentsCreateStudentResponseBody:
-        title: 'Mediatype identifier: application/vnd.student+json; view=default'
-        type: object
-        properties:
-            address:
-                type: string
-                description: 学生の住所
-                example: 名古屋市中区三の丸三丁目1番2号
-            date_of_birth:
-                type: string
-                description: 学生の生年月日 (RFC3339)
-                example: "2022-04-01T13:30:00+09:00"
-                format: date-time
-            expiration_date:
-                type: string
-                description: 学生証の有効期間 (RFC3339)
-                example: "2027-03-31T00:00:00+09:00"
-                format: date-time
-            id:
-                type: integer
-                description: 学生を一意に表す ID
-                example: 1
-                format: int64
-            name:
-                type: string
-                description: 学生の氏名
-                example: 鈴木太郎
-            ruby:
-                type: string
-                description: 学生の氏名のフリガナ
-                example: スズキタロウ
-            student_number:
-                type: integer
-                description: 学生の学籍番号
-                example: 12345
-                format: int64
-        description: create_student_response_body result type (default view)
-        example:
-            address: 名古屋市中区三の丸三丁目1番2号
-            date_of_birth: "2022-04-01T13:30:00+09:00"
-            expiration_date: "2027-03-31T00:00:00+09:00"
-            id: 1
-            name: 鈴木太郎
-            ruby: スズキタロウ
-            student_number: 12345
-        required:
-            - id
-            - name
-            - ruby
-            - student_number
-            - date_of_birth
-            - address
-            - expiration_date
-    StudentsGetStudentInternalErrorResponseBody:
-        title: StudentsGetStudentInternalErrorResponseBody
-        type: object
-        properties:
-            message:
-                type: string
-                description: Message of error
-                example: This is an error message.
-            name:
-                type: string
-                description: Name of error
-                example: internal_error
-        example:
-            message: This is an error message.
-            name: internal_error
-        required:
-            - name
-            - message
-    StudentsGetStudentNotFoundResponseBody:
-        title: StudentsGetStudentNotFoundResponseBody
-        type: object
-        properties:
-            message:
-                type: string
-                description: Message of error
-                example: This is an error message.
-            name:
-                type: string
-                description: Name of error
-                example: internal_error
-        example:
-            message: This is an error message.
-            name: internal_error
-        required:
-            - name
-            - message
-    StudentsGetStudentResponseBody:
-        title: 'Mediatype identifier: application/vnd.student+json; view=default'
-        type: object
-        properties:
-            address:
-                type: string
-                description: 学生の住所
-                example: 名古屋市中区三の丸三丁目1番2号
-            date_of_birth:
-                type: string
-                description: 学生の生年月日 (RFC3339)
-                example: "2022-04-01T13:30:00+09:00"
-                format: date-time
-            expiration_date:
-                type: string
-                description: 学生証の有効期間 (RFC3339)
-                example: "2027-03-31T00:00:00+09:00"
-                format: date-time
-            id:
-                type: integer
-                description: 学生を一意に表す ID
-                example: 1
-                format: int64
-            name:
-                type: string
-                description: 学生の氏名
-                example: 鈴木太郎
-            ruby:
-                type: string
-                description: 学生の氏名のフリガナ
-                example: スズキタロウ
-            student_number:
-                type: integer
-                description: 学生の学籍番号
-                example: 12345
-                format: int64
-        description: get_student_response_body result type (default view)
-        example:
-            address: 名古屋市中区三の丸三丁目1番2号
-            date_of_birth: "2022-04-01T13:30:00+09:00"
-            expiration_date: "2027-03-31T00:00:00+09:00"
-            id: 1
-            name: 鈴木太郎
-            ruby: スズキタロウ
-            student_number: 12345
-        required:
-            - id
-            - name
-            - ruby
-            - student_number
-            - date_of_birth
-            - address
-            - expiration_date
-    StudentsGetStudentsInternalErrorResponseBody:
-        title: StudentsGetStudentsInternalErrorResponseBody
-        type: object
-        properties:
-            message:
-                type: string
-                description: Message of error
-                example: This is an error message.
-            name:
-                type: string
-                description: Name of error
-                example: internal_error
-        example:
-            message: This is an error message.
-            name: internal_error
-        required:
-            - name
-            - message
-    StudentsGetStudentsResponseBody:
-        title: 'Mediatype identifier: application/vnd.students+json; view=default'
-        type: object
-        properties:
-            students:
-                type: array
-                items:
-                    $ref: '#/definitions/StudentResponseBody'
-                example:
-                    - address: 名古屋市中区三の丸三丁目1番2号
-                      date_of_birth: "2022-04-01T13:30:00+09:00"
-                      expiration_date: "2027-03-31T00:00:00+09:00"
-                      id: 1
-                      name: 鈴木太郎
-                      ruby: スズキタロウ
-                      student_number: 12345
-                    - address: 名古屋市中区三の丸三丁目1番2号
-                      date_of_birth: "2022-04-01T13:30:00+09:00"
-                      expiration_date: "2027-03-31T00:00:00+09:00"
-                      id: 1
-                      name: 鈴木太郎
-                      ruby: スズキタロウ
-                      student_number: 12345
-                    - address: 名古屋市中区三の丸三丁目1番2号
-                      date_of_birth: "2022-04-01T13:30:00+09:00"
-                      expiration_date: "2027-03-31T00:00:00+09:00"
-                      id: 1
-                      name: 鈴木太郎
-                      ruby: スズキタロウ
-                      student_number: 12345
-                    - address: 名古屋市中区三の丸三丁目1番2号
-                      date_of_birth: "2022-04-01T13:30:00+09:00"
-                      expiration_date: "2027-03-31T00:00:00+09:00"
-                      id: 1
-                      name: 鈴木太郎
-                      ruby: スズキタロウ
-                      student_number: 12345
-        description: get_students_response_body result type (default view)
-        example:
-            students:
-                - address: 名古屋市中区三の丸三丁目1番2号
-                  date_of_birth: "2022-04-01T13:30:00+09:00"
-                  expiration_date: "2027-03-31T00:00:00+09:00"
-                  id: 1
-                  name: 鈴木太郎
-                  ruby: スズキタロウ
-                  student_number: 12345
-                - address: 名古屋市中区三の丸三丁目1番2号
-                  date_of_birth: "2022-04-01T13:30:00+09:00"
-                  expiration_date: "2027-03-31T00:00:00+09:00"
-                  id: 1
-                  name: 鈴木太郎
-                  ruby: スズキタロウ
-                  student_number: 12345
-        required:
-            - students

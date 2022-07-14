@@ -13,7 +13,7 @@ import (
 	"syscall"
 
 	studentsapi "github.com/is-hoku/goa-template/webapi"
-	students "github.com/is-hoku/goa-template/webapi/gen/students"
+	students "github.com/is-hoku/goa-template/webapi/gen/student"
 )
 
 func main() {

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/is-hoku/goa-template/webapi/datastore"
-	students "github.com/is-hoku/goa-template/webapi/gen/students"
+	"github.com/is-hoku/goa-template/webapi/gen/student"
 	"github.com/is-hoku/goa-template/webapi/interactor"
 	"github.com/is-hoku/goa-template/webapi/model"
 	"github.com/is-hoku/goa-template/webapi/repository"
@@ -22,7 +22,7 @@ type studentssrvc struct {
 }
 
 // NewStudents returns the students service implementation.
-func NewStudents(logger *log.Logger) students.Service {
+func NewStudents(logger *log.Logger) student.Service {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("Cannot load .env: %v", err)
@@ -39,53 +39,53 @@ func NewStudents(logger *log.Logger) students.Service {
 }
 
 // id から学生を取得する。
-func (s *studentssrvc) GetStudent(ctx context.Context, p *students.GetStudentPayload) (res *students.Student, err error) {
+func (s *studentssrvc) GetStudent(ctx context.Context, p *student.GetStudentPayload) (res *student.Student, err error) {
 	s.logger.Print("students.get student")
 	si := interactor.StudentInteractor{Repo: s.handler}
-	student, err := si.GetByNum(ctx, *p.StudentNumber)
+	gotStudent, err := si.GetByNum(ctx, *p.StudentNumber)
 	if err != nil {
 		return nil, err
 	}
-	res = &students.Student{
-		ID:             student.ID,
-		Name:           student.Name,
-		Ruby:           student.Ruby,
-		StudentNumber:  student.StudentNumber,
-		DateOfBirth:    student.DateOfBirth.String(),
-		Address:        student.Address,
-		ExpirationDate: student.ExpirationDate.String(),
+	res = &student.Student{
+		ID:             gotStudent.ID,
+		Name:           gotStudent.Name,
+		Ruby:           gotStudent.Ruby,
+		StudentNumber:  gotStudent.StudentNumber,
+		DateOfBirth:    gotStudent.DateOfBirth.String(),
+		Address:        gotStudent.Address,
+		ExpirationDate: gotStudent.ExpirationDate.String(),
 	}
 	return
 }
 
 // 学籍番号で昇順にソートされた全ての学生を取得する。
-func (s *studentssrvc) GetStudents(ctx context.Context) (res *students.Students, err error) {
+func (s *studentssrvc) GetStudents(ctx context.Context) (res *student.Students, err error) {
 	s.logger.Print("students.get students")
 	si := interactor.StudentInteractor{Repo: s.handler}
 	allStudents, err := si.GetAll(ctx)
 	if err != nil {
 		return nil, err
 	}
-	l := make([]*students.Student, 0, len(allStudents))
-	for _, student := range allStudents {
-		var st *students.Student
-		st = &students.Student{
-			ID:             student.ID,
-			Name:           student.Name,
-			Ruby:           student.Ruby,
-			StudentNumber:  student.StudentNumber,
-			DateOfBirth:    student.DateOfBirth.String(),
-			Address:        student.Address,
-			ExpirationDate: student.ExpirationDate.String(),
+	l := make([]*student.Student, 0, len(allStudents))
+	for _, person := range allStudents {
+		var st *student.Student
+		st = &student.Student{
+			ID:             person.ID,
+			Name:           person.Name,
+			Ruby:           person.Ruby,
+			StudentNumber:  person.StudentNumber,
+			DateOfBirth:    person.DateOfBirth.String(),
+			Address:        person.Address,
+			ExpirationDate: person.ExpirationDate.String(),
 		}
 		l = append(l, st)
 	}
-	res = &students.Students{Students: l}
+	res = &student.Students{Students: l}
 	return
 }
 
 // 学生を登録する。
-func (s *studentssrvc) CreateStudent(ctx context.Context, body *students.StudentBody) (res *students.Student, err error) {
+func (s *studentssrvc) CreateStudent(ctx context.Context, body *student.StudentBody) (res *student.Student, err error) {
 	s.logger.Print("students.create student")
 	si := interactor.StudentInteractor{Repo: s.handler}
 	birth, err := time.Parse(time.RFC3339, body.DateOfBirth)
@@ -104,18 +104,18 @@ func (s *studentssrvc) CreateStudent(ctx context.Context, body *students.Student
 		Address:        body.Address,
 		ExpirationDate: expiration,
 	}
-	student, err := si.Create(ctx, bodyStudent)
+	createdStudent, err := si.Create(ctx, bodyStudent)
 	if err != nil {
 		return nil, err
 	}
-	res = &students.Student{
-		ID:             student.ID,
-		Name:           student.Name,
-		Ruby:           student.Ruby,
-		StudentNumber:  student.StudentNumber,
-		DateOfBirth:    student.DateOfBirth.String(),
-		Address:        student.Address,
-		ExpirationDate: student.ExpirationDate.String(),
+	res = &student.Student{
+		ID:             createdStudent.ID,
+		Name:           createdStudent.Name,
+		Ruby:           createdStudent.Ruby,
+		StudentNumber:  createdStudent.StudentNumber,
+		DateOfBirth:    createdStudent.DateOfBirth.String(),
+		Address:        createdStudent.Address,
+		ExpirationDate: createdStudent.ExpirationDate.String(),
 	}
 	return
 }
