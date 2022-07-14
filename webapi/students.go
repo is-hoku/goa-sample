@@ -4,10 +4,12 @@ import (
 	"context"
 	"log"
 	"os"
+	"time"
 
 	"github.com/is-hoku/goa-template/webapi/datastore"
 	students "github.com/is-hoku/goa-template/webapi/gen/students"
 	"github.com/is-hoku/goa-template/webapi/interactor"
+	"github.com/is-hoku/goa-template/webapi/model"
 	"github.com/is-hoku/goa-template/webapi/repository"
 	"github.com/joho/godotenv"
 )
@@ -86,7 +88,23 @@ func (s *studentssrvc) GetStudents(ctx context.Context) (res *students.Students,
 func (s *studentssrvc) CreateStudent(ctx context.Context, body *students.StudentBody) (res *students.Student, err error) {
 	s.logger.Print("students.create student")
 	si := interactor.StudentInteractor{Repo: s.handler}
-	student, err := si.Create(ctx, body)
+	birth, err := time.Parse(time.RFC3339, body.DateOfBirth)
+	if err != nil {
+		return nil, err
+	}
+	expiration, err := time.Parse(time.RFC3339, body.ExpirationDate)
+	if err != nil {
+		return nil, err
+	}
+	bodyStudent := &model.Student{
+		Name:           body.Name,
+		Ruby:           body.Ruby,
+		StudentNumber:  body.StudentNumber,
+		DateOfBirth:    birth,
+		Address:        body.Address,
+		ExpirationDate: expiration,
+	}
+	student, err := si.Create(ctx, bodyStudent)
 	if err != nil {
 		return nil, err
 	}
