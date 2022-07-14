@@ -16,13 +16,13 @@ import (
 
 // students service example implementation.
 // The example methods log the requests and return zero values.
-type studentssrvc struct {
+type studentsrvc struct {
 	logger  *log.Logger
 	handler repository.StudentRepository
 }
 
 // NewStudents returns the students service implementation.
-func NewStudents(logger *log.Logger) student.Service {
+func NewStudent(logger *log.Logger) student.Service {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("Cannot load .env: %v", err)
@@ -35,11 +35,11 @@ func NewStudents(logger *log.Logger) student.Service {
 		DBName:   os.Getenv("DB_NAME"),
 	}
 	handler, err := datastore.New(config)
-	return &studentssrvc{logger, handler}
+	return &studentsrvc{logger, handler}
 }
 
 // id から学生を取得する。
-func (s *studentssrvc) GetStudent(ctx context.Context, p *student.GetStudentPayload) (res *student.Student, err error) {
+func (s *studentsrvc) GetStudent(ctx context.Context, p *student.GetStudentPayload) (res *student.Student, err error) {
 	s.logger.Print("students.get student")
 	si := interactor.StudentInteractor{Repo: s.handler}
 	gotStudent, err := si.GetByNum(ctx, *p.StudentNumber)
@@ -59,7 +59,7 @@ func (s *studentssrvc) GetStudent(ctx context.Context, p *student.GetStudentPayl
 }
 
 // 学籍番号で昇順にソートされた全ての学生を取得する。
-func (s *studentssrvc) GetStudents(ctx context.Context) (res *student.Students, err error) {
+func (s *studentsrvc) GetStudents(ctx context.Context) (res *student.Students, err error) {
 	s.logger.Print("students.get students")
 	si := interactor.StudentInteractor{Repo: s.handler}
 	allStudents, err := si.GetAll(ctx)
@@ -85,7 +85,7 @@ func (s *studentssrvc) GetStudents(ctx context.Context) (res *student.Students, 
 }
 
 // 学生を登録する。
-func (s *studentssrvc) CreateStudent(ctx context.Context, body *student.StudentBody) (res *student.Student, err error) {
+func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBody) (res *student.Student, err error) {
 	s.logger.Print("students.create student")
 	si := interactor.StudentInteractor{Repo: s.handler}
 	birth, err := time.Parse(time.RFC3339, body.DateOfBirth)

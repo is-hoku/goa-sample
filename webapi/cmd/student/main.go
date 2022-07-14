@@ -12,8 +12,8 @@ import (
 	"sync"
 	"syscall"
 
-	studentsapi "github.com/is-hoku/goa-template/webapi"
-	students "github.com/is-hoku/goa-template/webapi/gen/student"
+	studentapi "github.com/is-hoku/goa-template/webapi"
+	student "github.com/is-hoku/goa-template/webapi/gen/student"
 )
 
 func main() {
@@ -33,24 +33,24 @@ func main() {
 		logger *log.Logger
 	)
 	{
-		logger = log.New(os.Stderr, "[studentsapi] ", log.Ltime)
+		logger = log.New(os.Stderr, "[studentapi] ", log.Ltime)
 	}
 
 	// Initialize the services.
 	var (
-		studentsSvc students.Service
+		studentSvc student.Service
 	)
 	{
-		studentsSvc = studentsapi.NewStudents(logger)
+		studentSvc = studentapi.NewStudent(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		studentsEndpoints *students.Endpoints
+		studentEndpoints *student.Endpoints
 	)
 	{
-		studentsEndpoints = students.NewEndpoints(studentsSvc)
+		studentEndpoints = student.NewEndpoints(studentSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -94,7 +94,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, studentsEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, studentEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:

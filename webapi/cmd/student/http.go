@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	studentssvr "github.com/is-hoku/goa-template/webapi/gen/http/student/server"
-	students "github.com/is-hoku/goa-template/webapi/gen/student"
+	studentsvr "github.com/is-hoku/goa-template/webapi/gen/http/student/server"
+	student "github.com/is-hoku/goa-template/webapi/gen/student"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
@@ -18,7 +18,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, studentsEndpoints *students.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, studentEndpoints *student.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -49,20 +49,20 @@ func handleHTTPServer(ctx context.Context, u *url.URL, studentsEndpoints *studen
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		studentsServer *studentssvr.Server
+		studentServer *studentsvr.Server
 	)
 	{
 		eh := errorHandler(logger)
-		studentsServer = studentssvr.New(studentsEndpoints, mux, dec, enc, eh, nil)
+		studentServer = studentsvr.New(studentEndpoints, mux, dec, enc, eh, nil)
 		if debug {
 			servers := goahttp.Servers{
-				studentsServer,
+				studentServer,
 			}
 			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
 		}
 	}
 	// Configure the mux.
-	studentssvr.Mount(mux, studentsServer)
+	studentsvr.Mount(mux, studentServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.
@@ -75,7 +75,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, studentsEndpoints *studen
 	// Start HTTP server using default configuration, change the code to
 	// configure the server as required by your service.
 	srv := &http.Server{Addr: u.Host, Handler: handler}
-	for _, m := range studentsServer.Mounts {
+	for _, m := range studentServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 
