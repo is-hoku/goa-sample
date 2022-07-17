@@ -45,11 +45,11 @@ func New(config *Config) (*DBHandler, error) {
 
 var _ repository.StudentRepository = (*DBHandler)(nil)
 
-func (db *DBHandler) Get(ctx context.Context, num int64) (*model.Student, error) {
+func (db *DBHandler) Get(ctx context.Context, number int64) (*model.Student, error) {
 	var s model.Student
 	row := db.DB.QueryRowContext(ctx,
 		"SELECT `id`, `name`, `ruby`, `student_number`, `date_of_birth`, `address`, `expiration_date`, `created_at`, `updated_at` FROM `students` WHERE `student_number`=?",
-		num,
+		number,
 	)
 	err := row.Scan(&s.ID, &s.Name, &s.Ruby, &s.StudentNumber, &s.DateOfBirth, &s.Address, &s.ExpirationDate, &s.CreatedAt, &s.UpdatedAt)
 	if err != nil {
