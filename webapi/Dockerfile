@@ -8,6 +8,7 @@ RUN mkdir /go/src/webapi
 WORKDIR /go/src/webapi
 
 ADD . /go/src/webapi
+ENV PATH $PATH:/go/src/webapi/script
 
 RUN go install github.com/cosmtrek/air@latest
 
