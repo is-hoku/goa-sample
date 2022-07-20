@@ -25,7 +25,7 @@ type studentsrvc struct {
 func NewStudent(logger *log.Logger) student.Service {
 	err := godotenv.Load("../.env")
 	if err != nil {
-		log.Fatalf("Cannot load .env: %v", err)
+		logger.Fatalf("Could not load .env: %s", err)
 	}
 	config := &datastore.Config{
 		User:     os.Getenv("DB_USER"),
@@ -39,14 +39,14 @@ func NewStudent(logger *log.Logger) student.Service {
 }
 
 // id から学生を取得する。
-func (s *studentsrvc) GetStudent(ctx context.Context, p *student.GetStudentPayload) (res *student.Student, err error) {
+func (s *studentsrvc) GetStudent(ctx context.Context, p *student.GetStudentPayload) (*student.Student, error) {
 	s.logger.Print("students.get student")
 	si := interactor.StudentInteractor{Repo: s.handler}
 	gotStudent, err := si.GetByNumber(ctx, *p.StudentNumber)
 	if err != nil {
 		return nil, err
 	}
-	res = &student.Student{
+	res := &student.Student{
 		ID:             gotStudent.ID,
 		Name:           gotStudent.Name,
 		Ruby:           gotStudent.Ruby,
@@ -55,11 +55,11 @@ func (s *studentsrvc) GetStudent(ctx context.Context, p *student.GetStudentPaylo
 		Address:        gotStudent.Address,
 		ExpirationDate: gotStudent.ExpirationDate.String(),
 	}
-	return
+	return res, nil
 }
 
 // 学籍番号で昇順にソートされた全ての学生を取得する。
-func (s *studentsrvc) GetStudents(ctx context.Context) (res *student.Students, err error) {
+func (s *studentsrvc) GetStudents(ctx context.Context) (*student.Students, error) {
 	s.logger.Print("students.get students")
 	si := interactor.StudentInteractor{Repo: s.handler}
 	allStudents, err := si.GetAll(ctx)
@@ -80,12 +80,12 @@ func (s *studentsrvc) GetStudents(ctx context.Context) (res *student.Students, e
 		}
 		l = append(l, st)
 	}
-	res = &student.Students{Students: l}
-	return
+	res := &student.Students{Students: l}
+	return res, nil
 }
 
 // 学生を登録する。
-func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBody) (res *student.Student, err error) {
+func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBody) (*student.Student, error) {
 	s.logger.Print("students.create student")
 	si := interactor.StudentInteractor{Repo: s.handler}
 	birth, err := time.Parse(time.RFC3339, body.DateOfBirth)
@@ -108,7 +108,7 @@ func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBo
 	if err != nil {
 		return nil, err
 	}
-	res = &student.Student{
+	res := &student.Student{
 		ID:             createdStudent.ID,
 		Name:           createdStudent.Name,
 		Ruby:           createdStudent.Ruby,
@@ -117,7 +117,7 @@ func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBo
 		Address:        createdStudent.Address,
 		ExpirationDate: createdStudent.ExpirationDate.String(),
 	}
-	return
+	return res, nil
 }
 
 func (s *studentsrvc) Close() error {

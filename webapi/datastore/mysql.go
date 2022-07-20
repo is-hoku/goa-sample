@@ -37,7 +37,7 @@ func (c Config) DNS() string {
 func New(config *Config) (*DBHandler, error) {
 	db, err := sql.Open("mysql", config.DNS())
 	if err != nil {
-		log.Printf("Cannot connect to DB: %s", err)
+		log.Printf("Could not connect to DB: %s", err)
 		return nil, err
 	}
 	return &DBHandler{db}, err
