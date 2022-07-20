@@ -43,6 +43,7 @@ func main() {
 	{
 		studentSvc = studentapi.NewStudent(logger)
 	}
+	defer studentSvc.Close()
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.

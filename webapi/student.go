@@ -119,3 +119,7 @@ func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBo
 	}
 	return
 }
+
+func (s *studentsrvc) Close() error {
+	return s.handler.Close()
+}

@@ -103,3 +103,7 @@ func (db *DBHandler) GetAll(ctx context.Context) ([]*model.Student, error) {
 	}
 	return students, err
 }
+
+func (db *DBHandler) Close() error {
+	return db.DB.Close()
+}
