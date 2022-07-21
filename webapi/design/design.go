@@ -5,10 +5,10 @@ import (
 	cors "goa.design/plugins/v3/cors/dsl"
 )
 
-var _ = API("student", func() {
-	Title("Student API")
-	Description("API for student information management")
-	Server("student", func() {
+var _ = API("sample", func() {
+	Title("Sample API")
+	Description("Sample API for student information management")
+	Server("sample", func() {
 		Host("0.0.0.0", func() {
 			URI("http://0.0.0.0:8080")
 		})
@@ -30,7 +30,7 @@ var _ = Service("student", func() {
 		Error("internal_error", CustomErrorType)
 		Error("not_found", CustomErrorType)
 		Payload(func() {
-			Attribute("student_number", Int64, "Student's unique number")
+			Attribute("student_number", UInt32, "Student's unique number")
 		})
 		HTTP(func() {
 			GET("students/{student_number}")

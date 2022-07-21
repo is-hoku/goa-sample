@@ -5,7 +5,7 @@ import . "goa.design/goa/v3/dsl"
 var StudentType = ResultType("application/vnd.student+json", "Student", func() {
 	Description("One student")
 	Attributes(func() {
-		Attribute("id", Int64, "学生を一意に表す ID", func() {
+		Attribute("id", UInt64, "学生を一意に表す ID", func() {
 			Example(1)
 		})
 		Attribute("name", String, "学生の氏名", func() {
@@ -14,7 +14,7 @@ var StudentType = ResultType("application/vnd.student+json", "Student", func() {
 		Attribute("ruby", String, "学生の氏名のフリガナ", func() {
 			Example("スズキタロウ")
 		})
-		Attribute("student_number", Int, "学生の学籍番号", func() {
+		Attribute("student_number", UInt32, "学生の学籍番号", func() {
 			Example(12345)
 		})
 		Attribute("date_of_birth", String, "学生の生年月日 (RFC3339)", func() {
@@ -60,7 +60,7 @@ var StudentBodyType = Type("StudentBody", func() {
 	Attribute("ruby", String, "学生の氏名のフリガナ", func() {
 		Example("スズキタロウ")
 	})
-	Attribute("student_number", Int, "学生の学籍番号", func() {
+	Attribute("student_number", UInt32, "学生の学籍番号", func() {
 		Example(12345)
 	})
 	Attribute("date_of_birth", String, "学生の生年月日 (RFC3339)", func() {

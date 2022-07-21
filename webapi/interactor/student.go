@@ -14,7 +14,7 @@ type StudentInteractor struct {
 
 var _ usecase.StudentUsecase = (*StudentInteractor)(nil)
 
-func (i *StudentInteractor) GetByNumber(ctx context.Context, number int64) (*model.Student, error) {
+func (i *StudentInteractor) GetByNumber(ctx context.Context, number uint32) (*model.Student, error) {
 	student, err := i.Repo.Get(ctx, number)
 	if err != nil {
 		return nil, err
