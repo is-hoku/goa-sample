@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	studentsvr "github.com/is-hoku/goa-template/webapi/gen/http/student/server"
-	student "github.com/is-hoku/goa-template/webapi/gen/student"
+	studentsvr "github.com/is-hoku/goa-sample/webapi/gen/http/student/server"
+	student "github.com/is-hoku/goa-sample/webapi/gen/student"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"

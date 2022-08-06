@@ -12,8 +12,8 @@ import (
 	"sync"
 	"syscall"
 
-	studentapi "github.com/is-hoku/goa-template/webapi"
-	student "github.com/is-hoku/goa-template/webapi/gen/student"
+	sample "github.com/is-hoku/goa-sample/webapi"
+	student "github.com/is-hoku/goa-sample/webapi/gen/student"
 )
 
 func main() {
@@ -33,7 +33,7 @@ func main() {
 		logger *log.Logger
 	)
 	{
-		logger = log.New(os.Stderr, "[studentapi] ", log.Ltime)
+		logger = log.New(os.Stderr, "[sample] ", log.Ltime)
 	}
 
 	// Initialize the services.
@@ -41,9 +41,8 @@ func main() {
 		studentSvc student.Service
 	)
 	{
-		studentSvc = studentapi.NewStudent(logger)
+		studentSvc = sample.NewStudent(logger)
 	}
-	defer studentSvc.Close()
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
