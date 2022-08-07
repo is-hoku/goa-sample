@@ -1,15 +1,15 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type Student struct {
-	ID             int64
+	ID             uint64
 	Name           string
 	Ruby           string
-	StudentNumber  int
+	StudentNumber  uint32
 	DateOfBirth    time.Time
 	Address        string
 	ExpirationDate time.Time
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
 }

@@ -1,6 +1,6 @@
 GOOS ?= linux
 GOARCH ?= amd64
-MAIN_PATH ?= ./cmd/student
+MAIN_PATH ?= ./cmd/sample
 
 build: dist/student
 dist/student:
@@ -14,9 +14,11 @@ test:
 clean:
 	rm -rf dist
 goagen:
-	goa gen github.com/is-hoku/goa-template/webapi/design
-	rm -rf gen/http/cli gen/http/students/client
+	goa gen github.com/is-hoku/goa-sample/webapi/design
+	rm -rf gen/http/cli/ gen/http/*/client/ gen/*/client*
 goaexample:
-	goa example github.com/is-hoku/goa-template/webapi/design
+	goa example github.com/is-hoku/goa-sample/webapi/design
 	rm -rf cmd/*-cli
-.PHONY: build dist/student exec test clean goagen goaexample
+create_ddl:
+	go run cmd/ddl/main.go -d mysql
+.PHONY: build dist/student exec test clean goagen goaexample create_ddl

@@ -6,11 +6,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/is-hoku/goa-template/webapi/datastore"
-	"github.com/is-hoku/goa-template/webapi/gen/student"
-	"github.com/is-hoku/goa-template/webapi/interactor"
-	"github.com/is-hoku/goa-template/webapi/model"
-	"github.com/is-hoku/goa-template/webapi/repository"
+	"github.com/is-hoku/goa-sample/webapi/datastore"
+	"github.com/is-hoku/goa-sample/webapi/gen/student"
+	"github.com/is-hoku/goa-sample/webapi/interactor"
+	"github.com/is-hoku/goa-sample/webapi/model"
+	"github.com/is-hoku/goa-sample/webapi/repository"
 	"github.com/joho/godotenv"
 )
 
@@ -34,15 +34,19 @@ func NewStudent(logger *log.Logger) student.Service {
 		Port:     os.Getenv("DB_PORT"),
 		DBName:   os.Getenv("DB_NAME"),
 	}
-	handler, err := datastore.New(config)
-	return &studentsrvc{logger, handler}
+	sqldb, err := datastore.NewDB(config)
+	if err != nil {
+		logger.Fatalf("Could not generate db: %s", err)
+	}
+	studentDB := &datastore.StudentHandler{DBHandler: sqldb}
+	return &studentsrvc{logger, studentDB}
 }
 
-// id から学生を取得する。
+// 学籍番号から学生を取得する。
 func (s *studentsrvc) GetStudent(ctx context.Context, p *student.GetStudentPayload) (*student.Student, error) {
 	s.logger.Print("students.get student")
 	si := interactor.StudentInteractor{Repo: s.handler}
-	gotStudent, err := si.GetByNumber(ctx, *p.StudentNumber)
+	gotStudent, err := si.GetByNumber(ctx, int32(*p.StudentNumber))
 	if err != nil {
 		return nil, err
 	}
@@ -118,8 +122,4 @@ func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBo
 		ExpirationDate: createdStudent.ExpirationDate.String(),
 	}
 	return res, nil
-}
-
-func (s *studentsrvc) Close() error {
-	return s.handler.Close()
 }

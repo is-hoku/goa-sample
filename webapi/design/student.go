@@ -37,7 +37,7 @@ var _ = Service("student", func() {
 		HTTP(func() {
 			POST("/students")
 			Body(StudentBodyType)
-			Response(StatusCreated)
+			Response(StatusOK)
 			Response("internal_error", StatusInternalServerError)
 			Response("bad_request", StatusBadRequest)
 		})

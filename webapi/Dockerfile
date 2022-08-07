@@ -11,5 +11,6 @@ ADD . /go/src/webapi
 ENV PATH $PATH:/go/src/webapi/script
 
 RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
 
 CMD [ "./script/startup.sh" ]

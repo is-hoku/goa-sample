@@ -1,0 +1,9 @@
+version: "2"
+sql:
+- schema: "../mysql/migration/"
+  queries: "../mysql/query/"
+  engine: "mysql"
+  gen:
+    go:
+      package: "datastore"
+      out: "./datastore"

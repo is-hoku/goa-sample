@@ -47,8 +47,8 @@ paths:
                   schema:
                     $ref: '#/definitions/StudentCreateStudentRequestBody'
             responses:
-                "201":
-                    description: Created response.
+                "200":
+                    description: OK response.
                     schema:
                         $ref: '#/definitions/StudentCreateStudentResponseBody'
                 "400":

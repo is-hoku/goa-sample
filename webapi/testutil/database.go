@@ -6,8 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/is-hoku/goa-template/webapi/datastore"
-	"github.com/is-hoku/goa-template/webapi/model"
+	"github.com/is-hoku/goa-sample/webapi/datastore"
 	"github.com/joho/godotenv"
 )
 
@@ -25,9 +24,12 @@ func NewTestDBHandler(ctx context.Context) (*datastore.DBHandler, error) {
 		DBName:   os.Getenv("DB_NAME"),
 	}
 	// 既存の DB に接続
-	db1, err := datastore.New(config1)
-	defer db1.DB.Close()
-	if _, err := db1.DB.ExecContext(ctx, fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s`", os.Getenv("TEST_DB_NAME"))); err != nil {
+	handler1, err := datastore.NewDB(config1)
+	if err != nil {
+		log.Fatalf("Could not generate db: %s", err)
+	}
+	defer handler1.DB.Close()
+	if _, err := handler1.DB.ExecContext(ctx, fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s`", os.Getenv("TEST_DB_NAME"))); err != nil {
 		log.Fatalf("Could not create test db: %s\n", err)
 		return nil, err
 	}
@@ -39,11 +41,14 @@ func NewTestDBHandler(ctx context.Context) (*datastore.DBHandler, error) {
 		DBName:   os.Getenv("TEST_DB_NAME"),
 	}
 	// テスト用 DB
-	handler, err := datastore.New(config2)
+	handler, err := datastore.NewDB(config2)
+	if err != nil {
+		log.Fatalf("Could not generate db: %s", err)
+	}
 	return handler, nil
 }
 
-func CreateTestTable(ctx context.Context, handler *datastore.DBHandler) error {
+func CreateTestStudentTable(ctx context.Context, handler *datastore.DBHandler) error {
 	createTableQuery := "CREATE TABLE IF NOT EXISTS `students` (" +
 		"`id` BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," +
 		"`name` VARCHAR(128) NOT NULL," +
@@ -76,15 +81,24 @@ func DeleteTestDB(ctx context.Context, handler *datastore.DBHandler) error {
 }
 
 func TruncateAll(ctx context.Context, handler *datastore.DBHandler) error {
-	tableName := "students"
-	if _, err := handler.DB.ExecContext(ctx, fmt.Sprintf("TRUNCATE `%s`", tableName)); err != nil {
-		log.Fatalf("Could not truncate all: %s\n", err)
+	rows, err := handler.DB.QueryContext(ctx, "SHOW TABLES")
+	if err != nil {
 		return err
 	}
-	return nil
+	defer rows.Close()
+	for rows.Next() {
+		var tableName string
+		if err := rows.Scan(&tableName); err != nil {
+			return err
+		}
+		if _, err := handler.DB.ExecContext(ctx, fmt.Sprintf("TRUNCATE `%s`", tableName)); err != nil {
+			return err
+		}
+	}
+	return rows.Err()
 }
 
-func InsertTestData(ctx context.Context, handler *datastore.DBHandler, students []*model.Student) error {
+func InsertTestStudentsData(ctx context.Context, handler *datastore.DBHandler, students []*datastore.SetStudentParams) error {
 	tx, err := handler.DB.BeginTx(ctx, nil)
 	if err != nil {
 		log.Fatalf("Could not begin a transaction: %s\n", err)
