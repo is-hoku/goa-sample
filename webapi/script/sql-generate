@@ -1,3 +1,2 @@
 #!/bin/bash
 sqlc generate --file sqlc.yaml
-mv ./datastore/models.go ./repository
