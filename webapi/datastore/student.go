@@ -2,8 +2,8 @@ package datastore
 
 import (
 	"context"
-	"errors"
 
+	"github.com/is-hoku/goa-sample/webapi/gen/student"
 	"github.com/is-hoku/goa-sample/webapi/model"
 	"github.com/is-hoku/goa-sample/webapi/repository"
 )
@@ -19,7 +19,7 @@ func (db *StudentHandler) GetByNumber(ctx context.Context, number int32) (*model
 	s, err := queries.GetStudentByNumber(ctx, number)
 	if err != nil {
 		if err != nil {
-			return nil, errors.New("not_found")
+			return nil, &student.CustomError{Name: "not_found", Message: "Student Not Found"}
 		}
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (db *StudentHandler) GetByID(ctx context.Context, id int64) (*model.Student
 	queries := New(db.DB)
 	s, err := queries.GetStudentByID(ctx, id)
 	if err != nil {
-		return nil, errors.New("not_found")
+		return nil, &student.CustomError{Name: "not_found", Message: "Student Not Found"}
 	}
 	res := &model.Student{
 		ID:             uint64(s.ID),
@@ -53,23 +53,23 @@ func (db *StudentHandler) GetByID(ctx context.Context, id int64) (*model.Student
 	return res, nil
 }
 
-func (db *StudentHandler) Set(ctx context.Context, student *model.Student) (int64, error) {
+func (db *StudentHandler) Set(ctx context.Context, s *model.Student) (int64, error) {
 	queries := New(db.DB)
 	params := SetStudentParams{
-		Name:           student.Name,
-		Ruby:           student.Ruby,
-		StudentNumber:  int32(student.StudentNumber),
-		DateOfBirth:    student.DateOfBirth,
-		Address:        student.Address,
-		ExpirationDate: student.ExpirationDate,
+		Name:           s.Name,
+		Ruby:           s.Ruby,
+		StudentNumber:  int32(s.StudentNumber),
+		DateOfBirth:    s.DateOfBirth,
+		Address:        s.Address,
+		ExpirationDate: s.ExpirationDate,
 	}
 	result, err := queries.SetStudent(ctx, params)
 	if err != nil {
-		return -1, errors.New("bad_request")
+		return -1, &student.CustomError{Name: "bad_request", Message: "Bad Request Body"}
 	}
 	insertedID, err := result.LastInsertId()
 	if err != nil {
-		return -1, errors.New("internal_error")
+		return -1, &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
 	}
 	return insertedID, nil
 }
@@ -78,7 +78,7 @@ func (db *StudentHandler) GetAll(ctx context.Context) ([]*model.Student, error) 
 	queries := New(db.DB)
 	students, err := queries.GetAllStudents(ctx)
 	if err != nil {
-		return nil, errors.New("internal_error")
+		return nil, &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
 	}
 	var res []*model.Student
 	for _, s := range students {

@@ -33,6 +33,7 @@ const ServiceName = "student"
 // MethodKey key.
 var MethodNames = [3]string{"get_student", "get_students", "create_student"}
 
+// CustomError is the error returned error name and message.
 type CustomError struct {
 	// Name of error
 	Name string
@@ -88,7 +89,7 @@ type Students struct {
 
 // Error returns an error description.
 func (e *CustomError) Error() string {
-	return ""
+	return "CustomError is the error returned error name and message."
 }
 
 // ErrorName returns "CustomError".

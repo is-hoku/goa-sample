@@ -3,6 +3,7 @@ package design
 import . "goa.design/goa/v3/dsl"
 
 var CustomErrorType = Type("CustomError", func() {
+	Description("CustomError is the error returned error name and message.")
 	ErrorName("name", String, "Name of error", func() {
 		Example("internal_error")
 	})
