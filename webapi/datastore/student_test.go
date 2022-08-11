@@ -2,7 +2,6 @@ package datastore_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
@@ -83,7 +82,6 @@ func TestGetByNumber(t *testing.T) {
 		}
 
 		_, err := studentHandler.GetByNumber(ctx, 12345)
-		fmt.Println(err.(*student.CustomError))
 		wantedError := &student.CustomError{Name: "not_found", Message: "Student Not Found"}
 		if err.(*student.CustomError).Name != wantedError.Name {
 			t.Errorf("error response mismatch:\nwant: %v\ngot: %v", wantedError.Name, err.(*student.CustomError).Name)
@@ -160,7 +158,6 @@ func TestGetByID(t *testing.T) {
 		}
 
 		_, err := studentHandler.GetByID(ctx, 1)
-		fmt.Println(err.(*student.CustomError))
 		wantedError := &student.CustomError{Name: "not_found", Message: "Student Not Found"}
 		if err.(*student.CustomError).Name != wantedError.Name {
 			t.Errorf("error response mismatch:\nwant: %v\ngot: %v", wantedError.Name, err.(*student.CustomError).Name)
