@@ -14,8 +14,10 @@ test:
 clean:
 	rm -rf dist
 goagen:
+	mv gen/student/error.go .
 	goa gen github.com/is-hoku/goa-sample/webapi/design
 	rm -rf gen/http/cli/ gen/http/*/client/ gen/*/client*
+	mv ./error.go gen/student
 goaexample:
 	goa example github.com/is-hoku/goa-sample/webapi/design
 	rm -rf cmd/*-cli

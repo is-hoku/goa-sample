@@ -1,8 +1,10 @@
 package student
 
-import "net/http"
+import (
+	"net/http"
+)
 
-func (err CustomError) StatusCode() int {
+func (err *CustomError) StatusCode() int {
 	switch err.Name {
 	case "not_found":
 		return http.StatusNotFound
