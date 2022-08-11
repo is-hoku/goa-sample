@@ -108,10 +108,10 @@ paths:
                   description: Student's unique number
                   required: true
                   schema:
-                    type: string
+                    type: integer
                     description: Student's unique number
-                    example: Eius vitae molestiae soluta.
-                  example: Dignissimos aut.
+                    example: 1289516460
+                  example: 3842506169
             responses:
                 "200":
                     description: OK response.
@@ -127,6 +127,12 @@ paths:
                                 name: 鈴木太郎
                                 ruby: スズキタロウ
                                 student_number: 12345
+                "400":
+                    description: 'bad_request: Bad Request response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomError'
                 "404":
                     description: 'not_found: Not Found response.'
                     content:
@@ -323,22 +329,22 @@ components:
                           name: 鈴木太郎
                           ruby: スズキタロウ
                           student_number: 12345
+                        - address: 名古屋市中区三の丸三丁目1番2号
+                          date_of_birth: "2022-04-01T13:30:00+09:00"
+                          expiration_date: "2027-03-31T00:00:00+09:00"
+                          id: 1
+                          name: 鈴木太郎
+                          ruby: スズキタロウ
+                          student_number: 12345
+                        - address: 名古屋市中区三の丸三丁目1番2号
+                          date_of_birth: "2022-04-01T13:30:00+09:00"
+                          expiration_date: "2027-03-31T00:00:00+09:00"
+                          id: 1
+                          name: 鈴木太郎
+                          ruby: スズキタロウ
+                          student_number: 12345
             example:
                 students:
-                    - address: 名古屋市中区三の丸三丁目1番2号
-                      date_of_birth: "2022-04-01T13:30:00+09:00"
-                      expiration_date: "2027-03-31T00:00:00+09:00"
-                      id: 1
-                      name: 鈴木太郎
-                      ruby: スズキタロウ
-                      student_number: 12345
-                    - address: 名古屋市中区三の丸三丁目1番2号
-                      date_of_birth: "2022-04-01T13:30:00+09:00"
-                      expiration_date: "2027-03-31T00:00:00+09:00"
-                      id: 1
-                      name: 鈴木太郎
-                      ruby: スズキタロウ
-                      student_number: 12345
                     - address: 名古屋市中区三の丸三丁目1番2号
                       date_of_birth: "2022-04-01T13:30:00+09:00"
                       expiration_date: "2027-03-31T00:00:00+09:00"

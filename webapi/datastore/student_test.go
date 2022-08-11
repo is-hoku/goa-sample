@@ -2,12 +2,14 @@ package datastore_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/is-hoku/goa-sample/webapi/datastore"
+	"github.com/is-hoku/goa-sample/webapi/gen/student"
 	"github.com/is-hoku/goa-sample/webapi/model"
 	"github.com/is-hoku/goa-sample/webapi/testutil"
 )
@@ -74,6 +76,19 @@ func TestGetByNumber(t *testing.T) {
 			t.Errorf("student mismatch (-want +got):\n%s", diff)
 		}
 	})
+
+	t.Run("存在しない学籍番号の場合はエラーとして not_found を返す", func(t *testing.T) {
+		if err := testutil.TruncateAll(ctx, handler); err != nil {
+			t.Fatalf("Could not remove test data from test db: %s\n", err)
+		}
+
+		_, err := studentHandler.GetByNumber(ctx, 12345)
+		fmt.Println(err.(*student.CustomError))
+		wantedError := &student.CustomError{Name: "not_found", Message: "Student Not Found"}
+		if err.(*student.CustomError).Name != wantedError.Name {
+			t.Errorf("error response mismatch:\nwant: %v\ngot: %v", wantedError.Name, err.(*student.CustomError).Name)
+		}
+	})
 }
 
 func TestGetByID(t *testing.T) {
@@ -136,6 +151,19 @@ func TestGetByID(t *testing.T) {
 		option := cmpopts.IgnoreFields(datastore.Student{}, "CreatedAt", "UpdatedAt")
 		if diff := cmp.Diff(want, got, option); diff != "" {
 			t.Errorf("student mismatch (-want +got):\n%s", diff)
+		}
+	})
+
+	t.Run("存在しない ID の場合はエラーとして not_found を返す", func(t *testing.T) {
+		if err := testutil.TruncateAll(ctx, handler); err != nil {
+			t.Fatalf("Could not remove test data from test db: %s\n", err)
+		}
+
+		_, err := studentHandler.GetByID(ctx, 1)
+		fmt.Println(err.(*student.CustomError))
+		wantedError := &student.CustomError{Name: "not_found", Message: "Student Not Found"}
+		if err.(*student.CustomError).Name != wantedError.Name {
+			t.Errorf("error response mismatch:\nwant: %v\ngot: %v", wantedError.Name, err.(*student.CustomError).Name)
 		}
 	})
 }

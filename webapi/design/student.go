@@ -8,14 +8,16 @@ var _ = Service("student", func() {
 		Result(StudentType)
 		Error("internal_error", CustomErrorType)
 		Error("not_found", CustomErrorType)
+		Error("bad_request", CustomErrorType)
 		Payload(func() {
-			Attribute("student_number", String, "Student's unique number")
+			Attribute("student_number", UInt32, "Student's unique number")
 		})
 		HTTP(func() {
 			GET("students/{student_number}")
 			Response(StatusOK)
 			Response("internal_error", StatusInternalServerError)
 			Response("not_found", StatusNotFound)
+			Response("bad_request", StatusBadRequest)
 		})
 	})
 	Method("get_students", func() {

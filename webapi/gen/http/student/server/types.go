@@ -92,6 +92,15 @@ type GetStudentNotFoundResponseBody struct {
 	Message string `form:"message" json:"message" xml:"message"`
 }
 
+// GetStudentBadRequestResponseBody is the type of the "student" service
+// "get_student" endpoint HTTP response body for the "bad_request" error.
+type GetStudentBadRequestResponseBody struct {
+	// Name of error
+	Name string `form:"name" json:"name" xml:"name"`
+	// Message of error
+	Message string `form:"message" json:"message" xml:"message"`
+}
+
 // GetStudentsInternalErrorResponseBody is the type of the "student" service
 // "get_students" endpoint HTTP response body for the "internal_error" error.
 type GetStudentsInternalErrorResponseBody struct {
@@ -200,6 +209,16 @@ func NewGetStudentNotFoundResponseBody(res *student.CustomError) *GetStudentNotF
 	return body
 }
 
+// NewGetStudentBadRequestResponseBody builds the HTTP response body from the
+// result of the "get_student" endpoint of the "student" service.
+func NewGetStudentBadRequestResponseBody(res *student.CustomError) *GetStudentBadRequestResponseBody {
+	body := &GetStudentBadRequestResponseBody{
+		Name:    res.Name,
+		Message: res.Message,
+	}
+	return body
+}
+
 // NewGetStudentsInternalErrorResponseBody builds the HTTP response body from
 // the result of the "get_students" endpoint of the "student" service.
 func NewGetStudentsInternalErrorResponseBody(res *student.CustomError) *GetStudentsInternalErrorResponseBody {
@@ -231,7 +250,7 @@ func NewCreateStudentBadRequestResponseBody(res *student.CustomError) *CreateStu
 }
 
 // NewGetStudentPayload builds a student service get_student endpoint payload.
-func NewGetStudentPayload(studentNumber string) *student.GetStudentPayload {
+func NewGetStudentPayload(studentNumber uint32) *student.GetStudentPayload {
 	v := &student.GetStudentPayload{}
 	v.StudentNumber = &studentNumber
 

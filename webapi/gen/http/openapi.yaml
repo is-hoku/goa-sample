@@ -79,12 +79,19 @@ paths:
                   in: path
                   description: Student's unique number
                   required: true
-                  type: string
+                  type: integer
             responses:
                 "200":
                     description: OK response.
                     schema:
                         $ref: '#/definitions/StudentGetStudentResponseBody'
+                "400":
+                    description: Bad Request response.
+                    schema:
+                        $ref: '#/definitions/StudentGetStudentBadRequestResponseBody'
+                        required:
+                            - name
+                            - message
                 "404":
                     description: Not Found response.
                     schema:
@@ -237,6 +244,24 @@ definitions:
             - date_of_birth
             - address
             - expiration_date
+    StudentGetStudentBadRequestResponseBody:
+        title: StudentGetStudentBadRequestResponseBody
+        type: object
+        properties:
+            message:
+                type: string
+                description: Message of error
+                example: This is an error message.
+            name:
+                type: string
+                description: Name of error
+                example: internal_error
+        example:
+            message: This is an error message.
+            name: internal_error
+        required:
+            - name
+            - message
     StudentGetStudentInternalErrorResponseBody:
         title: StudentGetStudentInternalErrorResponseBody
         type: object
@@ -353,6 +378,13 @@ definitions:
                 items:
                     $ref: '#/definitions/StudentResponseBody'
                 example:
+                    - address: 名古屋市中区三の丸三丁目1番2号
+                      date_of_birth: "2022-04-01T13:30:00+09:00"
+                      expiration_date: "2027-03-31T00:00:00+09:00"
+                      id: 1
+                      name: 鈴木太郎
+                      ruby: スズキタロウ
+                      student_number: 12345
                     - address: 名古屋市中区三の丸三丁目1番2号
                       date_of_birth: "2022-04-01T13:30:00+09:00"
                       expiration_date: "2027-03-31T00:00:00+09:00"

@@ -14,6 +14,7 @@ import (
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
@@ -53,7 +54,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, studentEndpoints *student
 	)
 	{
 		eh := errorHandler(logger)
-		studentServer = studentsvr.New(studentEndpoints, mux, dec, enc, eh, nil)
+		studentServer = studentsvr.New(studentEndpoints, mux, dec, enc, eh, customErrorResponse)
 		if debug {
 			servers := goahttp.Servers{
 				studentServer,
@@ -109,4 +110,16 @@ func errorHandler(logger *log.Logger) func(context.Context, http.ResponseWriter,
 		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
 		logger.Printf("[%s] ERROR: %s", id, err.Error())
 	}
+}
+
+func customErrorResponse(err error) goahttp.Statuser {
+	if serr, ok := err.(*goa.ServiceError); ok {
+		switch serr.Name {
+		case "invalid_field_type":
+			return &student.CustomError{Name: "bad_request", Message: "Invalid Field Type"}
+		default:
+			return &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
+		}
+	}
+	return goahttp.NewErrorResponse(err)
 }

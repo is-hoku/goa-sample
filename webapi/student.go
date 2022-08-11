@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/is-hoku/goa-sample/webapi/datastore"
@@ -47,11 +46,7 @@ func NewStudent(logger *log.Logger) student.Service {
 func (s *studentsrvc) GetStudent(ctx context.Context, p *student.GetStudentPayload) (*student.Student, error) {
 	s.logger.Print("students.get student")
 	si := interactor.StudentInteractor{Repo: s.handler}
-	number, err := strconv.ParseInt(*p.StudentNumber, 10, 32)
-	if err != nil {
-		return nil, &student.CustomError{Name: "not_found", Message: "Student Not Found"}
-	}
-	gotStudent, err := si.GetByNumber(ctx, int32(number))
+	gotStudent, err := si.GetByNumber(ctx, int32(*p.StudentNumber))
 	if err != nil {
 		return nil, err
 	}

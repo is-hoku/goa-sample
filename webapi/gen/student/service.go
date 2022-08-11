@@ -45,7 +45,7 @@ type CustomError struct {
 // method.
 type GetStudentPayload struct {
 	// Student's unique number
-	StudentNumber *string
+	StudentNumber *uint32
 }
 
 // Student is the result type of the student service get_student method.

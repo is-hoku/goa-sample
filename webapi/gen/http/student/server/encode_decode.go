@@ -12,6 +12,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"strconv"
 
 	student "github.com/is-hoku/goa-sample/webapi/gen/student"
 	studentviews "github.com/is-hoku/goa-sample/webapi/gen/student/views"
@@ -36,11 +37,22 @@ func EncodeGetStudentResponse(encoder func(context.Context, http.ResponseWriter)
 func DecodeGetStudentRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			studentNumber string
+			studentNumber uint32
+			err           error
 
 			params = mux.Vars(r)
 		)
-		studentNumber = params["student_number"]
+		{
+			studentNumberRaw := params["student_number"]
+			v, err2 := strconv.ParseUint(studentNumberRaw, 10, 32)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("studentNumber", studentNumberRaw, "unsigned integer"))
+			}
+			studentNumber = uint32(v)
+		}
+		if err != nil {
+			return nil, err
+		}
 		payload := NewGetStudentPayload(studentNumber)
 
 		return payload, nil
@@ -82,6 +94,19 @@ func EncodeGetStudentError(encoder func(context.Context, http.ResponseWriter) go
 			}
 			w.Header().Set("goa-error", res.ErrorName())
 			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "bad_request":
+			var res *student.CustomError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewGetStudentBadRequestResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusBadRequest)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
