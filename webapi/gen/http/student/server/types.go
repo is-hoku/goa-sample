@@ -231,7 +231,7 @@ func NewCreateStudentBadRequestResponseBody(res *student.CustomError) *CreateStu
 }
 
 // NewGetStudentPayload builds a student service get_student endpoint payload.
-func NewGetStudentPayload(studentNumber uint32) *student.GetStudentPayload {
+func NewGetStudentPayload(studentNumber string) *student.GetStudentPayload {
 	v := &student.GetStudentPayload{}
 	v.StudentNumber = &studentNumber
 

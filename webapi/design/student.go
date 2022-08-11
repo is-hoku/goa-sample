@@ -9,7 +9,7 @@ var _ = Service("student", func() {
 		Error("internal_error", CustomErrorType)
 		Error("not_found", CustomErrorType)
 		Payload(func() {
-			Attribute("student_number", UInt32, "Student's unique number")
+			Attribute("student_number", String, "Student's unique number")
 		})
 		HTTP(func() {
 			GET("students/{student_number}")

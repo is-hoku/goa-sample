@@ -12,7 +12,6 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"strconv"
 
 	student "github.com/is-hoku/goa-sample/webapi/gen/student"
 	studentviews "github.com/is-hoku/goa-sample/webapi/gen/student/views"
@@ -37,22 +36,11 @@ func EncodeGetStudentResponse(encoder func(context.Context, http.ResponseWriter)
 func DecodeGetStudentRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			studentNumber uint32
-			err           error
+			studentNumber string
 
 			params = mux.Vars(r)
 		)
-		{
-			studentNumberRaw := params["student_number"]
-			v, err2 := strconv.ParseUint(studentNumberRaw, 10, 32)
-			if err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("studentNumber", studentNumberRaw, "unsigned integer"))
-			}
-			studentNumber = uint32(v)
-		}
-		if err != nil {
-			return nil, err
-		}
+		studentNumber = params["student_number"]
 		payload := NewGetStudentPayload(studentNumber)
 
 		return payload, nil
