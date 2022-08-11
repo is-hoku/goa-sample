@@ -113,13 +113,20 @@ func errorHandler(logger *log.Logger) func(context.Context, http.ResponseWriter,
 }
 
 func customErrorResponse(err error) goahttp.Statuser {
+	// Error Handling for Decoding & Validation
 	if serr, ok := err.(*goa.ServiceError); ok {
 		switch serr.Name {
 		case "invalid_field_type":
 			return &student.CustomError{Name: "bad_request", Message: "Invalid Field Type"}
+		case "missing_field":
+			return &student.CustomError{Name: "bad_request", Message: "Missing Field"}
+		case "decode_payload":
+			return &student.CustomError{Name: "bad_request", Message: "Invalid Body"}
 		default:
 			return &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
 		}
+	} else if serr, ok := err.(*student.CustomError); ok { // Error Handling for Business logic
+		return &student.CustomError{Name: serr.Name, Message: serr.Message}
 	}
-	return goahttp.NewErrorResponse(err)
+	return &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
 }
