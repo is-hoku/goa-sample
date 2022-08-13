@@ -55,9 +55,9 @@ func (s *studentsrvc) GetStudent(ctx context.Context, p *student.GetStudentPaylo
 		Name:           gotStudent.Name,
 		Ruby:           gotStudent.Ruby,
 		StudentNumber:  gotStudent.StudentNumber,
-		DateOfBirth:    gotStudent.DateOfBirth.String(),
+		DateOfBirth:    gotStudent.DateOfBirth.Format(time.RFC3339),
 		Address:        gotStudent.Address,
-		ExpirationDate: gotStudent.ExpirationDate.String(),
+		ExpirationDate: gotStudent.ExpirationDate.Format(time.RFC3339),
 	}
 	return res, nil
 }
@@ -78,9 +78,9 @@ func (s *studentsrvc) GetStudents(ctx context.Context) (*student.Students, error
 			Name:           person.Name,
 			Ruby:           person.Ruby,
 			StudentNumber:  person.StudentNumber,
-			DateOfBirth:    person.DateOfBirth.String(),
+			DateOfBirth:    person.DateOfBirth.Format(time.RFC3339),
 			Address:        person.Address,
-			ExpirationDate: person.ExpirationDate.String(),
+			ExpirationDate: person.ExpirationDate.Format(time.RFC3339),
 		}
 		l = append(l, st)
 	}
@@ -94,11 +94,11 @@ func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBo
 	si := interactor.StudentInteractor{Repo: s.handler}
 	birth, err := time.Parse(time.RFC3339, body.DateOfBirth)
 	if err != nil {
-		return nil, err
+		return nil, &student.CustomError{Name: "bad_request", Message: "date_of_birth is invalid format"}
 	}
 	expiration, err := time.Parse(time.RFC3339, body.ExpirationDate)
 	if err != nil {
-		return nil, err
+		return nil, &student.CustomError{Name: "bad_request", Message: "expiration_date is invalid format"}
 	}
 	bodyStudent := &model.Student{
 		Name:           body.Name,
@@ -117,9 +117,9 @@ func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBo
 		Name:           createdStudent.Name,
 		Ruby:           createdStudent.Ruby,
 		StudentNumber:  createdStudent.StudentNumber,
-		DateOfBirth:    createdStudent.DateOfBirth.String(),
+		DateOfBirth:    createdStudent.DateOfBirth.Format(time.RFC3339),
 		Address:        createdStudent.Address,
-		ExpirationDate: createdStudent.ExpirationDate.String(),
+		ExpirationDate: createdStudent.ExpirationDate.Format(time.RFC3339),
 	}
 	return res, nil
 }

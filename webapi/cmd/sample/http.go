@@ -122,6 +122,8 @@ func customErrorResponse(err error) goahttp.Statuser {
 			return &student.CustomError{Name: "bad_request", Message: "Missing Field"}
 		case "decode_payload":
 			return &student.CustomError{Name: "bad_request", Message: "Invalid Body"}
+		case "invalid_format":
+			return &student.CustomError{Name: "bad_request", Message: "Invalid Format"}
 		default:
 			return &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
 		}
