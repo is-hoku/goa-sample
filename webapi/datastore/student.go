@@ -14,7 +14,7 @@ type StudentHandler struct {
 	*DBHandler
 }
 
-func (db *StudentHandler) GetByNumber(ctx context.Context, number int32) (*model.Student, error) {
+func (db *StudentHandler) GetByNumber(ctx context.Context, number uint32) (*model.Student, error) {
 	queries := New(db.DB)
 	s, err := queries.GetStudentByNumber(ctx, number)
 	if err != nil {
@@ -24,10 +24,10 @@ func (db *StudentHandler) GetByNumber(ctx context.Context, number int32) (*model
 		return nil, err
 	}
 	res := &model.Student{
-		ID:             uint64(s.ID),
+		ID:             s.ID,
 		Name:           s.Name,
 		Ruby:           s.Ruby,
-		StudentNumber:  uint32(s.StudentNumber),
+		StudentNumber:  s.StudentNumber,
 		DateOfBirth:    s.DateOfBirth,
 		Address:        s.Address,
 		ExpirationDate: s.ExpirationDate,
@@ -35,17 +35,17 @@ func (db *StudentHandler) GetByNumber(ctx context.Context, number int32) (*model
 	return res, nil
 }
 
-func (db *StudentHandler) GetByID(ctx context.Context, id int64) (*model.Student, error) {
+func (db *StudentHandler) GetByID(ctx context.Context, id uint64) (*model.Student, error) {
 	queries := New(db.DB)
 	s, err := queries.GetStudentByID(ctx, id)
 	if err != nil {
 		return nil, &student.CustomError{Name: "not_found", Message: "Student Not Found"}
 	}
 	res := &model.Student{
-		ID:             uint64(s.ID),
+		ID:             s.ID,
 		Name:           s.Name,
 		Ruby:           s.Ruby,
-		StudentNumber:  uint32(s.StudentNumber),
+		StudentNumber:  s.StudentNumber,
 		DateOfBirth:    s.DateOfBirth,
 		Address:        s.Address,
 		ExpirationDate: s.ExpirationDate,
@@ -53,25 +53,25 @@ func (db *StudentHandler) GetByID(ctx context.Context, id int64) (*model.Student
 	return res, nil
 }
 
-func (db *StudentHandler) Set(ctx context.Context, s *model.Student) (int64, error) {
+func (db *StudentHandler) Set(ctx context.Context, s *model.Student) (uint64, error) {
 	queries := New(db.DB)
 	params := SetStudentParams{
 		Name:           s.Name,
 		Ruby:           s.Ruby,
-		StudentNumber:  int32(s.StudentNumber),
+		StudentNumber:  s.StudentNumber,
 		DateOfBirth:    s.DateOfBirth,
 		Address:        s.Address,
 		ExpirationDate: s.ExpirationDate,
 	}
 	result, err := queries.SetStudent(ctx, params)
 	if err != nil {
-		return -1, &student.CustomError{Name: "bad_request", Message: "Bad Request Body"}
+		return 0, &student.CustomError{Name: "bad_request", Message: "Bad Request Body"}
 	}
 	insertedID, err := result.LastInsertId()
 	if err != nil {
-		return -1, &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
+		return 0, &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
 	}
-	return insertedID, nil
+	return uint64(insertedID), nil
 }
 
 func (db *StudentHandler) GetAll(ctx context.Context) ([]*model.Student, error) {
@@ -83,10 +83,10 @@ func (db *StudentHandler) GetAll(ctx context.Context) ([]*model.Student, error) 
 	var res []*model.Student
 	for _, s := range students {
 		student := &model.Student{
-			ID:             uint64(s.ID),
+			ID:             s.ID,
 			Name:           s.Name,
 			Ruby:           s.Ruby,
-			StudentNumber:  uint32(s.StudentNumber),
+			StudentNumber:  s.StudentNumber,
 			DateOfBirth:    s.DateOfBirth,
 			Address:        s.Address,
 			ExpirationDate: s.ExpirationDate,

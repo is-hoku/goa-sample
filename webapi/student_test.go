@@ -14,22 +14,22 @@ import (
 )
 
 type MockStudent struct {
-	GetByNumberFunc func(context.Context, int32) (*model.Student, error)
-	GetByIDFunc     func(context.Context, int64) (*model.Student, error)
-	SetFunc         func(context.Context, *model.Student) (int64, error)
+	GetByNumberFunc func(context.Context, uint32) (*model.Student, error)
+	GetByIDFunc     func(context.Context, uint64) (*model.Student, error)
+	SetFunc         func(context.Context, *model.Student) (uint64, error)
 	GetAllFunc      func(context.Context) ([]*model.Student, error)
 	repository.TxBeginner
 }
 
-func (m *MockStudent) GetByNumber(ctx context.Context, number int32) (*model.Student, error) {
+func (m *MockStudent) GetByNumber(ctx context.Context, number uint32) (*model.Student, error) {
 	return m.GetByNumberFunc(ctx, number)
 }
 
-func (m *MockStudent) GetByID(ctx context.Context, id int64) (*model.Student, error) {
+func (m *MockStudent) GetByID(ctx context.Context, id uint64) (*model.Student, error) {
 	return m.GetByIDFunc(ctx, id)
 }
 
-func (m *MockStudent) Set(ctx context.Context, student *model.Student) (int64, error) {
+func (m *MockStudent) Set(ctx context.Context, student *model.Student) (uint64, error) {
 	return m.SetFunc(ctx, student)
 }
 
@@ -61,8 +61,8 @@ func TestGetStudent(t *testing.T) {
 	logger := log.New(os.Stderr, "[test] ", log.Ltime)
 	srvc := &studentsrvc{logger: logger, handler: mock}
 	t.Run("学籍番号に対応する学生を返却", func(t *testing.T) {
-		mock.GetByNumberFunc = func(ctx context.Context, number int32) (*model.Student, error) {
-			wantedNumber := int32(12345)
+		mock.GetByNumberFunc = func(ctx context.Context, number uint32) (*model.Student, error) {
+			wantedNumber := uint32(12345)
 			if diff := cmp.Diff(wantedNumber, number); diff != "" {
 				t.Errorf("mismatch (-want +got):\n%s", diff)
 			}
@@ -102,8 +102,8 @@ func TestGetStudent(t *testing.T) {
 	})
 
 	t.Run("存在しない学籍番号", func(t *testing.T) {
-		mock.GetByNumberFunc = func(ctx context.Context, number int32) (*model.Student, error) {
-			wantedNumber := int32(12346)
+		mock.GetByNumberFunc = func(ctx context.Context, number uint32) (*model.Student, error) {
+			wantedNumber := uint32(12346)
 			if diff := cmp.Diff(wantedNumber, number); diff != "" {
 				t.Errorf("mismatch (-want +got):\n%s", diff)
 			}
@@ -196,8 +196,8 @@ func TestCreate(t *testing.T) {
 	logger := log.New(os.Stderr, "[test] ", log.Ltime)
 	srvc := &studentsrvc{logger: logger, handler: mock}
 	t.Run("学生を登録", func(t *testing.T) {
-		mock.GetByIDFunc = func(ctx context.Context, id int64) (*model.Student, error) {
-			wantedID := int64(10001)
+		mock.GetByIDFunc = func(ctx context.Context, id uint64) (*model.Student, error) {
+			wantedID := uint64(10001)
 			if diff := cmp.Diff(wantedID, id); diff != "" {
 				t.Errorf("mismatch (-want +got):\n%s", diff)
 			}
@@ -214,7 +214,7 @@ func TestCreate(t *testing.T) {
 			}
 			return s, nil
 		}
-		mock.SetFunc = func(ctx context.Context, gotStudent *model.Student) (int64, error) {
+		mock.SetFunc = func(ctx context.Context, gotStudent *model.Student) (uint64, error) {
 			date1 := time.Date(2003, 6, 27, 15, 0, 0, 0, time.UTC)
 			edate1 := time.Date(2024, 3, 31, 0, 0, 0, 0, time.UTC)
 			wantedStudent := &model.Student{

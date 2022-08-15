@@ -46,7 +46,7 @@ func NewStudent(logger *log.Logger) student.Service {
 func (s *studentsrvc) GetStudent(ctx context.Context, p *student.GetStudentPayload) (*student.Student, error) {
 	s.logger.Print("students.get student")
 	si := interactor.StudentInteractor{Repo: s.handler}
-	gotStudent, err := si.GetByNumber(ctx, int32(*p.StudentNumber))
+	gotStudent, err := si.GetByNumber(ctx, *p.StudentNumber)
 	if err != nil {
 		return nil, err
 	}
