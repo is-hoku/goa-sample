@@ -1,0 +1,347 @@
+@startuml
+namespace datastore {
+    class Config << (S,Aquamarine) >> {
+        + User string
+        + Password string
+        + Host string
+        + Port string
+        + DBName string
+
+        + DNS() string
+
+    }
+    class DBHandler << (S,Aquamarine) >> {
+        + DB *sql.DB
+
+        + Close() error
+        + BeginTx(ctx context.Context) (repository.Tx, error)
+
+    }
+    interface DBTX  {
+        + ExecContext( context.Context,  string,  ...<font color=blue>interface</font>{}) (sql.Result, error)
+        + PrepareContext( context.Context,  string) (*sql.Stmt, error)
+        + QueryContext( context.Context,  string,  ...<font color=blue>interface</font>{}) (*sql.Rows, error)
+        + QueryRowContext( context.Context,  string,  ...<font color=blue>interface</font>{}) *sql.Row
+
+    }
+    class Queries << (S,Aquamarine) >> {
+        - db DBTX
+
+        + WithTx(tx *sql.Tx) *Queries
+        + GetAllStudents(ctx context.Context) ([]Student, error)
+        + GetStudentByID(ctx context.Context, id int64) (Student, error)
+        + GetStudentByNumber(ctx context.Context, studentNumber int32) (Student, error)
+        + SetStudent(ctx context.Context, arg SetStudentParams) (sql.Result, error)
+
+    }
+    class SetStudentParams << (S,Aquamarine) >> {
+        + Name string
+        + Ruby string
+        + StudentNumber int32
+        + DateOfBirth time.Time
+        + Address string
+        + ExpirationDate time.Time
+
+    }
+    class Student << (S,Aquamarine) >> {
+        + ID int64
+        + Name string
+        + Ruby string
+        + StudentNumber int32
+        + DateOfBirth time.Time
+        + Address string
+        + ExpirationDate time.Time
+        + CreatedAt time.Time
+        + UpdatedAt time.Time
+
+    }
+    class StudentHandler << (S,Aquamarine) >> {
+        + GetByNumber(ctx context.Context, number int32) (*model.Student, error)
+        + GetByID(ctx context.Context, id int64) (*model.Student, error)
+        + Set(ctx context.Context, s *model.Student) (int64, error)
+        + GetAll(ctx context.Context) ([]*model.Student, error)
+
+    }
+}
+"datastore.DBHandler" *-- "extends""datastore.StudentHandler"
+
+"repository.TxBeginner" <|-- "implements""datastore.DBHandler"
+"repository.StudentRepository" <|-- "implements""datastore.StudentHandler"
+
+"datastore.DBHandler""uses" o-- "sql.DB"
+"datastore.SetStudentParams""uses" o-- "time.Time"
+"datastore.Student""uses" o-- "time.Time"
+
+namespace interactor {
+    class StudentInteractor << (S,Aquamarine) >> {
+        + Repo repository.StudentRepository
+
+        + GetByNumber(ctx context.Context, number int32) (*model.Student, error)
+        + Create(ctx context.Context, s *model.Student) (*model.Student, error)
+        + GetAll(ctx context.Context) ([]*model.Student, error)
+
+    }
+}
+
+"usecase.StudentUsecase" <|-- "implements""interactor.StudentInteractor"
+
+"interactor.StudentInteractor""uses" o-- "repository.StudentRepository"
+
+namespace model {
+    class Student << (S,Aquamarine) >> {
+        + ID uint64
+        + Name string
+        + Ruby string
+        + StudentNumber uint32
+        + DateOfBirth time.Time
+        + Address string
+        + ExpirationDate time.Time
+
+    }
+}
+
+
+"model.Student""uses" o-- "time.Time"
+
+namespace repository {
+    interface StudentRepository  {
+        + GetByNumber( context.Context,  int32) (*model.Student, error)
+        + GetByID( context.Context,  int64) (*model.Student, error)
+        + Set( context.Context,  *model.Student) (int64, error)
+        + GetAll( context.Context) ([]*model.Student, error)
+
+    }
+    interface Tx  {
+        + Commit() error
+        + Rollback() error
+
+    }
+    interface TxBeginner  {
+        + BeginTx( context.Context) (Tx, error)
+
+    }
+}
+"repository.TxBeginner" *-- "extends""repository.StudentRepository"
+
+
+
+namespace server {
+    class CreateStudentBadRequestResponseBody << (S,Aquamarine) >> {
+        + Name string
+        + Message string
+
+    }
+    class CreateStudentInternalErrorResponseBody << (S,Aquamarine) >> {
+        + Name string
+        + Message string
+
+    }
+    class CreateStudentRequestBody << (S,Aquamarine) >> {
+        + Name *string
+        + Ruby *string
+        + StudentNumber *uint32
+        + DateOfBirth *string
+        + Address *string
+        + ExpirationDate *string
+
+    }
+    class CreateStudentResponseBody << (S,Aquamarine) >> {
+        + ID uint64
+        + Name string
+        + Ruby string
+        + StudentNumber uint32
+        + DateOfBirth string
+        + Address string
+        + ExpirationDate string
+
+    }
+    interface ErrorNamer  {
+        + ErrorName() string
+
+    }
+    class GetStudentBadRequestResponseBody << (S,Aquamarine) >> {
+        + Name string
+        + Message string
+
+    }
+    class GetStudentInternalErrorResponseBody << (S,Aquamarine) >> {
+        + Name string
+        + Message string
+
+    }
+    class GetStudentNotFoundResponseBody << (S,Aquamarine) >> {
+        + Name string
+        + Message string
+
+    }
+    class GetStudentResponseBody << (S,Aquamarine) >> {
+        + ID uint64
+        + Name string
+        + Ruby string
+        + StudentNumber uint32
+        + DateOfBirth string
+        + Address string
+        + ExpirationDate string
+
+    }
+    class GetStudentsInternalErrorResponseBody << (S,Aquamarine) >> {
+        + Name string
+        + Message string
+
+    }
+    class GetStudentsResponseBody << (S,Aquamarine) >> {
+        + Students []*StudentResponseBody
+
+    }
+    class MountPoint << (S,Aquamarine) >> {
+        + Method string
+        + Verb string
+        + Pattern string
+
+    }
+    class Server << (S,Aquamarine) >> {
+        + Mounts []*MountPoint
+        + GetStudent http.Handler
+        + GetStudents http.Handler
+        + CreateStudent http.Handler
+        + CORS http.Handler
+
+        + Service() string
+        + Use(m <font color=blue>func</font>(http.Handler) http.Handler) 
+        + Mount(mux http.Muxer) 
+
+    }
+    class StudentResponseBody << (S,Aquamarine) >> {
+        + ID uint64
+        + Name string
+        + Ruby string
+        + StudentNumber uint32
+        + DateOfBirth string
+        + Address string
+        + ExpirationDate string
+
+    }
+}
+
+
+"server.GetStudentsResponseBody""uses" o-- "server.StudentResponseBody"
+"server.Server""uses" o-- "http.Handler"
+"server.Server""uses" o-- "server.MountPoint"
+
+namespace student {
+    class CustomError << (S,Aquamarine) >> {
+        + Name string
+        + Message string
+
+        + StatusCode() int
+        + Error() string
+        + ErrorName() string
+
+    }
+    class Endpoints << (S,Aquamarine) >> {
+        + GetStudent pkg.Endpoint
+        + GetStudents pkg.Endpoint
+        + CreateStudent pkg.Endpoint
+
+        + Use(m <font color=blue>func</font>(pkg.Endpoint) pkg.Endpoint) 
+
+    }
+    class GetStudentPayload << (S,Aquamarine) >> {
+        + StudentNumber *uint32
+
+    }
+    interface Service  {
+        + GetStudent( context.Context,  *GetStudentPayload) (*Student, error)
+        + GetStudents( context.Context) (*Students, error)
+        + CreateStudent( context.Context,  *StudentBody) (*Student, error)
+
+    }
+    class Student << (S,Aquamarine) >> {
+        + ID uint64
+        + Name string
+        + Ruby string
+        + StudentNumber uint32
+        + DateOfBirth string
+        + Address string
+        + ExpirationDate string
+
+    }
+    class StudentBody << (S,Aquamarine) >> {
+        + Name string
+        + Ruby string
+        + StudentNumber uint32
+        + DateOfBirth string
+        + Address string
+        + ExpirationDate string
+
+    }
+    class Students << (S,Aquamarine) >> {
+        + Students []*Student
+
+    }
+}
+
+"server.ErrorNamer" <|-- "implements""student.CustomError"
+
+"student.Endpoints""uses" o-- "pkg.Endpoint"
+"student.Students""uses" o-- "student.Student"
+
+namespace studentsapi {
+    class studentsrvc << (S,Aquamarine) >> {
+        - logger *log.Logger
+        - handler repository.StudentRepository
+
+        + GetStudent(ctx context.Context, p *student.GetStudentPayload) (*student.Student, error)
+        + GetStudents(ctx context.Context) (*student.Students, error)
+        + CreateStudent(ctx context.Context, body *student.StudentBody) (*student.Student, error)
+
+    }
+}
+
+"student.Service" <|-- "implements""studentsapi.studentsrvc"
+
+
+namespace usecase {
+    interface StudentUsecase  {
+        + GetByNumber( context.Context,  int32) (*model.Student, error)
+        + Create( context.Context,  *model.Student) (*model.Student, error)
+        + GetAll( context.Context) ([]*model.Student, error)
+
+    }
+}
+
+
+
+namespace views {
+    class Student << (S,Aquamarine) >> {
+        + Projected *StudentView
+        + View string
+
+    }
+    class StudentView << (S,Aquamarine) >> {
+        + ID *uint64
+        + Name *string
+        + Ruby *string
+        + StudentNumber *uint32
+        + DateOfBirth *string
+        + Address *string
+        + ExpirationDate *string
+
+    }
+    class Students << (S,Aquamarine) >> {
+        + Projected *StudentsView
+        + View string
+
+    }
+    class StudentsView << (S,Aquamarine) >> {
+        + Students []*StudentView
+
+    }
+}
+
+
+"views.Student""uses" o-- "views.StudentView"
+"views.Students""uses" o-- "views.StudentsView"
+"views.StudentsView""uses" o-- "views.StudentView"
+
+@enduml
