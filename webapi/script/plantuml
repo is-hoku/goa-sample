@@ -1,0 +1,2 @@
+#!/bin/bash
+goplantuml -recursive -show-aggregations -show-aliases -show-compositions -show-connection-labels -show-implementations ./ > ./diagram.puml
