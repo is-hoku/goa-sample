@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/is-hoku/goa-sample/webapi/gen/student"
+	"github.com/is-hoku/goa-sample/webapi/interactor"
 	"github.com/is-hoku/goa-sample/webapi/model"
 	"github.com/is-hoku/goa-sample/webapi/repository"
 )
@@ -59,7 +60,8 @@ func TestGetStudent(t *testing.T) {
 	defer cancel()
 	mock := &MockStudent{}
 	logger := log.New(os.Stderr, "[test] ", log.Ltime)
-	srvc := &studentsrvc{logger: logger, handler: mock}
+	studentInteractor := interactor.NewStudentInteractor(mock)
+	srvc := &studentsrvc{logger: logger, student: studentInteractor}
 	t.Run("学籍番号に対応する学生を返却", func(t *testing.T) {
 		mock.GetByNumberFunc = func(ctx context.Context, number uint32) (*model.Student, error) {
 			wantedNumber := uint32(12345)
@@ -124,7 +126,8 @@ func TestGetStudents(t *testing.T) {
 	defer cancel()
 	mock := &MockStudent{}
 	logger := log.New(os.Stderr, "[test] ", log.Ltime)
-	srvc := &studentsrvc{logger: logger, handler: mock}
+	studentInteractor := interactor.NewStudentInteractor(mock)
+	srvc := &studentsrvc{logger: logger, student: studentInteractor}
 	t.Run("学生を登録", func(t *testing.T) {
 		mock.GetAllFunc = func(ctx context.Context) ([]*model.Student, error) {
 			date1 := time.Date(2003, 6, 27, 15, 0, 0, 0, time.UTC)
@@ -194,7 +197,8 @@ func TestCreate(t *testing.T) {
 	defer cancel()
 	mock := &MockStudent{}
 	logger := log.New(os.Stderr, "[test] ", log.Ltime)
-	srvc := &studentsrvc{logger: logger, handler: mock}
+	studentInteractor := interactor.NewStudentInteractor(mock)
+	srvc := &studentsrvc{logger: logger, student: studentInteractor}
 	t.Run("学生を登録", func(t *testing.T) {
 		mock.GetByIDFunc = func(ctx context.Context, id uint64) (*model.Student, error) {
 			wantedID := uint64(10001)

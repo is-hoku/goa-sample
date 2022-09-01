@@ -12,6 +12,12 @@ type StudentInteractor struct {
 	Repo repository.StudentRepository
 }
 
+func NewStudentInteractor(repo repository.StudentRepository) *StudentInteractor {
+	return &StudentInteractor{
+		Repo: repo,
+	}
+}
+
 var _ usecase.StudentUsecase = (*StudentInteractor)(nil)
 
 func (i *StudentInteractor) GetByNumber(ctx context.Context, number uint32) (*model.Student, error) {

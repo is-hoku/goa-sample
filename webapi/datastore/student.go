@@ -14,6 +14,12 @@ type StudentHandler struct {
 	*DBHandler
 }
 
+func NewStudentHandler(dbHandler *DBHandler) *StudentHandler {
+	return &StudentHandler{
+		dbHandler,
+	}
+}
+
 func (db *StudentHandler) GetByNumber(ctx context.Context, number uint32) (*model.Student, error) {
 	queries := New(db.DB)
 	s, err := queries.GetStudentByNumber(ctx, number)
