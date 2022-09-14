@@ -21,6 +21,4 @@ goagen:
 goaexample:
 	goa example github.com/is-hoku/goa-sample/webapi/design
 	rm -rf cmd/*-cli
-create_ddl:
-	go run cmd/ddl/main.go -d mysql
-.PHONY: build dist/student exec test clean goagen goaexample create_ddl
+.PHONY: build dist/student exec test clean goagen goaexample
