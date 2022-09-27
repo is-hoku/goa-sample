@@ -11,7 +11,6 @@ import (
 	"github.com/is-hoku/goa-sample/webapi/interactor"
 	"github.com/is-hoku/goa-sample/webapi/model"
 	"github.com/is-hoku/goa-sample/webapi/usecase"
-	"github.com/joho/godotenv"
 )
 
 // students service example implementation.
@@ -24,10 +23,6 @@ type studentsrvc struct {
 
 // NewStudents returns the students service implementation.
 func NewStudent(logger *log.Logger) student.Service {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		logger.Fatalf("Could not load .env: %s", err)
-	}
 	config := &datastore.Config{
 		User:     os.Getenv("DB_USER"),
 		Password: os.Getenv("DB_PASS"),

@@ -7,15 +7,9 @@ import (
 	"os"
 
 	"github.com/is-hoku/goa-sample/webapi/datastore"
-	"github.com/joho/godotenv"
 )
 
 func NewTestDBHandler(ctx context.Context) (*datastore.DBHandler, error) {
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Fatalf("Could not load .env: %s\n", err)
-		return nil, err
-	}
 	config1 := &datastore.Config{
 		User:     os.Getenv("TEST_DB_USER"),
 		Password: os.Getenv("TEST_DB_PASS"),
@@ -67,11 +61,6 @@ func CreateTestStudentTable(ctx context.Context, handler *datastore.DBHandler) e
 }
 
 func DeleteTestDB(ctx context.Context, handler *datastore.DBHandler) error {
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Fatalf("Could not load .env: %s\n", err)
-		return err
-	}
 	dbName := os.Getenv("TEST_DB_NAME")
 	if _, err := handler.DB.ExecContext(ctx, fmt.Sprintf("DROP DATABASE IF EXISTS `%s`", dbName)); err != nil {
 		log.Fatalf("Could not delete test db: %s\n", err)

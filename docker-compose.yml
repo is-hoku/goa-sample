@@ -16,6 +16,18 @@ services:
             - ./webapi:/go/src/webapi
         environment:
             - DSN=${DSN}
+            - ATLAS_DSN=${ATLAS_DSN}
+            - DB_NAME=${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
+            - DB_PORT=${DB_PORT}
+            - DB_ROOT_PASS=${DB_ROOT_PASS}
+            - DB_HOST=${DB_HOST}
+            - TEST_DB_NAME=${TEST_DB_NAME}
+            - TEST_DB_USER=${TEST_DB_USER}
+            - TEST_DB_PASS=${TEST_DB_PASS}
+            - TEST_DB_PORT=${TEST_DB_PORT}
+            - TEST_DB_HOST=${TEST_DB_HOST}
         container_name: webapi
 
     db:
