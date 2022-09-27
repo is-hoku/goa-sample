@@ -34,5 +34,5 @@ make auto
 ### Generate class diagram text
 Run this in the app container to generate class diagram text compatible with plantuml.
 ```
-plantuml
+make plantuml
 ```
