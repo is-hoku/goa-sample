@@ -13,7 +13,7 @@ services:
             - "8080"
         tty: true
         volumes:
-            - .:/go/src
+            - ./webapi:/go/src/webapi
         environment:
             - DSN=${DSN}
         container_name: webapi

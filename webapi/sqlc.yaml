@@ -1,7 +1,7 @@
 version: "2"
 sql:
-- schema: "../mysql/migration/"
-  queries: "../mysql/query/"
+- schema: "./datastore/migration/"
+  queries: "./datastore/query/"
   engine: "mysql"
   gen:
     go:

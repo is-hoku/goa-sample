@@ -1,2 +1,2 @@
 #!/bin/bash
-migrate -database $DSN -path "../mysql/migration" up $1
+migrate -database $DSN -path ./datastore/migration up $1
