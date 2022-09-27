@@ -1,2 +1,0 @@
-#!/bin/bash
-migrate create -ext sql -dir ./datastore/migration $1

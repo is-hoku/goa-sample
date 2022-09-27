@@ -20,11 +20,16 @@ goagen:
 goaexample:
 	goa example github.com/is-hoku/goa-sample/webapi/design
 	rm -rf cmd/*-cli
+sqlc-generate:
+	sqlc generate --file sqlc.yaml
+plantuml:
+	goplantuml -recursive -show-aggregations -show-aliases -show-compositions -show-connection-labels -show-implementations ./ > ./diagram.puml
 inspect:
 	atlas schema inspect -u ${ATLAS_DSN} > datastore/schema.hcl
 migrate:
 	atlas schema apply -u ${ATLAS_DSN} -f datastore/schema.hcl
 sqlgen:
 	go run ./bin/table_def_sql.go
+auto: migrate sqlgen sqlc-generate
 
-.PHONY: build exec test clean goagen goaexample inspect migrate
+.PHONY: build exec test clean goagen goaexample sqlc-generate plantuml inspect migrate sqlgen auto
