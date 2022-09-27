@@ -1,6 +1,6 @@
 version: "2"
 sql:
-- schema: "./datastore/migration/"
+  schema: "./datastore/table/"
   queries: "./datastore/query/"
   engine: "mysql"
   gen:
