@@ -2,12 +2,11 @@ GOOS ?= linux
 GOARCH ?= amd64
 MAIN_PATH ?= ./cmd/sample
 
-build: dist/student
-dist/student:
+build:
 	mkdir -p dist
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o $@ $(MAIN_PATH)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) CGO_ENABLED=0 go build -o dist/sample $(MAIN_PATH)
 exec: build
-	./dist/student
+	./dist/sample
 test:
 	go test ./...
 	go vet ./...
@@ -21,4 +20,6 @@ goagen:
 goaexample:
 	goa example github.com/is-hoku/goa-sample/webapi/design
 	rm -rf cmd/*-cli
-.PHONY: build dist/student exec test clean goagen goaexample
+inspectdb: datastore/table/students.sql
+	atlas schema inspect -u ${ATLAS_DSN} > datastore/schema.hcl
+.PHONY: build exec test clean goagen goaexample inspectdb
