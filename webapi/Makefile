@@ -20,6 +20,11 @@ goagen:
 goaexample:
 	goa example github.com/is-hoku/goa-sample/webapi/design
 	rm -rf cmd/*-cli
-inspectdb: datastore/table/students.sql
+inspect:
 	atlas schema inspect -u ${ATLAS_DSN} > datastore/schema.hcl
-.PHONY: build exec test clean goagen goaexample inspectdb
+migrate:
+	atlas schema apply -u ${ATLAS_DSN} -f datastore/schema.hcl
+sqlgen:
+	go run ./bin/table_def_sql.go
+
+.PHONY: build exec test clean goagen goaexample inspect migrate

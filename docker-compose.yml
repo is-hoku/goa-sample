@@ -9,8 +9,6 @@ services:
             dockerfile: ./webapi/Dockerfile
         ports:
             - "8080:8080"
-        expose:
-            - "8080"
         tty: true
         volumes:
             - ./webapi:/go/src/webapi
@@ -42,5 +40,5 @@ services:
           - MYSQL_HOST=${DB_HOST}
           - TZ=${TZ}
         ports:
-          - 3306:3306
+          - "3306:3306"
         container_name: mysql

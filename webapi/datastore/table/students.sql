@@ -1,11 +1,13 @@
 CREATE TABLE `students` (
-		`id` BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		`name` VARCHAR(128) NOT NULL,
-		`ruby` VARCHAR(128) NOT NULL,
-		`student_number` INT UNSIGNED NOT NULL UNIQUE,
-		`date_of_birth` DATETIME NOT NULL,
-		`address` VARCHAR(256) NOT NULL,
-		`expiration_date` DATETIME NOT NULL,
-		`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) COLLATE utf8mb4_bin NOT NULL,
+  `ruby` varchar(128) COLLATE utf8mb4_bin NOT NULL,
+  `student_number` int unsigned NOT NULL,
+  `date_of_birth` datetime NOT NULL,
+  `address` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `expiration_date` datetime NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `student_number` (`student_number`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin

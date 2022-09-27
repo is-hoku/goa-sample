@@ -1,8 +1,8 @@
 FROM golang:latest
 
 RUN apt update && apt upgrade -y
-RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.0/migrate.linux-amd64.tar.gz | tar xvz && mv ./migrate /usr/bin/migrate
-RUN curl -LO https://release.ariga.io/atlas/atlas-linux-amd64-latest && mv ./atlas-linux-amd64-latest /usr/bin/atlas && chmod 755 /usr/bin/atlas
+RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.0/migrate.linux-amd64.tar.gz | tar xvz && mv ./migrate /usr/local/bin/migrate
+RUN curl -LO https://release.ariga.io/atlas/atlas-linux-amd64-latest && mv ./atlas-linux-amd64-latest /usr/local/bin/atlas && chmod 755 /usr/local/bin/atlas
 
 WORKDIR /go/src/webapi
 ENV PATH $PATH:/go/src/webapi/script
