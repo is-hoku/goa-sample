@@ -19,20 +19,17 @@ make exec
 ### Generate infrastructure layer code from SQL
 After writing queries in SQL, run this to generate code. For more information, you can see the [sqlc](https://github.com/kyleconroy/sqlc) repository.
 ```
-sql-generate
+make sqlc-generate
 ```
 ### Migrate
-Run this in the app container to execute migrations. (Default argument is 1)
+After writing [atlas](https://github.com/ariga/atlas) ddl, run this to execute the migration.
 ```
-migrate-up 2
+make migrate
 ```
-Run this in the app container to rollback migrations. (Default argument is 1)
+And you have to do something like generating sql files...  
+Run this and everything will be file.
 ```
-migrate-down 2
-```
-Run this in the app container to create a migration file. The argument becomes part of the filename.  
-```
-migrate-create hoge
+make auto
 ```
 ### Generate class diagram text
 Run this in the app container to generate class diagram text compatible with plantuml.
