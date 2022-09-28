@@ -26,8 +26,8 @@ After writing [atlas](https://github.com/ariga/atlas) ddl, run this to execute t
 ```
 make migrate
 ```
-And you have to do something like generating sql files...  
-Run this and everything will be file.
+You must generate SQL files of the table definition and run the sqlc command.  
+Run this and everything will be fine.
 ```
 make auto
 ```
