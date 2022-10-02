@@ -9,5 +9,6 @@ ENV PATH $PATH:/go/src/webapi/script
 RUN go install github.com/cosmtrek/air@latest
 RUN go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
 RUN go install github.com/jfeliu007/goplantuml/cmd/goplantuml@latest
+RUN go install goa.design/goa/v3/cmd/goa@v3
 
 CMD [ "./script/startup.sh" ]

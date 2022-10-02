@@ -26,10 +26,10 @@ After writing [atlas](https://github.com/ariga/atlas) ddl, run this to execute t
 ```
 make migrate
 ```
-You must generate SQL files of the table definition and run the sqlc command.  
+You should generate SQL files of the table definition and run the sqlc command.  
 Run this and everything will be fine.
 ```
-make auto
+make db
 ```
 ### Generate class diagram text
 Run this in the app container to generate class diagram text compatible with plantuml.
