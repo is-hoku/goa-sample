@@ -52,7 +52,7 @@ const getStudentByID = `-- name: GetStudentByID :one
 SELECT ` + "`" + `id` + "`" + `, ` + "`" + `name` + "`" + `, ` + "`" + `ruby` + "`" + `, ` + "`" + `student_number` + "`" + `, ` + "`" + `date_of_birth` + "`" + `, ` + "`" + `address` + "`" + `, ` + "`" + `expiration_date` + "`" + `, ` + "`" + `created_at` + "`" + `, ` + "`" + `updated_at` + "`" + ` FROM ` + "`" + `students` + "`" + ` WHERE ` + "`" + `id` + "`" + `=?
 `
 
-func (q *Queries) GetStudentByID(ctx context.Context, id int64) (Student, error) {
+func (q *Queries) GetStudentByID(ctx context.Context, id uint64) (Student, error) {
 	row := q.db.QueryRowContext(ctx, getStudentByID, id)
 	var i Student
 	err := row.Scan(
@@ -73,7 +73,7 @@ const getStudentByNumber = `-- name: GetStudentByNumber :one
 SELECT ` + "`" + `id` + "`" + `, ` + "`" + `name` + "`" + `, ` + "`" + `ruby` + "`" + `, ` + "`" + `student_number` + "`" + `, ` + "`" + `date_of_birth` + "`" + `, ` + "`" + `address` + "`" + `, ` + "`" + `expiration_date` + "`" + `, ` + "`" + `created_at` + "`" + `, ` + "`" + `updated_at` + "`" + ` FROM ` + "`" + `students` + "`" + ` WHERE ` + "`" + `student_number` + "`" + `=?
 `
 
-func (q *Queries) GetStudentByNumber(ctx context.Context, studentNumber int32) (Student, error) {
+func (q *Queries) GetStudentByNumber(ctx context.Context, studentNumber uint32) (Student, error) {
 	row := q.db.QueryRowContext(ctx, getStudentByNumber, studentNumber)
 	var i Student
 	err := row.Scan(
@@ -97,7 +97,7 @@ INSERT INTO ` + "`" + `students` + "`" + ` (` + "`" + `name` + "`" + `, ` + "`" 
 type SetStudentParams struct {
 	Name           string
 	Ruby           string
-	StudentNumber  int32
+	StudentNumber  uint32
 	DateOfBirth    time.Time
 	Address        string
 	ExpirationDate time.Time

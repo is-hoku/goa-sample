@@ -32,10 +32,6 @@ namespace datastore {
         + GetStudentByID(ctx context.Context, id uint64) (Student, error)
         + GetStudentByNumber(ctx context.Context, studentNumber uint32) (Student, error)
         + SetStudent(ctx context.Context, arg SetStudentParams) (sql.Result, error)
-        + GetAllStudents(ctx context.Context) ([]Student, error)
-        + GetStudentByID(ctx context.Context, id int64) (Student, error)
-        + GetStudentByNumber(ctx context.Context, studentNumber int32) (Student, error)
-        + SetStudent(ctx context.Context, arg SetStudentParams) (sql.Result, error)
 
     }
     class SetStudentParams << (S,Aquamarine) >> {
@@ -45,19 +41,13 @@ namespace datastore {
         + DateOfBirth time.Time
         + Address string
         + ExpirationDate time.Time
-        + Name string
-        + Ruby string
-        + StudentNumber int32
-        + DateOfBirth time.Time
-        + Address string
-        + ExpirationDate time.Time
 
     }
     class Student << (S,Aquamarine) >> {
-        + ID int64
+        + ID uint64
         + Name string
         + Ruby string
-        + StudentNumber int32
+        + StudentNumber uint32
         + DateOfBirth time.Time
         + Address string
         + ExpirationDate time.Time
