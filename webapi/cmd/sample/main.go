@@ -13,6 +13,7 @@ import (
 	"syscall"
 
 	sample "github.com/is-hoku/goa-sample/webapi"
+	health "github.com/is-hoku/goa-sample/webapi/gen/health"
 	student "github.com/is-hoku/goa-sample/webapi/gen/student"
 )
 
@@ -38,18 +39,22 @@ func main() {
 
 	// Initialize the services.
 	var (
+		healthSvc  health.Service
 		studentSvc student.Service
 	)
 	{
+		healthSvc = sample.NewHealth(logger)
 		studentSvc = sample.NewStudent(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
+		healthEndpoints  *health.Endpoints
 		studentEndpoints *student.Endpoints
 	)
 	{
+		healthEndpoints = health.NewEndpoints(healthSvc)
 		studentEndpoints = student.NewEndpoints(studentSvc)
 	}
 
@@ -94,7 +99,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, studentEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, healthEndpoints, studentEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:

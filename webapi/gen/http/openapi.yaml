@@ -13,6 +13,27 @@ produces:
     - application/xml
     - application/gob
 paths:
+    /health:
+        get:
+            tags:
+                - health
+            summary: check health
+            description: ヘルスチェック
+            operationId: health#check
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        $ref: '#/definitions/HealthCheckResponseBody'
+                "500":
+                    description: Internal Server Error response.
+                    schema:
+                        $ref: '#/definitions/HealthCheckInternalErrorResponseBody'
+                        required:
+                            - name
+                            - message
+            schemes:
+                - http
     /students:
         get:
             tags:
@@ -20,6 +41,12 @@ paths:
             summary: get_students student
             description: 学籍番号で昇順にソートされた全ての学生を取得する。
             operationId: student#get_students
+            parameters:
+                - name: Authorization
+                  in: header
+                  description: Firebase JWT Token
+                  required: true
+                  type: string
             responses:
                 "200":
                     description: OK response.
@@ -34,6 +61,8 @@ paths:
                             - message
             schemes:
                 - http
+            security:
+                - jwt_header_Authorization: []
         post:
             tags:
                 - student
@@ -41,6 +70,11 @@ paths:
             description: 学生を登録する。
             operationId: student#create_student
             parameters:
+                - name: Authorization
+                  in: header
+                  description: Firebase JWT Token
+                  required: true
+                  type: string
                 - name: create_student_request_body
                   in: body
                   required: true
@@ -67,6 +101,8 @@ paths:
                             - message
             schemes:
                 - http
+            security:
+                - jwt_header_Authorization: []
     /students/{student_number}:
         get:
             tags:
@@ -80,6 +116,11 @@ paths:
                   description: Student's unique number
                   required: true
                   type: integer
+                - name: Authorization
+                  in: header
+                  description: Firebase JWT Token
+                  required: true
+                  type: string
             responses:
                 "200":
                     description: OK response.
@@ -108,7 +149,40 @@ paths:
                             - message
             schemes:
                 - http
+            security:
+                - jwt_header_Authorization: []
 definitions:
+    HealthCheckInternalErrorResponseBody:
+        title: HealthCheckInternalErrorResponseBody
+        type: object
+        properties:
+            message:
+                type: string
+                description: Message of error
+                example: This is an error message.
+            name:
+                type: string
+                description: Name of error
+                example: internal_error
+        example:
+            message: This is an error message.
+            name: internal_error
+        required:
+            - name
+            - message
+    HealthCheckResponseBody:
+        title: 'Mediatype identifier: application/vnd.health+json; view=default'
+        type: object
+        properties:
+            message:
+                type: string
+                description: health message
+                example: OK.
+        description: CheckResponseBody result type (default view)
+        example:
+            message: OK.
+        required:
+            - message
     StudentCreateStudentBadRequestResponseBody:
         title: StudentCreateStudentBadRequestResponseBody
         type: object
@@ -478,3 +552,14 @@ definitions:
             - date_of_birth
             - address
             - expiration_date
+securityDefinitions:
+    jwt_header_Authorization:
+        type: apiKey
+        description: |-
+            Use firebase Authentication
+
+            **Security Scopes**:
+              * `api:read`: Read access
+              * `api:write`: Write access
+        name: Authorization
+        in: header

@@ -250,17 +250,26 @@ func NewCreateStudentBadRequestResponseBody(res *student.CustomError) *CreateStu
 }
 
 // NewGetStudentPayload builds a student service get_student endpoint payload.
-func NewGetStudentPayload(studentNumber uint32) *student.GetStudentPayload {
+func NewGetStudentPayload(studentNumber uint32, authorization string) *student.GetStudentPayload {
 	v := &student.GetStudentPayload{}
 	v.StudentNumber = &studentNumber
+	v.Authorization = authorization
 
 	return v
 }
 
-// NewCreateStudentStudentBody builds a student service create_student endpoint
+// NewGetStudentsPayload builds a student service get_students endpoint payload.
+func NewGetStudentsPayload(authorization string) *student.GetStudentsPayload {
+	v := &student.GetStudentsPayload{}
+	v.Authorization = authorization
+
+	return v
+}
+
+// NewCreateStudentPayload builds a student service create_student endpoint
 // payload.
-func NewCreateStudentStudentBody(body *CreateStudentRequestBody) *student.StudentBody {
-	v := &student.StudentBody{
+func NewCreateStudentPayload(body *CreateStudentRequestBody, authorization string) *student.CreateStudentPayload {
+	v := &student.CreateStudentPayload{
 		Name:           *body.Name,
 		Ruby:           *body.Ruby,
 		StudentNumber:  *body.StudentNumber,
@@ -268,6 +277,7 @@ func NewCreateStudentStudentBody(body *CreateStudentRequestBody) *student.Studen
 		Address:        *body.Address,
 		ExpirationDate: *body.ExpirationDate,
 	}
+	v.Authorization = authorization
 
 	return v
 }

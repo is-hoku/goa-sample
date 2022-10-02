@@ -9,17 +9,18 @@ import (
 	"sync"
 	"time"
 
+	health "github.com/is-hoku/goa-sample/webapi/gen/health"
+	healthsvr "github.com/is-hoku/goa-sample/webapi/gen/http/health/server"
 	studentsvr "github.com/is-hoku/goa-sample/webapi/gen/http/student/server"
 	student "github.com/is-hoku/goa-sample/webapi/gen/student"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
-	goa "goa.design/goa/v3/pkg"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, studentEndpoints *student.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, healthEndpoints *health.Endpoints, studentEndpoints *student.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -50,19 +51,23 @@ func handleHTTPServer(ctx context.Context, u *url.URL, studentEndpoints *student
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
+		healthServer  *healthsvr.Server
 		studentServer *studentsvr.Server
 	)
 	{
 		eh := errorHandler(logger)
-		studentServer = studentsvr.New(studentEndpoints, mux, dec, enc, eh, customErrorResponse)
+		healthServer = healthsvr.New(healthEndpoints, mux, dec, enc, eh, healthCustomErrorResponse)
+		studentServer = studentsvr.New(studentEndpoints, mux, dec, enc, eh, studentCustomErrorResponse)
 		if debug {
 			servers := goahttp.Servers{
+				healthServer,
 				studentServer,
 			}
 			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
 		}
 	}
 	// Configure the mux.
+	healthsvr.Mount(mux, healthServer)
 	studentsvr.Mount(mux, studentServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
@@ -76,6 +81,9 @@ func handleHTTPServer(ctx context.Context, u *url.URL, studentEndpoints *student
 	// Start HTTP server using default configuration, change the code to
 	// configure the server as required by your service.
 	srv := &http.Server{Addr: u.Host, Handler: handler}
+	for _, m := range healthServer.Mounts {
+		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
+	}
 	for _, m := range studentServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
@@ -110,25 +118,4 @@ func errorHandler(logger *log.Logger) func(context.Context, http.ResponseWriter,
 		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
 		logger.Printf("[%s] ERROR: %s", id, err.Error())
 	}
-}
-
-func customErrorResponse(err error) goahttp.Statuser {
-	// Error Handling for Decoding & Validation
-	if serr, ok := err.(*goa.ServiceError); ok {
-		switch serr.Name {
-		case "invalid_field_type":
-			return &student.CustomError{Name: "bad_request", Message: "Invalid Field Type"}
-		case "missing_field":
-			return &student.CustomError{Name: "bad_request", Message: "Missing Field"}
-		case "decode_payload":
-			return &student.CustomError{Name: "bad_request", Message: "Invalid Body"}
-		case "invalid_format":
-			return &student.CustomError{Name: "bad_request", Message: "Invalid Format"}
-		default:
-			return &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
-		}
-	} else if serr, ok := err.(*student.CustomError); ok { // Error Handling for Business logic
-		return &student.CustomError{Name: serr.Name, Message: serr.Message}
-	}
-	return &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
 }

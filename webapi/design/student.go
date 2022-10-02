@@ -11,8 +11,10 @@ var _ = Service("student", func() {
 		Error("bad_request", CustomErrorType)
 		Payload(func() {
 			Attribute("student_number", UInt32, "Student's unique number")
+			Extend(Authorization)
 		})
 		HTTP(func() {
+			Header("Authorization", String)
 			GET("students/{student_number}")
 			Response(StatusOK)
 			Response("internal_error", StatusInternalServerError)
@@ -24,7 +26,12 @@ var _ = Service("student", func() {
 		Description("学籍番号で昇順にソートされた全ての学生を取得する。")
 		Result(StudentsType)
 		Error("internal_error", CustomErrorType)
+		Payload(
+			func() {
+				Extend(Authorization)
+			})
 		HTTP(func() {
+			Header("Authorization", String)
 			GET("/students")
 			Response(StatusOK)
 			Response("internal_error", StatusInternalServerError)
@@ -35,7 +42,11 @@ var _ = Service("student", func() {
 		Result(StudentType)
 		Error("internal_error", CustomErrorType)
 		Error("bad_request", CustomErrorType)
-		Payload(StudentBodyType)
+		Payload(
+			func() {
+				Extend(StudentBodyType)
+				Extend(Authorization)
+			})
 		HTTP(func() {
 			POST("/students")
 			Body(StudentBodyType)

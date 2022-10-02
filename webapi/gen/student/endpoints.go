@@ -11,6 +11,7 @@ import (
 	"context"
 
 	goa "goa.design/goa/v3/pkg"
+	"goa.design/goa/v3/security"
 )
 
 // Endpoints wraps the "student" service endpoints.
@@ -22,10 +23,12 @@ type Endpoints struct {
 
 // NewEndpoints wraps the methods of the "student" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
+	// Casting service to Auther interface
+	a := s.(Auther)
 	return &Endpoints{
-		GetStudent:    NewGetStudentEndpoint(s),
-		GetStudents:   NewGetStudentsEndpoint(s),
-		CreateStudent: NewCreateStudentEndpoint(s),
+		GetStudent:    NewGetStudentEndpoint(s, a.JWTAuth),
+		GetStudents:   NewGetStudentsEndpoint(s, a.JWTAuth),
+		CreateStudent: NewCreateStudentEndpoint(s, a.JWTAuth),
 	}
 }
 
@@ -38,9 +41,19 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 
 // NewGetStudentEndpoint returns an endpoint function that calls the method
 // "get_student" of service "student".
-func NewGetStudentEndpoint(s Service) goa.Endpoint {
+func NewGetStudentEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*GetStudentPayload)
+		var err error
+		sc := security.JWTScheme{
+			Name:           "jwt",
+			Scopes:         []string{"api:read", "api:write"},
+			RequiredScopes: []string{},
+		}
+		ctx, err = authJWTFn(ctx, p.Authorization, &sc)
+		if err != nil {
+			return nil, err
+		}
 		res, err := s.GetStudent(ctx, p)
 		if err != nil {
 			return nil, err
@@ -52,9 +65,20 @@ func NewGetStudentEndpoint(s Service) goa.Endpoint {
 
 // NewGetStudentsEndpoint returns an endpoint function that calls the method
 // "get_students" of service "student".
-func NewGetStudentsEndpoint(s Service) goa.Endpoint {
+func NewGetStudentsEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		res, err := s.GetStudents(ctx)
+		p := req.(*GetStudentsPayload)
+		var err error
+		sc := security.JWTScheme{
+			Name:           "jwt",
+			Scopes:         []string{"api:read", "api:write"},
+			RequiredScopes: []string{},
+		}
+		ctx, err = authJWTFn(ctx, p.Authorization, &sc)
+		if err != nil {
+			return nil, err
+		}
+		res, err := s.GetStudents(ctx, p)
 		if err != nil {
 			return nil, err
 		}
@@ -65,9 +89,19 @@ func NewGetStudentsEndpoint(s Service) goa.Endpoint {
 
 // NewCreateStudentEndpoint returns an endpoint function that calls the method
 // "create_student" of service "student".
-func NewCreateStudentEndpoint(s Service) goa.Endpoint {
+func NewCreateStudentEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		p := req.(*StudentBody)
+		p := req.(*CreateStudentPayload)
+		var err error
+		sc := security.JWTScheme{
+			Name:           "jwt",
+			Scopes:         []string{"api:read", "api:write"},
+			RequiredScopes: []string{},
+		}
+		ctx, err = authJWTFn(ctx, p.Authorization, &sc)
+		if err != nil {
+			return nil, err
+		}
 		res, err := s.CreateStudent(ctx, p)
 		if err != nil {
 			return nil, err

@@ -13,6 +13,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	student "github.com/is-hoku/goa-sample/webapi/gen/student"
 	studentviews "github.com/is-hoku/goa-sample/webapi/gen/student/views"
@@ -38,6 +39,7 @@ func DecodeGetStudentRequest(mux goahttp.Muxer, decoder func(*http.Request) goah
 	return func(r *http.Request) (interface{}, error) {
 		var (
 			studentNumber uint32
+			authorization string
 			err           error
 
 			params = mux.Vars(r)
@@ -50,10 +52,19 @@ func DecodeGetStudentRequest(mux goahttp.Muxer, decoder func(*http.Request) goah
 			}
 			studentNumber = uint32(v)
 		}
+		authorization = r.Header.Get("Authorization")
+		if authorization == "" {
+			err = goa.MergeErrors(err, goa.MissingFieldError("Authorization", "header"))
+		}
 		if err != nil {
 			return nil, err
 		}
-		payload := NewGetStudentPayload(studentNumber)
+		payload := NewGetStudentPayload(studentNumber, authorization)
+		if strings.Contains(payload.Authorization, " ") {
+			// Remove authorization scheme prefix (e.g. "Bearer")
+			cred := strings.SplitN(payload.Authorization, " ", 2)[1]
+			payload.Authorization = cred
+		}
 
 		return payload, nil
 	}
@@ -126,6 +137,32 @@ func EncodeGetStudentsResponse(encoder func(context.Context, http.ResponseWriter
 	}
 }
 
+// DecodeGetStudentsRequest returns a decoder for requests sent to the student
+// get_students endpoint.
+func DecodeGetStudentsRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			authorization string
+			err           error
+		)
+		authorization = r.Header.Get("Authorization")
+		if authorization == "" {
+			err = goa.MergeErrors(err, goa.MissingFieldError("Authorization", "header"))
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewGetStudentsPayload(authorization)
+		if strings.Contains(payload.Authorization, " ") {
+			// Remove authorization scheme prefix (e.g. "Bearer")
+			cred := strings.SplitN(payload.Authorization, " ", 2)[1]
+			payload.Authorization = cred
+		}
+
+		return payload, nil
+	}
+}
+
 // EncodeGetStudentsError returns an encoder for errors returned by the
 // get_students student endpoint.
 func EncodeGetStudentsError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
@@ -186,7 +223,23 @@ func DecodeCreateStudentRequest(mux goahttp.Muxer, decoder func(*http.Request) g
 		if err != nil {
 			return nil, err
 		}
-		payload := NewCreateStudentStudentBody(&body)
+
+		var (
+			authorization string
+		)
+		authorization = r.Header.Get("Authorization")
+		if authorization == "" {
+			err = goa.MergeErrors(err, goa.MissingFieldError("Authorization", "header"))
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewCreateStudentPayload(&body, authorization)
+		if strings.Contains(payload.Authorization, " ") {
+			// Remove authorization scheme prefix (e.g. "Bearer")
+			cred := strings.SplitN(payload.Authorization, " ", 2)[1]
+			payload.Authorization = cred
+		}
 
 		return payload, nil
 	}

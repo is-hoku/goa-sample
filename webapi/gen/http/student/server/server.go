@@ -170,6 +170,7 @@ func NewGetStudentsHandler(
 	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
+		decodeRequest  = DecodeGetStudentsRequest(mux, decoder)
 		encodeResponse = EncodeGetStudentsResponse(encoder)
 		encodeError    = EncodeGetStudentsError(encoder, formatter)
 	)
@@ -177,8 +178,14 @@ func NewGetStudentsHandler(
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "get_students")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "student")
-		var err error
-		res, err := endpoint(ctx, nil)
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)

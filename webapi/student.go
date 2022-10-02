@@ -1,27 +1,25 @@
-package studentsapi
+package sample
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"time"
 
 	"github.com/is-hoku/goa-sample/webapi/datastore"
-	"github.com/is-hoku/goa-sample/webapi/gen/student"
+	student "github.com/is-hoku/goa-sample/webapi/gen/student"
 	"github.com/is-hoku/goa-sample/webapi/interactor"
 	"github.com/is-hoku/goa-sample/webapi/model"
 	"github.com/is-hoku/goa-sample/webapi/usecase"
+	"goa.design/goa/v3/security"
 )
 
-// students service example implementation.
-// The example methods log the requests and return zero values.
 type studentsrvc struct {
-	logger *log.Logger
-	//handler repository.StudentRepository
+	logger  *log.Logger
 	student usecase.StudentUsecase
 }
 
-// NewStudents returns the students service implementation.
 func NewStudent(logger *log.Logger) student.Service {
 	config := &datastore.Config{
 		User:     os.Getenv("DB_USER"),
@@ -37,6 +35,10 @@ func NewStudent(logger *log.Logger) student.Service {
 	studentDB := datastore.NewStudentHandler(sqldb)
 	studentInteractor := interactor.NewStudentInteractor(studentDB)
 	return &studentsrvc{logger, studentInteractor}
+}
+
+func (s *studentsrvc) JWTAuth(ctx context.Context, token string, scheme *security.JWTScheme) (context.Context, error) {
+	return ctx, fmt.Errorf("not implemented")
 }
 
 // 学籍番号から学生を取得する。
@@ -59,7 +61,7 @@ func (s *studentsrvc) GetStudent(ctx context.Context, p *student.GetStudentPaylo
 }
 
 // 学籍番号で昇順にソートされた全ての学生を取得する。
-func (s *studentsrvc) GetStudents(ctx context.Context) (*student.Students, error) {
+func (s *studentsrvc) GetStudents(ctx context.Context, p *student.GetStudentsPayload) (*student.Students, error) {
 	s.logger.Print("students.get students")
 	allStudents, err := s.student.GetAll(ctx)
 	if err != nil {
@@ -84,7 +86,7 @@ func (s *studentsrvc) GetStudents(ctx context.Context) (*student.Students, error
 }
 
 // 学生を登録する。
-func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.StudentBody) (*student.Student, error) {
+func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.CreateStudentPayload) (*student.Student, error) {
 	s.logger.Print("students.create student")
 	birth, err := time.Parse(time.RFC3339, body.DateOfBirth)
 	if err != nil {

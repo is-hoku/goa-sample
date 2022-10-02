@@ -6,6 +6,28 @@ info:
 servers:
     - url: http://0.0.0.0:8080
 paths:
+    /health:
+        get:
+            tags:
+                - health
+            summary: check health
+            description: ヘルスチェック
+            operationId: health#check
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/HealthResult'
+                            example:
+                                message: OK.
+                "500":
+                    description: 'internal_error: Internal Server Error response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomError'
     /students:
         get:
             tags:
@@ -43,12 +65,23 @@ paths:
                                       name: 鈴木太郎
                                       ruby: スズキタロウ
                                       student_number: 12345
+                                    - address: 名古屋市中区三の丸三丁目1番2号
+                                      date_of_birth: "2022-04-01T13:30:00+09:00"
+                                      expiration_date: "2027-03-31T00:00:00+09:00"
+                                      id: 1
+                                      name: 鈴木太郎
+                                      ruby: スズキタロウ
+                                      student_number: 12345
                 "500":
                     description: 'internal_error: Internal Server Error response.'
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CustomError'
+            security:
+                - jwt_header_Authorization:
+                    - api:read
+                    - api:write
         post:
             tags:
                 - student
@@ -95,6 +128,10 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CustomError'
+            security:
+                - jwt_header_Authorization:
+                    - api:read
+                    - api:write
     /students/{student_number}:
         get:
             tags:
@@ -110,8 +147,8 @@ paths:
                   schema:
                     type: integer
                     description: Student's unique number
-                    example: 1289516460
-                  example: 3842506169
+                    example: 2516961669
+                  example: 1801313920
             responses:
                 "200":
                     description: OK response.
@@ -145,6 +182,10 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CustomError'
+            security:
+                - jwt_header_Authorization:
+                    - api:read
+                    - api:write
 components:
     schemas:
         CustomError:
@@ -163,6 +204,17 @@ components:
                 name: internal_error
             required:
                 - name
+                - message
+        HealthResult:
+            type: object
+            properties:
+                message:
+                    type: string
+                    description: health message
+                    example: OK.
+            example:
+                message: OK.
+            required:
                 - message
         Student:
             type: object
@@ -336,13 +388,6 @@ components:
                           name: 鈴木太郎
                           ruby: スズキタロウ
                           student_number: 12345
-                        - address: 名古屋市中区三の丸三丁目1番2号
-                          date_of_birth: "2022-04-01T13:30:00+09:00"
-                          expiration_date: "2027-03-31T00:00:00+09:00"
-                          id: 1
-                          name: 鈴木太郎
-                          ruby: スズキタロウ
-                          student_number: 12345
             example:
                 students:
                     - address: 名古屋市中区三の丸三丁目1番2号
@@ -361,5 +406,15 @@ components:
                       student_number: 12345
             required:
                 - students
+    securitySchemes:
+        jwt_header_Authorization:
+            type: http
+            description: Use firebase Authentication
+            scheme: bearer
 tags:
+    - name: health
     - name: student
+security:
+    - jwt_header_:
+        - api:read
+        - api:write

@@ -11,6 +11,7 @@ import (
 	"context"
 
 	studentviews "github.com/is-hoku/goa-sample/webapi/gen/student/views"
+	"goa.design/goa/v3/security"
 )
 
 // Service is the student service interface.
@@ -18,9 +19,15 @@ type Service interface {
 	// 学籍番号から学生を取得する。
 	GetStudent(context.Context, *GetStudentPayload) (res *Student, err error)
 	// 学籍番号で昇順にソートされた全ての学生を取得する。
-	GetStudents(context.Context) (res *Students, err error)
+	GetStudents(context.Context, *GetStudentsPayload) (res *Students, err error)
 	// 学生を登録する。
-	CreateStudent(context.Context, *StudentBody) (res *Student, err error)
+	CreateStudent(context.Context, *CreateStudentPayload) (res *Student, err error)
+}
+
+// Auther defines the authorization functions to be implemented by the service.
+type Auther interface {
+	// JWTAuth implements the authorization logic for the JWT security scheme.
+	JWTAuth(ctx context.Context, token string, schema *security.JWTScheme) (context.Context, error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -32,6 +39,25 @@ const ServiceName = "student"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [3]string{"get_student", "get_students", "create_student"}
+
+// CreateStudentPayload is the payload type of the student service
+// create_student method.
+type CreateStudentPayload struct {
+	// 学生の氏名
+	Name string
+	// 学生の氏名のフリガナ
+	Ruby string
+	// 学生の学籍番号
+	StudentNumber uint32
+	// 学生の生年月日 (RFC3339)
+	DateOfBirth string
+	// 学生の住所
+	Address string
+	// 学生証の有効期間 (RFC3339)
+	ExpirationDate string
+	// Firebase JWT Token
+	Authorization string
+}
 
 // CustomError is the error returned error name and message.
 type CustomError struct {
@@ -46,28 +72,21 @@ type CustomError struct {
 type GetStudentPayload struct {
 	// Student's unique number
 	StudentNumber *uint32
+	// Firebase JWT Token
+	Authorization string
+}
+
+// GetStudentsPayload is the payload type of the student service get_students
+// method.
+type GetStudentsPayload struct {
+	// Firebase JWT Token
+	Authorization string
 }
 
 // Student is the result type of the student service get_student method.
 type Student struct {
 	// 学生を一意に表す ID
 	ID uint64
-	// 学生の氏名
-	Name string
-	// 学生の氏名のフリガナ
-	Ruby string
-	// 学生の学籍番号
-	StudentNumber uint32
-	// 学生の生年月日 (RFC3339)
-	DateOfBirth string
-	// 学生の住所
-	Address string
-	// 学生証の有効期間 (RFC3339)
-	ExpirationDate string
-}
-
-// StudentBody is the payload type of the student service create_student method.
-type StudentBody struct {
 	// 学生の氏名
 	Name string
 	// 学生の氏名のフリガナ

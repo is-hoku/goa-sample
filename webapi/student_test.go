@@ -1,4 +1,4 @@
-package studentsapi
+package sample
 
 import (
 	"context"

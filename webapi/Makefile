@@ -13,13 +13,11 @@ test:
 	go vet ./...
 clean:
 	rm -rf dist
-goagen: design
-	mv gen/student/error.go .
+goagen:
 	goa gen github.com/is-hoku/goa-sample/webapi/design
 	rm -rf gen/http/cli/ gen/http/*/client/ gen/*/client*
-	mv ./error.go gen/student
 	touch goagen
-goaexample: design
+goaexample:
 	goa example github.com/is-hoku/goa-sample/webapi/design
 	rm -rf cmd/*-cli
 	touch goaexample
@@ -38,4 +36,4 @@ sqlgen:
 	go run ./bin/table_def_sql.go
 db: migrate sqlgen sqlc-generate
 
-.PHONY: build exec test clean inspect sqlgen db
+.PHONY: build exec test clean goagen goaexample inspect sqlgen db
