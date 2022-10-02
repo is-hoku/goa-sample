@@ -16,11 +16,9 @@ clean:
 goagen:
 	goa gen github.com/is-hoku/goa-sample/webapi/design
 	rm -rf gen/http/cli/ gen/http/*/client/ gen/*/client*
-	touch goagen
 goaexample:
 	goa example github.com/is-hoku/goa-sample/webapi/design
 	rm -rf cmd/*-cli
-	touch goaexample
 sqlc-generate: datastore/query datastore/table
 	sqlc generate --file sqlc.yaml
 	touch sqlc-generate

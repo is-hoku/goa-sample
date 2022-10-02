@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"firebase.google.com/go/auth"
 	"github.com/google/go-cmp/cmp"
 	"github.com/is-hoku/goa-sample/webapi/gen/student"
 	"github.com/is-hoku/goa-sample/webapi/interactor"
@@ -124,6 +125,10 @@ func TestGetStudent(t *testing.T) {
 func TestGetStudents(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
+	ctx = context.WithValue(ctx, userInfoContextKey, &auth.UserInfo{
+		Email: "test@example.com",
+	})
+	defer cancel()
 	mock := &MockStudent{}
 	logger := log.New(os.Stderr, "[test] ", log.Ltime)
 	studentInteractor := interactor.NewStudentInteractor(mock)
@@ -182,7 +187,7 @@ func TestGetStudents(t *testing.T) {
 				},
 			},
 		}
-		got, err := srvc.GetStudents(ctx)
+		got, err := srvc.GetStudents(ctx, &student.GetStudentsPayload{})
 		if err != nil {
 			t.Fatalf("Could not get mock data: %s\n", err)
 		}
@@ -246,7 +251,7 @@ func TestCreate(t *testing.T) {
 			Address:        "愛知県名古屋市中区三の丸三丁目1番2号",
 			ExpirationDate: edate1.Format(time.RFC3339),
 		}
-		body := &student.StudentBody{
+		body := &student.CreateStudentPayload{
 			Name:           "太郎",
 			Ruby:           "たろう",
 			StudentNumber:  12345,

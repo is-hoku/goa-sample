@@ -2,7 +2,6 @@ package sample
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -38,7 +37,20 @@ func NewStudent(logger *log.Logger) student.Service {
 }
 
 func (s *studentsrvc) JWTAuth(ctx context.Context, token string, scheme *security.JWTScheme) (context.Context, error) {
-	return ctx, fmt.Errorf("not implemented")
+	// Firebase Authentication で認証
+	//authClient, err := newFirebase(ctx)
+	//if err != nil {
+	//	return ctx, &student.CustomError{Name: "internal_error", Message: "Failed to create firebase app instance"}
+	//}
+	//idToken, err := authClient.VerifyIDToken(ctx, token)
+	//if err != nil {
+	//	return ctx, &student.CustomError{Name: "unauthorized", Message: "Unauthorized"}
+	//}
+	//ctx, err = SetUserInfo(ctx, idToken)
+	//if err != nil {
+	//	return ctx, &student.CustomError{Name: "internal_error", Message: "Failed to get user information from Firebase"}
+	//}
+	return ctx, nil
 }
 
 // 学籍番号から学生を取得する。
