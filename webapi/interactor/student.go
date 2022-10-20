@@ -8,37 +8,74 @@ import (
 	"github.com/is-hoku/goa-sample/webapi/usecase"
 )
 
-type StudentInteractor struct {
-	Repo repository.StudentRepository
+var _ usecase.StudentByNumberGetter = (*GetStudentByNumber)(nil)
+
+type GetStudentByNumber struct {
+	opt *GetStudentByNumberOption
 }
 
-func NewStudentInteractor(repo repository.StudentRepository) *StudentInteractor {
-	return &StudentInteractor{
-		Repo: repo,
+type GetStudentByNumberOption struct {
+	repository.StudentByNumberGetter
+}
+
+func NewGetStudentByNumber(opt *GetStudentByNumberOption) *GetStudentByNumber {
+	return &GetStudentByNumber{
+		opt: opt,
 	}
 }
 
-var _ usecase.StudentUsecase = (*StudentInteractor)(nil)
-
-func (i *StudentInteractor) GetByNumber(ctx context.Context, number uint32) (*model.Student, error) {
-	student, err := i.Repo.GetByNumber(ctx, number)
+func (s *GetStudentByNumber) GetStudentByNumber(ctx context.Context, input *usecase.GetStudentByNumberInput) (*usecase.GetStudentByNumberOutput, error) {
+	student, err := s.opt.GetStudentByNumber(ctx, &repository.GetStudentByNumberInput{
+		StudentNumber: input.StudentNumber,
+	})
 	if err != nil {
 		return nil, err
 	}
-	return student, nil
+	return &usecase.GetStudentByNumberOutput{
+		Student: &model.Student{
+			ID:             student.Student.ID,
+			Name:           student.Student.Name,
+			Ruby:           student.Student.Ruby,
+			StudentNumber:  student.Student.StudentNumber,
+			DateOfBirth:    student.Student.DateOfBirth,
+			Address:        student.Student.Address,
+			ExpirationDate: student.Student.ExpirationDate,
+		},
+	}, nil
 }
 
-func (i *StudentInteractor) Create(ctx context.Context, s *model.Student) (*model.Student, error) {
-	tx, err := i.Repo.BeginTx(ctx)
+var _ usecase.StudentCreator = (*CreateStudent)(nil)
+
+type CreateStudent struct {
+	opt *CreateStudentOption
+}
+
+type CreateStudentOption struct {
+	repository.StudentByIDGetter
+	repository.StudentCreator
+}
+
+func NewCreateStudent(opt *CreateStudentOption) *CreateStudent {
+	return &CreateStudent{
+		opt: opt,
+	}
+}
+
+func (s *CreateStudent) CreateStudent(ctx context.Context, input *usecase.CreateStudentInput) (*usecase.CreateStudentOutput, error) {
+	tx, err := s.opt.BeginTx(ctx)
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-	studentID, err := i.Repo.Set(ctx, s)
+	studentID, err := s.opt.CreateStudent(ctx, &repository.CreateStudentInput{
+		Student: input.Student,
+	})
 	if err != nil {
 		return nil, err
 	}
-	student, err := i.Repo.GetByID(ctx, studentID)
+	student, err := s.opt.GetStudentByID(ctx, &repository.GetStudentByIDInput{
+		ID: studentID.ID,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -46,13 +83,36 @@ func (i *StudentInteractor) Create(ctx context.Context, s *model.Student) (*mode
 	if err != nil {
 		return nil, err
 	}
-	return student, nil
+	return &usecase.CreateStudentOutput{
+		Student: student.Student,
+	}, nil
 }
 
-func (i *StudentInteractor) GetAll(ctx context.Context) ([]*model.Student, error) {
-	students, err := i.Repo.GetAll(ctx)
+var _ usecase.StudentsGetter = (*GetStudents)(nil)
+
+type GetStudents struct {
+	opt *GetStudentsOption
+}
+
+type GetStudentsOption struct {
+	repository.StudentsGetter
+}
+
+func NewGetStudents(opt *GetStudentsOption) *GetStudents {
+	return &GetStudents{
+		opt: opt,
+	}
+}
+func (s *GetStudents) GetStudents(ctx context.Context) (*usecase.GetStudentsOutput, error) {
+	gotStudents, err := s.opt.GetStudents(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return students, nil
+	var students []*model.Student
+	for _, s := range gotStudents.Students {
+		students = append(students, s)
+	}
+	return &usecase.GetStudentsOutput{
+		Students: students,
+	}, nil
 }

@@ -6,8 +6,34 @@ import (
 	"github.com/is-hoku/goa-sample/webapi/model"
 )
 
-type StudentUsecase interface {
-	GetByNumber(context.Context, uint32) (*model.Student, error)
-	Create(context.Context, *model.Student) (*model.Student, error)
-	GetAll(context.Context) ([]*model.Student, error)
+type StudentByNumberGetter interface {
+	GetStudentByNumber(ctx context.Context, input *GetStudentByNumberInput) (*GetStudentByNumberOutput, error)
+}
+
+type GetStudentByNumberInput struct {
+	StudentNumber uint32
+}
+
+type GetStudentByNumberOutput struct {
+	Student *model.Student
+}
+
+type StudentsGetter interface {
+	GetStudents(ctx context.Context) (*GetStudentsOutput, error)
+}
+
+type GetStudentsOutput struct {
+	Students []*model.Student
+}
+
+type StudentCreator interface {
+	CreateStudent(ctx context.Context, input *CreateStudentInput) (*CreateStudentOutput, error)
+}
+
+type CreateStudentInput struct {
+	Student *model.Student
+}
+
+type CreateStudentOutput struct {
+	Student *model.Student
 }
