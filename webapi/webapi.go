@@ -10,7 +10,7 @@ import (
 	"github.com/is-hoku/goa-sample/webapi/usecase"
 )
 
-func newMySQLConfig() (*mysql.Config, error) {
+func newMySQLConfig() *mysql.Config {
 	config := mysql.NewConfig()
 	config.Net = "tcp"
 	config.User = os.Getenv("DB_USER")
@@ -20,7 +20,7 @@ func newMySQLConfig() (*mysql.Config, error) {
 	config.Timeout = 30 * time.Second
 	config.RejectReadOnly = true
 	config.ParseTime = true
-	return config, nil
+	return config
 }
 
 type StudentApp struct {

@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/is-hoku/goa-sample/webapi/gen/student"
 	"github.com/is-hoku/goa-sample/webapi/model"
 	"github.com/is-hoku/goa-sample/webapi/repository"
@@ -56,15 +55,14 @@ func TestGetByNumber(t *testing.T) {
 			},
 		}
 
-		getStudentMedia := NewGetStudentMedia(testDB)
+		getStudentMedia := NewGetStudentByNumberMedia(testDB)
 		got, err := getStudentMedia.GetStudentByNumber(ctx, &repository.GetStudentByNumberInput{
 			StudentNumber: 12345,
 		})
 		if err != nil {
 			t.Fatalf("Could not get test data from test db: %s\n", err)
 		}
-		option := cmpopts.IgnoreFields(got, "CreatedAt", "UpdatedAt")
-		if diff := cmp.Diff(want, got, option); diff != "" {
+		if diff := cmp.Diff(want, got); diff != "" {
 			t.Errorf("unexpected response (-want +got):\n%s", diff)
 		}
 	})
@@ -74,7 +72,7 @@ func TestGetByNumber(t *testing.T) {
 			t.Fatalf("Could not remove test data from test db: %s\n", err)
 		}
 
-		getStudentMedia := NewGetStudentMedia(testDB)
+		getStudentMedia := NewGetStudentByNumberMedia(testDB)
 		_, err := getStudentMedia.GetStudentByNumber(ctx, &repository.GetStudentByNumberInput{
 			StudentNumber: 12345,
 		})
@@ -135,8 +133,7 @@ func TestGetByID(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Could not get test data from test db: %s\n", err)
 		}
-		option := cmpopts.IgnoreFields(got, "CreatedAt", "UpdatedAt")
-		if diff := cmp.Diff(want, got, option); diff != "" {
+		if diff := cmp.Diff(want, got); diff != "" {
 			t.Errorf("unexpected response (-want +got):\n%s", diff)
 		}
 	})
@@ -227,14 +224,13 @@ func TestGetAll(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Could not get test data from test db: %s\n", err)
 		}
-		option := cmpopts.IgnoreFields(got, "CreatedAt", "UpdatedAt")
-		if diff := cmp.Diff(want, got, option); diff != "" {
+		if diff := cmp.Diff(want, got); diff != "" {
 			t.Errorf("unexpected response (-want +got):\n%s", diff)
 		}
 	})
 }
 
-func TestSet(t *testing.T) {
+func TestCreate(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	testDB, err := newTestDB(ctx)
@@ -259,7 +255,7 @@ func TestSet(t *testing.T) {
 		}
 
 		createStudentMedia := NewCreateStudentMedia(testDB)
-		gotID, err := createStudentMedia.CreateStudent(ctx, &repository.CreateStudentInput{
+		got, err := createStudentMedia.CreateStudent(ctx, &repository.CreateStudentInput{
 			Student: &model.Student{
 				Name:           "太郎",
 				Ruby:           "たろう",
@@ -273,15 +269,7 @@ func TestSet(t *testing.T) {
 			t.Fatalf("Could not set test data to test db: %s\n", err)
 		}
 
-		getStudentByIDMedia := NewGetStudentByIDMedia(testDB)
-		got, err := getStudentByIDMedia.GetStudentByID(ctx, &repository.GetStudentByIDInput{
-			ID: gotID.ID,
-		})
-		if err != nil {
-			t.Fatalf("Could not get test data from test db: %s\n", err)
-		}
-		option := cmpopts.IgnoreFields(got, "CreatedAt", "UpdatedAt")
-		if diff := cmp.Diff(want, got, option); diff != "" {
+		if diff := cmp.Diff(want, got); diff != "" {
 			t.Errorf("unexpected response (-want +got):\n%s", diff)
 		}
 	})

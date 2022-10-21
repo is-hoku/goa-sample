@@ -3,21 +3,30 @@ package main
 import (
 	"context"
 	"log"
+	"net"
 	"os"
 	"time"
 
+	"github.com/go-sql-driver/mysql"
 	"github.com/is-hoku/goa-sample/webapi/datastore"
 )
 
+func newMySQLConfig() *mysql.Config {
+	config := mysql.NewConfig()
+	config.Net = "tcp"
+	config.User = os.Getenv("DB_USER")
+	config.Passwd = os.Getenv("DB_PASS")
+	config.Addr = net.JoinHostPort(os.Getenv("DB_HOST"), os.Getenv("DB_PORT"))
+	config.DBName = os.Getenv("DB_NAME")
+	config.Timeout = 30 * time.Second
+	config.RejectReadOnly = true
+	config.ParseTime = true
+	return config
+}
+
 func main() {
-	config := &datastore.Config{
-		User:     os.Getenv("DB_USER"),
-		Password: os.Getenv("DB_PASS"),
-		Host:     os.Getenv("DB_HOST"),
-		Port:     os.Getenv("DB_PORT"),
-		DBName:   os.Getenv("DB_NAME"),
-	}
-	db, err := datastore.NewDB(config)
+	config := newMySQLConfig()
+	db, err := datastore.NewMySQL(config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,9 +43,6 @@ func main() {
 	for rows.Next() {
 		if err := rows.Scan(&tableName); err != nil {
 			log.Fatal(err)
-		}
-		if tableName != "users" { // users は DB が自動生成したテーブル
-			tables = append(tables, tableName)
 		}
 	}
 	for _, table := range tables {

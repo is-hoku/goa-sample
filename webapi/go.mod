@@ -6,6 +6,7 @@ require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/go-cmp v0.5.6
+	github.com/google/wire v0.5.0
 	goa.design/goa/v3 v3.7.6
 	goa.design/plugins/v3 v3.7.6
 )

@@ -6,7 +6,20 @@ import (
 	"log"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/google/wire"
 	"github.com/is-hoku/goa-sample/webapi/repository"
+)
+
+var StudentSet = wire.NewSet(
+	NewMySQL,
+	NewGetStudentByNumberMedia,
+	wire.Bind(new(repository.StudentByNumberGetter), new(*GetStudentByNumberMedia)),
+	NewGetStudentByIDMedia,
+	wire.Bind(new(repository.StudentByIDGetter), new(*GetStudentByIDMedia)),
+	NewCreateStudentMedia,
+	wire.Bind(new(repository.StudentCreator), new(*CreateStudentMedia)),
+	NewGetStudentsMedia,
+	wire.Bind(new(repository.StudentsGetter), new(*GetStudentsMedia)),
 )
 
 type DB struct {

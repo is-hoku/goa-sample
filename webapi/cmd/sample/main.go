@@ -37,6 +37,14 @@ func main() {
 		logger = log.New(os.Stderr, "[sample] ", log.Ltime)
 	}
 
+	// New App
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	studentApp, err := sample.NewStudentApp(ctx)
+	if err != nil {
+		logger.Fatalf("unepected error:%s", err)
+	}
+
 	// Initialize the services.
 	var (
 		healthSvc  health.Service
@@ -44,7 +52,7 @@ func main() {
 	)
 	{
 		healthSvc = sample.NewHealth(logger)
-		studentSvc = sample.NewStudent(logger)
+		studentSvc = sample.NewStudent(logger, studentApp)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
@@ -71,7 +79,6 @@ func main() {
 	}()
 
 	var wg sync.WaitGroup
-	ctx, cancel := context.WithCancel(context.Background())
 
 	// Start the servers and send errors (if any) to the error channel.
 	switch *hostF {

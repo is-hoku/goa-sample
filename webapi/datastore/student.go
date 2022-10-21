@@ -14,7 +14,7 @@ type GetStudentByNumberMedia struct {
 	*DB
 }
 
-func NewGetStudentMedia(db *DB) *GetStudentByNumberMedia {
+func NewGetStudentByNumberMedia(db *DB) *GetStudentByNumberMedia {
 	return &GetStudentByNumberMedia{db}
 }
 

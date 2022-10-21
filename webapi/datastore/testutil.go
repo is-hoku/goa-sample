@@ -11,7 +11,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-func newTestMySQLConfig() (*mysql.Config, error) {
+func newTestMySQLConfig() *mysql.Config {
 	config := mysql.NewConfig()
 	config.Net = "tcp"
 	config.User = os.Getenv("TEST_DB_USER")
@@ -21,7 +21,7 @@ func newTestMySQLConfig() (*mysql.Config, error) {
 	config.Timeout = 30 * time.Second
 	config.RejectReadOnly = true
 	config.ParseTime = true
-	return config, nil
+	return config
 }
 
 func newTestDB(ctx context.Context) (*DB, error) {
@@ -43,10 +43,7 @@ func newTestDB(ctx context.Context) (*DB, error) {
 	if _, err := testDB1.DB.ExecContext(ctx, fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s`", os.Getenv("TEST_DB_NAME"))); err != nil {
 		return nil, err
 	}
-	config2, err := newTestMySQLConfig()
-	if err != nil {
-		return nil, err
-	}
+	config2 := newTestMySQLConfig()
 	testDB2, err := NewMySQL(config2)
 	if err != nil {
 		return nil, err

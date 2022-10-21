@@ -50,30 +50,6 @@ table "students" {
     columns = [column.student_number]
   }
 }
-table "users" {
-  schema = schema.temp
-  column "id" {
-    null           = false
-    type           = bigint
-    auto_increment = true
-  }
-  column "name" {
-    null = false
-    type = varchar(255)
-  }
-  column "password" {
-    null = false
-    type = varchar(255)
-  }
-  column "role" {
-    null    = false
-    type    = enum("USER","ADMIN")
-    default = "USER"
-  }
-  primary_key {
-    columns = [column.id]
-  }
-}
 schema "temp" {
   charset = "utf8mb4"
   collate = "utf8mb4_bin"

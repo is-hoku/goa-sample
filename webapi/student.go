@@ -67,8 +67,7 @@ func (s *studentsrvc) GetStudents(ctx context.Context, p *student.GetStudentsPay
 	}
 	l := make([]*student.Student, 0, len(students.Students))
 	for _, got := range students.Students {
-		var st *student.Student
-		st = &student.Student{
+		st := &student.Student{
 			ID:             got.ID,
 			Name:           got.Name,
 			Ruby:           got.Ruby,
