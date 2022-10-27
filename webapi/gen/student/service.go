@@ -22,6 +22,10 @@ type Service interface {
 	GetStudents(context.Context, *GetStudentsPayload) (res *Students, err error)
 	// 学生を登録する。
 	CreateStudent(context.Context, *CreateStudentPayload) (res *Student, err error)
+	// 学生情報を更新する。
+	UpdateStudent(context.Context, *UpdateStudentPayload) (res *Student, err error)
+	// 学生を削除する。
+	DeleteStudent(context.Context, *DeleteStudentPayload) (err error)
 }
 
 // Auther defines the authorization functions to be implemented by the service.
@@ -38,7 +42,7 @@ const ServiceName = "student"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [3]string{"get_student", "get_students", "create_student"}
+var MethodNames = [5]string{"get_student", "get_students", "create_student", "update_student", "delete_student"}
 
 // CreateStudentPayload is the payload type of the student service
 // create_student method.
@@ -65,6 +69,15 @@ type CustomError struct {
 	Name string
 	// Message of error
 	Message string
+}
+
+// DeleteStudentPayload is the payload type of the student service
+// delete_student method.
+type DeleteStudentPayload struct {
+	// Student's unique number
+	StudentNumber *uint32
+	// Firebase JWT Token
+	Authorization string
 }
 
 // GetStudentPayload is the payload type of the student service get_student
@@ -104,6 +117,25 @@ type Student struct {
 // Students is the result type of the student service get_students method.
 type Students struct {
 	Students []*Student
+}
+
+// UpdateStudentPayload is the payload type of the student service
+// update_student method.
+type UpdateStudentPayload struct {
+	// 学生の学籍番号
+	StudentNumber uint32
+	// 学生の氏名
+	Name string
+	// 学生の氏名のフリガナ
+	Ruby string
+	// 学生の生年月日 (RFC3339)
+	DateOfBirth string
+	// 学生の住所
+	Address string
+	// 学生証の有効期間 (RFC3339)
+	ExpirationDate string
+	// Firebase JWT Token
+	Authorization string
 }
 
 // Error returns an error description.

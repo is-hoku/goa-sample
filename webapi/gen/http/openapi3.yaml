@@ -58,20 +58,6 @@ paths:
                                       name: 鈴木太郎
                                       ruby: スズキタロウ
                                       student_number: 12345
-                                    - address: 名古屋市中区三の丸三丁目1番2号
-                                      date_of_birth: "2022-04-01T13:30:00+09:00"
-                                      expiration_date: "2027-03-31T00:00:00+09:00"
-                                      id: 1
-                                      name: 鈴木太郎
-                                      ruby: スズキタロウ
-                                      student_number: 12345
-                                    - address: 名古屋市中区三の丸三丁目1番2号
-                                      date_of_birth: "2022-04-01T13:30:00+09:00"
-                                      expiration_date: "2027-03-31T00:00:00+09:00"
-                                      id: 1
-                                      name: 鈴木太郎
-                                      ruby: スズキタロウ
-                                      student_number: 12345
                 "500":
                     description: 'internal_error: Internal Server Error response.'
                     content:
@@ -133,6 +119,47 @@ paths:
                     - api:read
                     - api:write
     /students/{student_number}:
+        delete:
+            tags:
+                - student
+            summary: delete_student student
+            description: 学生を削除する。
+            operationId: student#delete_student
+            parameters:
+                - name: student_number
+                  in: path
+                  description: Student's unique number
+                  required: true
+                  schema:
+                    type: integer
+                    description: Student's unique number
+                    example: 854016164
+                  example: 3780379796
+            responses:
+                "204":
+                    description: No Content response.
+                "400":
+                    description: 'bad_request: Bad Request response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomError'
+                "404":
+                    description: 'not_found: Not Found response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomError'
+                "500":
+                    description: 'internal_error: Internal Server Error response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomError'
+            security:
+                - jwt_header_Authorization:
+                    - api:read
+                    - api:write
         get:
             tags:
                 - student
@@ -147,8 +174,8 @@ paths:
                   schema:
                     type: integer
                     description: Student's unique number
-                    example: 2516961669
-                  example: 1801313920
+                    example: 1755727597
+                  example: 2973927810
             responses:
                 "200":
                     description: OK response.
@@ -172,6 +199,66 @@ paths:
                                 $ref: '#/components/schemas/CustomError'
                 "404":
                     description: 'not_found: Not Found response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomError'
+                "500":
+                    description: 'internal_error: Internal Server Error response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CustomError'
+            security:
+                - jwt_header_Authorization:
+                    - api:read
+                    - api:write
+        put:
+            tags:
+                - student
+            summary: update_student student
+            description: 学生情報を更新する。
+            operationId: student#update_student
+            parameters:
+                - name: student_number
+                  in: path
+                  description: 学生の学籍番号
+                  required: true
+                  schema:
+                    type: integer
+                    description: 学生の学籍番号
+                    example: 12345
+                  example: 12345
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/StudentBody'
+                        example:
+                            address: 名古屋市中区三の丸三丁目1番2号
+                            date_of_birth: "2022-04-01T13:30:00+09:00"
+                            expiration_date: "2027-03-31T00:00:00+09:00"
+                            name: 鈴木太郎
+                            ruby: スズキタロウ
+                            student_number: 12345
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Student'
+                            example:
+                                address: 名古屋市中区三の丸三丁目1番2号
+                                date_of_birth: "2022-04-01T13:30:00+09:00"
+                                expiration_date: "2027-03-31T00:00:00+09:00"
+                                id: 1
+                                name: 鈴木太郎
+                                ruby: スズキタロウ
+                                student_number: 12345
+                "400":
+                    description: 'bad_request: Bad Request response.'
                     content:
                         application/json:
                             schema:
@@ -367,13 +454,6 @@ components:
                     items:
                         $ref: '#/components/schemas/Student2'
                     example:
-                        - address: 名古屋市中区三の丸三丁目1番2号
-                          date_of_birth: "2022-04-01T13:30:00+09:00"
-                          expiration_date: "2027-03-31T00:00:00+09:00"
-                          id: 1
-                          name: 鈴木太郎
-                          ruby: スズキタロウ
-                          student_number: 12345
                         - address: 名古屋市中区三の丸三丁目1番2号
                           date_of_birth: "2022-04-01T13:30:00+09:00"
                           expiration_date: "2027-03-31T00:00:00+09:00"

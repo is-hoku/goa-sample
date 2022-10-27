@@ -118,3 +118,15 @@ func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.CreateStu
 	}
 	return res, nil
 }
+
+// 学生情報を更新する。
+func (s *studentsrvc) UpdateStudent(ctx context.Context, body *student.UpdateStudentPayload) (*student.Student, error) {
+	s.logger.Print("students.update student")
+	return nil, nil
+}
+
+// 学生を削除する。
+func (s *studentsrvc) DeleteStudent(ctx context.Context, p *student.DeleteStudentPayload) error {
+	s.logger.Print("students.delete student")
+	return nil
+}

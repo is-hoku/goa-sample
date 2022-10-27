@@ -19,6 +19,8 @@ type Endpoints struct {
 	GetStudent    goa.Endpoint
 	GetStudents   goa.Endpoint
 	CreateStudent goa.Endpoint
+	UpdateStudent goa.Endpoint
+	DeleteStudent goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "student" service with endpoints.
@@ -29,6 +31,8 @@ func NewEndpoints(s Service) *Endpoints {
 		GetStudent:    NewGetStudentEndpoint(s, a.JWTAuth),
 		GetStudents:   NewGetStudentsEndpoint(s, a.JWTAuth),
 		CreateStudent: NewCreateStudentEndpoint(s, a.JWTAuth),
+		UpdateStudent: NewUpdateStudentEndpoint(s, a.JWTAuth),
+		DeleteStudent: NewDeleteStudentEndpoint(s, a.JWTAuth),
 	}
 }
 
@@ -37,6 +41,8 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.GetStudent = m(e.GetStudent)
 	e.GetStudents = m(e.GetStudents)
 	e.CreateStudent = m(e.CreateStudent)
+	e.UpdateStudent = m(e.UpdateStudent)
+	e.DeleteStudent = m(e.DeleteStudent)
 }
 
 // NewGetStudentEndpoint returns an endpoint function that calls the method
@@ -108,5 +114,48 @@ func NewCreateStudentEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.End
 		}
 		vres := NewViewedStudent(res, "default")
 		return vres, nil
+	}
+}
+
+// NewUpdateStudentEndpoint returns an endpoint function that calls the method
+// "update_student" of service "student".
+func NewUpdateStudentEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*UpdateStudentPayload)
+		var err error
+		sc := security.JWTScheme{
+			Name:           "jwt",
+			Scopes:         []string{"api:read", "api:write"},
+			RequiredScopes: []string{},
+		}
+		ctx, err = authJWTFn(ctx, p.Authorization, &sc)
+		if err != nil {
+			return nil, err
+		}
+		res, err := s.UpdateStudent(ctx, p)
+		if err != nil {
+			return nil, err
+		}
+		vres := NewViewedStudent(res, "default")
+		return vres, nil
+	}
+}
+
+// NewDeleteStudentEndpoint returns an endpoint function that calls the method
+// "delete_student" of service "student".
+func NewDeleteStudentEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*DeleteStudentPayload)
+		var err error
+		sc := security.JWTScheme{
+			Name:           "jwt",
+			Scopes:         []string{"api:read", "api:write"},
+			RequiredScopes: []string{},
+		}
+		ctx, err = authJWTFn(ctx, p.Authorization, &sc)
+		if err != nil {
+			return nil, err
+		}
+		return nil, s.DeleteStudent(ctx, p)
 	}
 }

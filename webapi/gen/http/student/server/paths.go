@@ -25,3 +25,13 @@ func GetStudentsStudentPath() string {
 func CreateStudentStudentPath() string {
 	return "/students"
 }
+
+// UpdateStudentStudentPath returns the URL path to the student service update_student HTTP endpoint.
+func UpdateStudentStudentPath(studentNumber uint32) string {
+	return fmt.Sprintf("/students/%v", studentNumber)
+}
+
+// DeleteStudentStudentPath returns the URL path to the student service delete_student HTTP endpoint.
+func DeleteStudentStudentPath(studentNumber uint32) string {
+	return fmt.Sprintf("/students/%v", studentNumber)
+}

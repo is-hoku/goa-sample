@@ -55,6 +55,44 @@ var _ = Service("student", func() {
 			Response("bad_request", StatusBadRequest)
 		})
 	})
+	Method("update_student", func() {
+		Description("学生情報を更新する。")
+		Result(StudentType)
+		Error("internal_error", CustomErrorType)
+		Error("bad_request", CustomErrorType)
+		Payload(
+			func() {
+				Attribute("student_number", UInt32, "Student's unique number")
+				Extend(StudentBodyType)
+				Extend(Authorization)
+			})
+		HTTP(func() {
+			PUT("/students/{student_number}")
+			Body(StudentBodyType)
+			Response(StatusOK)
+			Response("internal_error", StatusInternalServerError)
+			Response("bad_request", StatusBadRequest)
+		})
+	})
+	Method("delete_student", func() {
+		Description("学生を削除する。")
+		Result(Empty)
+		Error("internal_error", CustomErrorType)
+		Error("not_found", CustomErrorType)
+		Error("bad_request", CustomErrorType)
+		Payload(func() {
+			Attribute("student_number", UInt32, "Student's unique number")
+			Extend(Authorization)
+		})
+		HTTP(func() {
+			Header("Authorization", String)
+			DELETE("students/{student_number}")
+			Response(StatusNoContent)
+			Response("internal_error", StatusInternalServerError)
+			Response("not_found", StatusNotFound)
+			Response("bad_request", StatusBadRequest)
+		})
+	})
 })
 
 var StudentType = ResultType("application/vnd.student+json", "Student", func() {

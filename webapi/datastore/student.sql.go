@@ -11,6 +11,14 @@ import (
 	"time"
 )
 
+const deleteStudent = `-- name: DeleteStudent :execresult
+DELETE FROM ` + "`" + `students` + "`" + ` WHERE ` + "`" + `student_number` + "`" + `=?
+`
+
+func (q *Queries) DeleteStudent(ctx context.Context, studentNumber uint32) (sql.Result, error) {
+	return q.db.ExecContext(ctx, deleteStudent, studentNumber)
+}
+
 const getAllStudents = `-- name: GetAllStudents :many
 SELECT ` + "`" + `id` + "`" + `, ` + "`" + `name` + "`" + `, ` + "`" + `ruby` + "`" + `, ` + "`" + `student_number` + "`" + `, ` + "`" + `date_of_birth` + "`" + `, ` + "`" + `address` + "`" + `, ` + "`" + `expiration_date` + "`" + `, ` + "`" + `created_at` + "`" + `, ` + "`" + `updated_at` + "`" + ` FROM ` + "`" + `students` + "`" + ` ORDER BY ` + "`" + `student_number` + "`" + ` ASC
 `
@@ -111,5 +119,31 @@ func (q *Queries) SetStudent(ctx context.Context, arg SetStudentParams) (sql.Res
 		arg.DateOfBirth,
 		arg.Address,
 		arg.ExpirationDate,
+	)
+}
+
+const updateStudent = `-- name: UpdateStudent :execresult
+UPDATE ` + "`" + `students` + "`" + ` SET ` + "`" + `name` + "`" + `=?, ` + "`" + `ruby` + "`" + `=?, ` + "`" + `student_number` + "`" + `=?, ` + "`" + `date_of_birth` + "`" + `=?, ` + "`" + `address` + "`" + `=?, ` + "`" + `expiration_date` + "`" + `=? WHERE ` + "`" + `id` + "`" + `=?
+`
+
+type UpdateStudentParams struct {
+	Name           string
+	Ruby           string
+	StudentNumber  uint32
+	DateOfBirth    time.Time
+	Address        string
+	ExpirationDate time.Time
+	ID             uint64
+}
+
+func (q *Queries) UpdateStudent(ctx context.Context, arg UpdateStudentParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, updateStudent,
+		arg.Name,
+		arg.Ruby,
+		arg.StudentNumber,
+		arg.DateOfBirth,
+		arg.Address,
+		arg.ExpirationDate,
+		arg.ID,
 	)
 }

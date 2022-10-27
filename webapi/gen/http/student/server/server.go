@@ -23,6 +23,8 @@ type Server struct {
 	GetStudent    http.Handler
 	GetStudents   http.Handler
 	CreateStudent http.Handler
+	UpdateStudent http.Handler
+	DeleteStudent http.Handler
 	CORS          http.Handler
 }
 
@@ -62,12 +64,16 @@ func New(
 			{"GetStudent", "GET", "/students/{student_number}"},
 			{"GetStudents", "GET", "/students"},
 			{"CreateStudent", "POST", "/students"},
+			{"UpdateStudent", "PUT", "/students/{student_number}"},
+			{"DeleteStudent", "DELETE", "/students/{student_number}"},
 			{"CORS", "OPTIONS", "/students/{student_number}"},
 			{"CORS", "OPTIONS", "/students"},
 		},
 		GetStudent:    NewGetStudentHandler(e.GetStudent, mux, decoder, encoder, errhandler, formatter),
 		GetStudents:   NewGetStudentsHandler(e.GetStudents, mux, decoder, encoder, errhandler, formatter),
 		CreateStudent: NewCreateStudentHandler(e.CreateStudent, mux, decoder, encoder, errhandler, formatter),
+		UpdateStudent: NewUpdateStudentHandler(e.UpdateStudent, mux, decoder, encoder, errhandler, formatter),
+		DeleteStudent: NewDeleteStudentHandler(e.DeleteStudent, mux, decoder, encoder, errhandler, formatter),
 		CORS:          NewCORSHandler(),
 	}
 }
@@ -80,6 +86,8 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.GetStudent = m(s.GetStudent)
 	s.GetStudents = m(s.GetStudents)
 	s.CreateStudent = m(s.CreateStudent)
+	s.UpdateStudent = m(s.UpdateStudent)
+	s.DeleteStudent = m(s.DeleteStudent)
 	s.CORS = m(s.CORS)
 }
 
@@ -88,6 +96,8 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountGetStudentHandler(mux, h.GetStudent)
 	MountGetStudentsHandler(mux, h.GetStudents)
 	MountCreateStudentHandler(mux, h.CreateStudent)
+	MountUpdateStudentHandler(mux, h.UpdateStudent)
+	MountDeleteStudentHandler(mux, h.DeleteStudent)
 	MountCORSHandler(mux, h.CORS)
 }
 
@@ -228,6 +238,108 @@ func NewCreateStudentHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "create_student")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "student")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountUpdateStudentHandler configures the mux to serve the "student" service
+// "update_student" endpoint.
+func MountUpdateStudentHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := HandleStudentOrigin(h).(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("PUT", "/students/{student_number}", f)
+}
+
+// NewUpdateStudentHandler creates a HTTP handler which loads the HTTP request
+// and calls the "student" service "update_student" endpoint.
+func NewUpdateStudentHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeUpdateStudentRequest(mux, decoder)
+		encodeResponse = EncodeUpdateStudentResponse(encoder)
+		encodeError    = EncodeUpdateStudentError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "update_student")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "student")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountDeleteStudentHandler configures the mux to serve the "student" service
+// "delete_student" endpoint.
+func MountDeleteStudentHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := HandleStudentOrigin(h).(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("DELETE", "/students/{student_number}", f)
+}
+
+// NewDeleteStudentHandler creates a HTTP handler which loads the HTTP request
+// and calls the "student" service "delete_student" endpoint.
+func NewDeleteStudentHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeDeleteStudentRequest(mux, decoder)
+		encodeResponse = EncodeDeleteStudentResponse(encoder)
+		encodeError    = EncodeDeleteStudentError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "delete_student")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "student")
 		payload, err := decodeRequest(r)
 		if err != nil {

@@ -34,9 +34,6 @@ type StudentsGetter interface {
 	GetStudents(ctx context.Context) (*GetStudentsOutput, error)
 }
 
-type GetStudentsInput struct {
-}
-
 type GetStudentsOutput struct {
 	Students []*model.Student
 }
@@ -52,4 +49,24 @@ type CreateStudentInput struct {
 
 type CreateStudentOutput struct {
 	ID uint64
+}
+
+type StudentUpdater interface {
+	UpdateStudent(ctx context.Context, input *UpdateStudentInput) (*UpdateStudentOutput, error)
+}
+
+type UpdateStudentInput struct {
+	Student *model.Student
+}
+
+type UpdateStudentOutput struct {
+	ID uint64
+}
+
+type StudentDeleter interface {
+	DeleteStudent(ctx context.Context, input *DeleteStudentInput) error
+}
+
+type DeleteStudentInput struct {
+	StudentNumber uint32
 }

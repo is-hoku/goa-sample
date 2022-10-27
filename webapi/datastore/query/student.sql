@@ -9,3 +9,9 @@ INSERT INTO `students` (`name`, `ruby`, `student_number`, `date_of_birth`, `addr
 
 -- name: GetAllStudents :many
 SELECT `id`, `name`, `ruby`, `student_number`, `date_of_birth`, `address`, `expiration_date`, `created_at`, `updated_at` FROM `students` ORDER BY `student_number` ASC;
+
+-- name: UpdateStudent :execresult
+UPDATE `students` SET `name`=?, `ruby`=?, `student_number`=?, `date_of_birth`=?, `address`=?, `expiration_date`=? WHERE `id`=?;
+
+-- name: DeleteStudent :execresult
+DELETE FROM `students` WHERE `student_number`=?;

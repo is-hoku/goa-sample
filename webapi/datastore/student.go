@@ -135,3 +135,55 @@ func (db *GetStudentsMedia) GetStudents(ctx context.Context) (*repository.GetStu
 		Students: res,
 	}, nil
 }
+
+var _ repository.StudentUpdater = (*UpdateStudentMedia)(nil)
+
+type UpdateStudentMedia struct {
+	*DB
+}
+
+func NewUpdateStudentMedia(db *DB) *UpdateStudentMedia {
+	return &UpdateStudentMedia{db}
+}
+
+func (db *UpdateStudentMedia) UpdateStudent(ctx context.Context, input *repository.UpdateStudentInput) (*repository.UpdateStudentOutput, error) {
+	queries := New(db.DB)
+	params := UpdateStudentParams{
+		Name:           input.Student.Name,
+		Ruby:           input.Student.Ruby,
+		StudentNumber:  input.Student.StudentNumber,
+		DateOfBirth:    input.Student.DateOfBirth,
+		Address:        input.Student.Address,
+		ExpirationDate: input.Student.ExpirationDate,
+	}
+	result, err := queries.UpdateStudent(ctx, params)
+	if err != nil {
+		return nil, &student.CustomError{Name: "bad_request", Message: "Bad Request Body"}
+	}
+	insertedID, err := result.LastInsertId()
+	if err != nil {
+		return nil, &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
+	}
+	return &repository.UpdateStudentOutput{
+		ID: uint64(insertedID),
+	}, nil
+}
+
+var _ repository.StudentDeleter = (*DeleteStudentMedia)(nil)
+
+type DeleteStudentMedia struct {
+	*DB
+}
+
+func NewDeleteStudentMedia(db *DB) *DeleteStudentMedia {
+	return &DeleteStudentMedia{db}
+}
+
+func (db *DeleteStudentMedia) DeleteStudent(ctx context.Context, input *repository.DeleteStudentInput) error {
+	queries := New(db.DB)
+	_, err := queries.DeleteStudent(ctx, input.StudentNumber)
+	if err != nil {
+		return &student.CustomError{Name: "not_found", Message: "Student Not Found"}
+	}
+	return nil
+}
