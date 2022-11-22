@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"firebase.google.com/go/auth"
 	student "github.com/is-hoku/goa-sample/webapi/gen/student"
 	"github.com/is-hoku/goa-sample/webapi/model"
 	"github.com/is-hoku/goa-sample/webapi/usecase"
@@ -21,20 +22,35 @@ func NewStudent(logger *log.Logger, app *StudentApp) student.Service {
 }
 
 func (s *studentsrvc) JWTAuth(ctx context.Context, token string, scheme *security.JWTScheme) (context.Context, error) {
-	// Firebase Authentication で認証
-	//authClient, err := newFirebase(ctx)
-	//if err != nil {
-	//	return ctx, &student.CustomError{Name: "internal_error", Message: "Failed to create firebase app instance"}
-	//}
-	//idToken, err := authClient.VerifyIDToken(ctx, token)
-	//if err != nil {
-	//	return ctx, &student.CustomError{Name: "unauthorized", Message: "Unauthorized"}
-	//}
-	//ctx, err = SetUserInfo(ctx, idToken)
-	//if err != nil {
-	//	return ctx, &student.CustomError{Name: "internal_error", Message: "Failed to get user information from Firebase"}
-	//}
-	return ctx, nil
+	// ダミーユーザ
+	switch token {
+	case "test":
+		testUser := &auth.UserInfo{
+			DisplayName: "test",
+			Email:       "test@example.com",
+			PhoneNumber: "000-0000-0000",
+			PhotoURL:    "photo.example.com",
+			ProviderID:  "testprovider",
+			UID:         "abcdefg",
+		}
+		ctx = SetTestUserInfo(ctx, testUser)
+		return ctx, nil
+	default:
+		// Firebase Authentication で認証
+		authClient, err := newFirebase(ctx)
+		if err != nil {
+			return ctx, &student.CustomError{Name: "internal_error", Message: "Failed to create firebase app instance"}
+		}
+		idToken, err := authClient.VerifyIDToken(ctx, token)
+		if err != nil {
+			return ctx, &student.CustomError{Name: "unauthorized", Message: "Unauthorized"}
+		}
+		ctx, err = SetUserInfo(ctx, idToken)
+		if err != nil {
+			return ctx, &student.CustomError{Name: "internal_error", Message: "Failed to get user information from Firebase"}
+		}
+		return ctx, nil
+	}
 }
 
 // 学籍番号から学生を取得する。

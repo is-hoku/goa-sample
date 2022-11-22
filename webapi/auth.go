@@ -24,6 +24,11 @@ type contextKey string
 
 const userInfoContextKey contextKey = "user_info"
 
+func SetTestUserInfo(ctx context.Context, user *auth.UserInfo) context.Context {
+
+	return context.WithValue(ctx, userInfoContextKey, user)
+}
+
 func SetUserInfo(ctx context.Context, token *auth.Token) (context.Context, error) {
 	userInfo, err := GetUserByToken(ctx, token)
 	if err != nil {
