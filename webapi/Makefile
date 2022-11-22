@@ -21,15 +21,12 @@ goaexample:
 	rm -rf cmd/*-cli
 sqlc-generate: datastore/query datastore/table
 	sqlc generate --file sqlc.yaml
-	touch sqlc-generate
 plantuml: built
 	goplantuml -recursive -show-aggregations -show-aliases -show-compositions -show-connection-labels -show-implementations ./ > ./diagram.puml
-	touch plantuml
 inspect:
 	atlas schema inspect -u ${ATLAS_DSN} > datastore/schema.hcl
 migrate: datastore/schema.hcl
 	atlas schema apply -u ${ATLAS_DSN} -f datastore/schema.hcl
-	touch migrate
 sqlgen:
 	go run ./bin/table_def_sql.go
 db: migrate sqlgen sqlc-generate
