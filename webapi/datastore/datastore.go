@@ -20,6 +20,10 @@ var StudentSet = wire.NewSet(
 	wire.Bind(new(repository.StudentCreator), new(*CreateStudentMedia)),
 	NewGetStudentsMedia,
 	wire.Bind(new(repository.StudentsGetter), new(*GetStudentsMedia)),
+	NewUpdateStudentMedia,
+	wire.Bind(new(repository.StudentUpdater), new(*UpdateStudentMedia)),
+	NewDeleteStudentMedia,
+	wire.Bind(new(repository.StudentDeleter), new(*DeleteStudentMedia)),
 )
 
 type DB struct {

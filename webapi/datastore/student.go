@@ -149,6 +149,7 @@ func NewUpdateStudentMedia(db *DB) *UpdateStudentMedia {
 func (db *UpdateStudentMedia) UpdateStudent(ctx context.Context, input *repository.UpdateStudentInput) (*repository.UpdateStudentOutput, error) {
 	queries := New(db.DB)
 	params := UpdateStudentParams{
+		ID:             input.Student.ID,
 		Name:           input.Student.Name,
 		Ruby:           input.Student.Ruby,
 		StudentNumber:  input.Student.StudentNumber,
@@ -160,12 +161,15 @@ func (db *UpdateStudentMedia) UpdateStudent(ctx context.Context, input *reposito
 	if err != nil {
 		return nil, &student.CustomError{Name: "bad_request", Message: "Bad Request Body"}
 	}
-	insertedID, err := result.LastInsertId()
+	affected, err := result.RowsAffected()
 	if err != nil {
 		return nil, &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
 	}
+	if affected == 0 {
+		return nil, &student.CustomError{Name: "not_found", Message: "Student Not Found"}
+	}
 	return &repository.UpdateStudentOutput{
-		ID: uint64(insertedID),
+		ID: input.Student.ID,
 	}, nil
 }
 
@@ -181,8 +185,15 @@ func NewDeleteStudentMedia(db *DB) *DeleteStudentMedia {
 
 func (db *DeleteStudentMedia) DeleteStudent(ctx context.Context, input *repository.DeleteStudentInput) error {
 	queries := New(db.DB)
-	_, err := queries.DeleteStudent(ctx, input.StudentNumber)
+	result, err := queries.DeleteStudent(ctx, input.StudentNumber)
 	if err != nil {
+		return &student.CustomError{Name: "bad_request", Message: "Bad Request Body"}
+	}
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return &student.CustomError{Name: "internal_error", Message: "Internal Server Error"}
+	}
+	if affected == 0 {
 		return &student.CustomError{Name: "not_found", Message: "Student Not Found"}
 	}
 	return nil

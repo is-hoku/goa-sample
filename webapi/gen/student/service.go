@@ -122,8 +122,8 @@ type Students struct {
 // UpdateStudentPayload is the payload type of the student service
 // update_student method.
 type UpdateStudentPayload struct {
-	// 学生の学籍番号
-	StudentNumber uint32
+	// Student's unique number
+	StudentNumber *uint32
 	// 学生の氏名
 	Name string
 	// 学生の氏名のフリガナ

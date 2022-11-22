@@ -37,3 +37,23 @@ type CreateStudentInput struct {
 type CreateStudentOutput struct {
 	Student *model.Student
 }
+
+type StudentUpdater interface {
+	UpdateStudent(ctx context.Context, input *UpdateStudentInput) (*UpdateStudentOutput, error)
+}
+
+type UpdateStudentInput struct {
+	Student *model.Student
+}
+
+type UpdateStudentOutput struct {
+	Student *model.Student
+}
+
+type StudentDeleter interface {
+	DeleteStudent(ctx context.Context, input *DeleteStudentInput) error
+}
+
+type DeleteStudentInput struct {
+	StudentNumber uint32
+}

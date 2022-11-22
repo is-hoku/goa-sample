@@ -53,6 +53,7 @@ type CreateStudentOutput struct {
 
 type StudentUpdater interface {
 	UpdateStudent(ctx context.Context, input *UpdateStudentInput) (*UpdateStudentOutput, error)
+	TxBeginner
 }
 
 type UpdateStudentInput struct {

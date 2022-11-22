@@ -19,9 +19,7 @@ type GetStudentByNumberOption struct {
 }
 
 func NewGetStudentByNumber(opt *GetStudentByNumberOption) *GetStudentByNumber {
-	return &GetStudentByNumber{
-		opt: opt,
-	}
+	return &GetStudentByNumber{opt: opt}
 }
 
 func (s *GetStudentByNumber) GetStudentByNumber(ctx context.Context, input *usecase.GetStudentByNumberInput) (*usecase.GetStudentByNumberOutput, error) {
@@ -56,9 +54,7 @@ type CreateStudentOption struct {
 }
 
 func NewCreateStudent(opt *CreateStudentOption) *CreateStudent {
-	return &CreateStudent{
-		opt: opt,
-	}
+	return &CreateStudent{opt: opt}
 }
 
 func (s *CreateStudent) CreateStudent(ctx context.Context, input *usecase.CreateStudentInput) (*usecase.CreateStudentOutput, error) {
@@ -99,9 +95,7 @@ type GetStudentsOption struct {
 }
 
 func NewGetStudents(opt *GetStudentsOption) *GetStudents {
-	return &GetStudents{
-		opt: opt,
-	}
+	return &GetStudents{opt: opt}
 }
 func (s *GetStudents) GetStudents(ctx context.Context) (*usecase.GetStudentsOutput, error) {
 	gotStudents, err := s.opt.GetStudents(ctx)
@@ -115,4 +109,74 @@ func (s *GetStudents) GetStudents(ctx context.Context) (*usecase.GetStudentsOutp
 	return &usecase.GetStudentsOutput{
 		Students: students,
 	}, nil
+}
+
+type UpdateStudent struct {
+	opt *UpdateStudentOption
+}
+
+type UpdateStudentOption struct {
+	repository.StudentUpdater
+	repository.StudentByNumberGetter
+}
+
+func NewUpdateStudent(opt *UpdateStudentOption) *UpdateStudent {
+	return &UpdateStudent{opt: opt}
+}
+
+func (s *UpdateStudent) UpdateStudent(ctx context.Context, input *usecase.UpdateStudentInput) (*usecase.UpdateStudentOutput, error) {
+	tx, err := s.opt.BeginTx(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	student, err := s.opt.GetStudentByNumber(ctx, &repository.GetStudentByNumberInput{
+		StudentNumber: input.Student.StudentNumber,
+	})
+	if err != nil {
+		return nil, err
+	}
+	_, err = s.opt.UpdateStudent(ctx, &repository.UpdateStudentInput{
+		Student: &model.Student{
+			ID:             student.Student.ID,
+			Name:           input.Student.Name,
+			Ruby:           input.Student.Ruby,
+			StudentNumber:  input.Student.StudentNumber,
+			DateOfBirth:    input.Student.DateOfBirth,
+			Address:        input.Student.Address,
+			ExpirationDate: input.Student.ExpirationDate,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+	return &usecase.UpdateStudentOutput{
+		Student: student.Student,
+	}, nil
+}
+
+type DeleteStudent struct {
+	opt *DeleteStudentOption
+}
+
+type DeleteStudentOption struct {
+	repository.StudentDeleter
+}
+
+func NewDeleteStudent(opt *DeleteStudentOption) *DeleteStudent {
+	return &DeleteStudent{opt: opt}
+}
+
+func (s *DeleteStudent) DeleteStudent(ctx context.Context, input *usecase.DeleteStudentInput) error {
+	err := s.opt.DeleteStudent(ctx, &repository.DeleteStudentInput{
+		StudentNumber: input.StudentNumber,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }

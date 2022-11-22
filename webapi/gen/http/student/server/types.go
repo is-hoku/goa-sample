@@ -37,8 +37,6 @@ type UpdateStudentRequestBody struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// 学生の氏名のフリガナ
 	Ruby *string `form:"ruby,omitempty" json:"ruby,omitempty" xml:"ruby,omitempty"`
-	// 学生の学籍番号
-	StudentNumber *uint32 `form:"student_number,omitempty" json:"student_number,omitempty" xml:"student_number,omitempty"`
 	// 学生の生年月日 (RFC3339)
 	DateOfBirth *string `form:"date_of_birth,omitempty" json:"date_of_birth,omitempty" xml:"date_of_birth,omitempty"`
 	// 学生の住所
@@ -176,6 +174,15 @@ type UpdateStudentInternalErrorResponseBody struct {
 // UpdateStudentBadRequestResponseBody is the type of the "student" service
 // "update_student" endpoint HTTP response body for the "bad_request" error.
 type UpdateStudentBadRequestResponseBody struct {
+	// Name of error
+	Name string `form:"name" json:"name" xml:"name"`
+	// Message of error
+	Message string `form:"message" json:"message" xml:"message"`
+}
+
+// UpdateStudentNotFoundResponseBody is the type of the "student" service
+// "update_student" endpoint HTTP response body for the "not_found" error.
+type UpdateStudentNotFoundResponseBody struct {
 	// Name of error
 	Name string `form:"name" json:"name" xml:"name"`
 	// Message of error
@@ -365,6 +372,16 @@ func NewUpdateStudentBadRequestResponseBody(res *student.CustomError) *UpdateStu
 	return body
 }
 
+// NewUpdateStudentNotFoundResponseBody builds the HTTP response body from the
+// result of the "update_student" endpoint of the "student" service.
+func NewUpdateStudentNotFoundResponseBody(res *student.CustomError) *UpdateStudentNotFoundResponseBody {
+	body := &UpdateStudentNotFoundResponseBody{
+		Name:    res.Name,
+		Message: res.Message,
+	}
+	return body
+}
+
 // NewDeleteStudentInternalErrorResponseBody builds the HTTP response body from
 // the result of the "delete_student" endpoint of the "student" service.
 func NewDeleteStudentInternalErrorResponseBody(res *student.CustomError) *DeleteStudentInternalErrorResponseBody {
@@ -434,12 +451,11 @@ func NewUpdateStudentPayload(body *UpdateStudentRequestBody, studentNumber uint3
 	v := &student.UpdateStudentPayload{
 		Name:           *body.Name,
 		Ruby:           *body.Ruby,
-		StudentNumber:  *body.StudentNumber,
 		DateOfBirth:    *body.DateOfBirth,
 		Address:        *body.Address,
 		ExpirationDate: *body.ExpirationDate,
 	}
-	v.StudentNumber = studentNumber
+	v.StudentNumber = &studentNumber
 	v.Authorization = authorization
 
 	return v
@@ -493,9 +509,6 @@ func ValidateUpdateStudentRequestBody(body *UpdateStudentRequestBody) (err error
 	}
 	if body.Ruby == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("ruby", "body"))
-	}
-	if body.StudentNumber == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("student_number", "body"))
 	}
 	if body.DateOfBirth == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("date_of_birth", "body"))

@@ -3,7 +3,6 @@ package datastore
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
 	"os"
 	"time"
@@ -63,7 +62,6 @@ func createTestStudentsTable(ctx context.Context, db *DB) error {
 		"`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," +
 		"`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);"
 	if _, err := db.ExecContext(ctx, createTableQuery); err != nil {
-		log.Fatalf("Could not create test table: %s\n", err)
 		return err
 	}
 	return nil
@@ -72,7 +70,6 @@ func createTestStudentsTable(ctx context.Context, db *DB) error {
 func deleteTestDB(ctx context.Context, db *DB) error {
 	dbName := os.Getenv("TEST_DB_NAME")
 	if _, err := db.ExecContext(ctx, fmt.Sprintf("DROP DATABASE IF EXISTS `%s`", dbName)); err != nil {
-		log.Fatalf("Could not delete test db: %s\n", err)
 		return err
 	}
 	return nil

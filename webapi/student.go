@@ -138,11 +138,48 @@ func (s *studentsrvc) CreateStudent(ctx context.Context, body *student.CreateStu
 // 学生情報を更新する。
 func (s *studentsrvc) UpdateStudent(ctx context.Context, body *student.UpdateStudentPayload) (*student.Student, error) {
 	s.logger.Print("students.update student")
-	return nil, nil
+	birth, err := time.Parse(time.RFC3339, body.DateOfBirth)
+	if err != nil {
+		return nil, &student.CustomError{Name: "bad_request", Message: "date_of_birth is invalid format"}
+	}
+	expiration, err := time.Parse(time.RFC3339, body.ExpirationDate)
+	if err != nil {
+		return nil, &student.CustomError{Name: "bad_request", Message: "expiration_date is invalid format"}
+	}
+	bodyStudent := &usecase.UpdateStudentInput{
+		Student: &model.Student{
+			Name:           body.Name,
+			Ruby:           body.Ruby,
+			StudentNumber:  *body.StudentNumber,
+			DateOfBirth:    birth,
+			Address:        body.Address,
+			ExpirationDate: expiration,
+		},
+	}
+	updated, err := s.app.updater.UpdateStudent(ctx, bodyStudent)
+	if err != nil {
+		return nil, err
+	}
+	res := &student.Student{
+		ID:             updated.Student.ID,
+		Name:           updated.Student.Name,
+		Ruby:           updated.Student.Ruby,
+		StudentNumber:  updated.Student.StudentNumber,
+		DateOfBirth:    updated.Student.DateOfBirth.Format(time.RFC3339),
+		Address:        updated.Student.Address,
+		ExpirationDate: updated.Student.ExpirationDate.Format(time.RFC3339),
+	}
+	return res, nil
 }
 
 // 学生を削除する。
 func (s *studentsrvc) DeleteStudent(ctx context.Context, p *student.DeleteStudentPayload) error {
 	s.logger.Print("students.delete student")
+	err := s.app.deleter.DeleteStudent(ctx, &usecase.DeleteStudentInput{
+		StudentNumber: *p.StudentNumber,
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }

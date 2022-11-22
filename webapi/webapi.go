@@ -27,12 +27,16 @@ type StudentApp struct {
 	getter      usecase.StudentByNumberGetter
 	multigetter usecase.StudentsGetter
 	creator     usecase.StudentCreator
+	updater     usecase.StudentUpdater
+	deleter     usecase.StudentDeleter
 }
 
-func newStudentApp(ctx context.Context, getter usecase.StudentByNumberGetter, multigetter usecase.StudentsGetter, creator usecase.StudentCreator) (*StudentApp, error) {
+func newStudentApp(ctx context.Context, getter usecase.StudentByNumberGetter, multigetter usecase.StudentsGetter, creator usecase.StudentCreator, updater usecase.StudentUpdater, deleter usecase.StudentDeleter) (*StudentApp, error) {
 	return &StudentApp{
 		getter:      getter,
 		multigetter: multigetter,
 		creator:     creator,
+		updater:     updater,
+		deleter:     deleter,
 	}, nil
 }

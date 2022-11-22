@@ -50,7 +50,7 @@ func TestGetStudent(t *testing.T) {
 		payload := &student.GetStudentPayload{StudentNumber: &studentNumber}
 
 		logger := log.New(os.Stderr, "[test] ", log.Ltime)
-		studentApp, err := newStudentApp(ctx, getter, nil, nil)
+		studentApp, err := newStudentApp(ctx, getter, nil, nil, nil, nil)
 		if err != nil {
 			t.Errorf("unexpected error")
 		}
@@ -75,7 +75,7 @@ func TestGetStudent(t *testing.T) {
 		payload := &student.GetStudentPayload{StudentNumber: &studentNumber}
 
 		logger := log.New(os.Stderr, "[test] ", log.Ltime)
-		studentApp, err := newStudentApp(ctx, getter, nil, nil)
+		studentApp, err := newStudentApp(ctx, getter, nil, nil, nil, nil)
 		if err != nil {
 			t.Errorf("unexpected error")
 		}
@@ -149,7 +149,7 @@ func TestGetStudents(t *testing.T) {
 		}
 
 		logger := log.New(os.Stderr, "[test] ", log.Ltime)
-		studentApp, err := newStudentApp(ctx, nil, multigetter, nil)
+		studentApp, err := newStudentApp(ctx, nil, multigetter, nil, nil, nil)
 		if err != nil {
 			t.Errorf("unexpected error")
 		}
@@ -206,7 +206,7 @@ func TestCreate(t *testing.T) {
 		}
 
 		logger := log.New(os.Stderr, "[test] ", log.Ltime)
-		studentApp, err := newStudentApp(ctx, nil, nil, creator)
+		studentApp, err := newStudentApp(ctx, nil, nil, creator, nil, nil)
 		if err != nil {
 			t.Errorf("unexpected error")
 		}
@@ -220,3 +220,6 @@ func TestCreate(t *testing.T) {
 		}
 	})
 }
+
+// TODO: UpdateStudent のテスト
+// TODO: DeleteStudent のテスト

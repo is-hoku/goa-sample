@@ -15,4 +15,10 @@ var StudentSet = wire.NewSet(
 	NewCreateStudent,
 	wire.Struct(new(CreateStudentOption), "*"),
 	wire.Bind(new(usecase.StudentCreator), new(*CreateStudent)),
+	NewUpdateStudent,
+	wire.Struct(new(UpdateStudentOption), "*"),
+	wire.Bind(new(usecase.StudentUpdater), new(*UpdateStudent)),
+	NewDeleteStudent,
+	wire.Struct(new(DeleteStudentOption), "*"),
+	wire.Bind(new(usecase.StudentDeleter), new(*DeleteStudent)),
 )

@@ -37,7 +37,18 @@ func NewStudentApp(ctx context.Context) (*StudentApp, error) {
 		StudentCreator:    createStudentMedia,
 	}
 	createStudent := interactor.NewCreateStudent(createStudentOption)
-	studentApp, err := newStudentApp(ctx, getStudentByNumber, getStudents, createStudent)
+	updateStudentMedia := datastore.NewUpdateStudentMedia(db)
+	updateStudentOption := &interactor.UpdateStudentOption{
+		StudentUpdater:        updateStudentMedia,
+		StudentByNumberGetter: getStudentByNumberMedia,
+	}
+	updateStudent := interactor.NewUpdateStudent(updateStudentOption)
+	deleteStudentMedia := datastore.NewDeleteStudentMedia(db)
+	deleteStudentOption := &interactor.DeleteStudentOption{
+		StudentDeleter: deleteStudentMedia,
+	}
+	deleteStudent := interactor.NewDeleteStudent(deleteStudentOption)
+	studentApp, err := newStudentApp(ctx, getStudentByNumber, getStudents, createStudent, updateStudent, deleteStudent)
 	if err != nil {
 		return nil, err
 	}
